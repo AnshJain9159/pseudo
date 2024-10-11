@@ -20,7 +20,7 @@ export default function Footer() {
             <h4 className="text-lg font-semibold text-white">Quick Links</h4>
             <div className="space-y-1">
               <a href="/features" className="block hover:text-white text-sm">Features</a>
-              <a href="/about-us" className="block hover:text-white text-sm">About</a>
+              <a href="/aboutus" className="block hover:text-white text-sm">About</a>
               <a href="#contact" className="block hover:text-white text-sm">Contact</a>
               <a href="#privacy" className="block hover:text-white text-sm">Privacy Policy</a>
             </div>

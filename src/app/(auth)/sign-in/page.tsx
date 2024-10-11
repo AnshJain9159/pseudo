@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import React, { useState } from 'react';
-import { Brain, Lock } from 'lucide-react';
+import { Brain, Lock, ArrowLeft } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from "@/context/AuthContext";
+import Link from 'next/link';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -24,7 +25,15 @@ const LoginPage = () => {
   };
 
   return (
-    <div  className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-purple-100 to-indigo-100 relative">
+      <Link href="/" className="absolute top-4 left-4">
+        <Button
+          variant="ghost"
+          className="p-2 rounded-full bg-white bg-opacity-50 hover:bg-opacity-75 transition-all duration-300"
+        >
+          <ArrowLeft className="h-6 w-6 text-gray-600" />
+        </Button>
+      </Link>
       <div className="max-w-md w-full space-y-8 p-10 bg-white rounded-xl shadow-lg">
         <div className="text-center">
           <Brain className="mx-auto h-12 w-12 text-indigo-600" />
@@ -74,7 +83,7 @@ const LoginPage = () => {
           <div>
             <Button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 transition duration-300 ease-in-out transform hover:scale-105 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               disabled={loading}
             >
               <span className="absolute left-0 inset-y-0 flex items-center pl-3">

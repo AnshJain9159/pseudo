@@ -35,7 +35,7 @@ const features = [
 
 const FeaturesPage = () => {
   return (
-    <Container maxWidth="lg" className="py-20 min-h-screen">
+    <Container maxWidth="lg" className="py-20 min-h-screen bg-gradient-to-b from-purple-100 to-indigo-100">
       <div className="text-center mb-12">
         <h4 className="text-4xl font-bold text-gray-900">Powerful Features of Algorithm Tutor</h4>
         

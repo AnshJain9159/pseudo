@@ -26,7 +26,7 @@ export default function ChatPage() {
       setChatHistory(newChatHistory);
       localStorage.setItem('chatHistory', JSON.stringify(newChatHistory));
     }
-  }, [messages]);
+  }, [chatHistory, messages]);
   // Helper function to detect and extract code blocks
   const stripMarkdown = (content: string) => {
     // Replace Markdown bold, italics, and headers
@@ -77,7 +77,7 @@ export default function ChatPage() {
   
 
   return (
-    <div className="flex flex-col h-screen px-16 py-16 bg-gray-100">
+    <div className="flex flex-col h-screen px-16 py-16 bg-gradient-to-b from-purple-100 to-indigo-100">
     <header className="p-4 bg-white shadow">
       <h1 className="text-2xl font-bold text-center">Algorithm Tutor</h1>
     </header>

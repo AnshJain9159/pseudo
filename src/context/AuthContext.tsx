@@ -84,7 +84,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = () => {
     localStorage.removeItem("accessToken");
     setUser(null);
-    router.push("/login"); // Redirect to login after logging out
+    router.push("/"); // Redirect to login after logging out
   };
 
   return (
