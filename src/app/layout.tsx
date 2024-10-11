@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import { AuthProvider } from "@/context/AuthContext";
+import { TooltipProvider } from "@/components/ui/tooltip";
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
@@ -21,6 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <AuthProvider>
+      <TooltipProvider>
       <body
         className={inter.className}
       >
@@ -28,6 +30,7 @@ export default function RootLayout({
           {children}
           <Footer/>
       </body>
+      </TooltipProvider>
         </AuthProvider>
     </html>
   );
