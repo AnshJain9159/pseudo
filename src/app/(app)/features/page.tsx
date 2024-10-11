@@ -35,11 +35,10 @@ const features = [
 
 const FeaturesPage = () => {
   return (
-    <Container maxWidth="lg" className="py-16 min-h-screen">
+    <Container maxWidth="lg" className="py-20 min-h-screen">
       <div className="text-center mb-12">
-        <Typography variant="h4" className="text-4xl font-bold text-gray-900">
-          Powerful Features of Algorithm Tutor
-        </Typography>
+        <h4 className="text-4xl font-bold text-gray-900">Powerful Features of Algorithm Tutor</h4>
+        
         <p className="mt-4 text-lg text-gray-500">
           Algorithm Tutor provides an intuitive and personalized learning experience that helps students master sorting algorithms with ease.
         </p>
@@ -70,7 +69,7 @@ const FeaturesPage = () => {
          <TooltipTrigger>
             <a href="/pseudobot">
                 <Button
-                variant={"outline"}
+                variant={"default"}
                 className="text-white bg-indigo-600 hover:bg-indigo-700 font-semibold text-lg py-3 px-6 rounded-lg shadow-md"
                 >
                 Start Learning Now

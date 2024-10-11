@@ -19,8 +19,8 @@ export default function Footer() {
           <div className="text-center lg:text-left space-y-2">
             <h4 className="text-lg font-semibold text-white">Quick Links</h4>
             <div className="space-y-1">
-              <a href="#features" className="block hover:text-white text-sm">Features</a>
-              <a href="#about" className="block hover:text-white text-sm">About</a>
+              <a href="/features" className="block hover:text-white text-sm">Features</a>
+              <a href="/about-us" className="block hover:text-white text-sm">About</a>
               <a href="#contact" className="block hover:text-white text-sm">Contact</a>
               <a href="#privacy" className="block hover:text-white text-sm">Privacy Policy</a>
             </div>
@@ -31,7 +31,7 @@ export default function Footer() {
             <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400">
               <LinkedIn className="text-2xl" />
             </a>
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:text-white">
+            <a href="https://github.com/AnshJain9159/pseudo.git" target="_blank" rel="noopener noreferrer" className="hover:text-white">
               <GitHub className="text-2xl" />
             </a>
             <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400">

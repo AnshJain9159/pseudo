@@ -18,7 +18,7 @@ export default function Home() {
             PSEUDO is an AI-powered teaching assistant designed to help you master Data Structures & Algorithms through Socratic questioning. Learn at your pace with personalized guidance to deepen your understanding.
           </p>
           <div className="mt-8">
-            <Button  >
+            <Button variant={'default'} className='bg-white'>
               Explore Features
             </Button>
           </div>
@@ -124,7 +124,7 @@ export default function Home() {
           </p>
           <div className="mt-8">
             <a href="/sign-in">
-            <Button>
+            <Button variant={'default'} className='bg-blue-50'>
               Get Started Now
             </Button>
             </a>

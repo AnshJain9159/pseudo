@@ -32,7 +32,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const token = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null; // Ensure we access localStorage only on the client side
       if (token) {
         try {
-          const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/profile`, {
+          const response = await axios.get(`/api/users/profile`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -63,7 +63,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, password: string) => {
     setLoading(true); // Set loading to true when trying to log in
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/login`, { email, password });
+      const response = await axios.post(`/api/users/login`, { email, password });
       const accessToken = response.data?.token; // Optional chaining to avoid unexpected issues
       if (accessToken) {
         localStorage.setItem("accessToken", accessToken);
