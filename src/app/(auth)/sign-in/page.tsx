@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import React, { useState } from 'react';
@@ -5,23 +6,59 @@ import { Brain, Lock, ArrowLeft } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useAuth } from "@/context/AuthContext";
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
+import { signIn } from 'next-auth/react';
+import { signInSchema } from '@/schemas/signInSchema';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/context/AuthContext';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { login, loading } = useAuth();
+const {  loading } = useAuth();
+  const router = useRouter();
+  const form = useForm<z.infer<typeof signInSchema>>({
+    resolver: zodResolver(signInSchema),
+    defaultValues: {
+      identifier: '',
+      password: '',
+    },
+  });
 
-  const handleSubmit = async (event: { preventDefault: () => void; }) => {
-    event.preventDefault();
+  const onSubmit = async (data:z.infer<typeof signInSchema>) => {
+    const { toast } = useToast();
+
     setError('');
-    try {
-      await login(email, password);
-    } catch (error) {
-      setError('Login failed. Please check your credentials.');
+    const result = await signIn('credentials',{
+      redirect:false,
+      identifier:data.identifier,
+      password:data.password,
+    })
+
+    if(result?.error){
+      if(result.error==='CredentialsSignin'){
+        toast({
+          title: "Login failed",
+          description: "Incorrect username or password",
+          variant: "destructive"
+        })
+      }else{
+        toast({
+          title: "Error",
+          description: result.error,
+          variant: "destructive"
+        })
+      }
+      
     }
+
+    if(result?.url)
+      router.replace('/');
   };
 
   return (
@@ -44,7 +81,8 @@ const LoginPage = () => {
             Unlock the power of AI for learning Data Structures and Algorithms.
           </p>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        
+        <form className="mt-8 space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
               <label htmlFor="email-address" className="sr-only">
@@ -52,7 +90,7 @@ const LoginPage = () => {
               </label>
               <Input
                 id="email-address"
-                name="email"
+                name="identifier"
                 type="email"
                 autoComplete="email"
                 required

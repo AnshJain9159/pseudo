@@ -5,6 +5,7 @@ import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import ClientLayout from "@/helpers/ClientLayout";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({
   subsets: ['latin'],
@@ -28,7 +29,10 @@ export default function RootLayout({
           <body className={inter.className}>
             <ClientLayout>
               {children}
+              <Toaster />
             </ClientLayout>
+            
+
           </body>
         </TooltipProvider>
       </AuthProvider>
