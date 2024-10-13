@@ -1,90 +1,114 @@
-// "use client"
-// import React from 'react';
-// import { User, Mail, GraduationCap } from 'lucide-react';
-// import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-// import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-// import { Badge } from '@/components/ui/badge';
-// import { Skeleton } from '@/components/ui/skeleton';
+"use client";
 
-// const UserProfilePage = ({ user, isLoading, error }) => {
-//   if (isLoading) {
-//     return <LoadingProfile />;
-//   }
+import React, { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Skeleton } from '@/components/ui/skeleton';
 
-//   if (error) {
-//     return <ErrorProfile error={error} />;
-//   }
+interface User {
+  fullName: string;
+  email: string;
+  role: "teacher" | "student";
+}
 
-//   if (!user) {
-//     return <ErrorProfile error="User data not available" />;
-//   }
+const ProfilePage: React.FC = () => {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-//   const { fullName, email, role } = user;
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (session?.user?.email) {
+        try {
+          const response = await fetch(`/api/users/profile?email=${session.user.email}`);
+          if (response.ok) {
+            const userData = await response.json();
+            setUser(userData);
+          } else {
+            console.error('Failed to fetch user data');
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
 
-//   return (
-//     <div className="container mx-auto p-4">
-//       <Card className="w-full max-w-md mx-auto">
-//         <CardHeader className="flex flex-col items-center">
-//           {/* <Avatar className="w-24 h-24">
-//             <AvatarImage src={`https://api.dicebear.com/6.x/initials/svg?seed=${fullName}`} alt={fullName} />
-//             <AvatarFallback>{fullName.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-//           </Avatar> */}
-//           <CardTitle className="mt-4 text-2xl font-bold">{fullName}</CardTitle>
-//           <Badge variant="secondary" className="mt-2">
-//             {role === 'student' ? (
-//               <GraduationCap className="w-4 h-4 mr-1" />
-//             ) : (
-//               <ChalkboardTeacher className="w-4 h-4 mr-1" />
-//             )}
-//             {role.charAt(0).toUpperCase() + role.slice(1)}
-//           </Badge>
-//         </CardHeader>
-//         <CardContent>
-//           <div className="space-y-4">
-//             <div className="flex items-center space-x-2">
-//               <User className="w-5 h-5 text-gray-500" />
-//               <span>{fullName}</span>
-//             </div>
-//             <div className="flex items-center space-x-2">
-//               <Mail className="w-5 h-5 text-gray-500" />
-//               <span>{email}</span>
-//             </div>
-//           </div>
-//         </CardContent>
-//       </Card>
-//     </div>
-//   );
-// };
+    if (status === 'authenticated') {
+      fetchUserData();
+    } else if (status === 'unauthenticated') {
+      router.push('/sign-in');
+    }
+  }, [session, status, router]);
 
-// const LoadingProfile = () => (
-//   <div className="container mx-auto p-4">
-//     <Card className="w-full max-w-md mx-auto">
-//       <CardHeader className="flex flex-col items-center">
-//         <Skeleton className="w-24 h-24 rounded-full" />
-//         <Skeleton className="h-8 w-[200px] mt-4" />
-//         <Skeleton className="h-4 w-[100px] mt-2" />
-//       </CardHeader>
-//       <CardContent>
-//         <div className="space-y-4">
-//           <Skeleton className="h-4 w-full" />
-//           <Skeleton className="h-4 w-full" />
-//         </div>
-//       </CardContent>
-//     </Card>
-//   </div>
-// );
+  if (status === 'loading' || loading) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+        <Card className="w-full max-w-4xl">
+          <CardHeader>
+            <Skeleton className="h-12 w-3/4 mx-auto" />
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-2/3" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
-// const ErrorProfile = ({ error }) => (
-//   <div className="container mx-auto p-4">
-//     <Card className="w-full max-w-md mx-auto">
-//       <CardHeader>
-//         <CardTitle className="text-red-500">Error</CardTitle>
-//       </CardHeader>
-//       <CardContent>
-//         <p>{error}</p>
-//       </CardContent>
-//     </Card>
-//   </div>
-// );
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+        <Card className="w-full max-w-4xl">
+          <CardContent>
+            <p className="text-center text-xl">User not found</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
-// export default UserProfilePage;
+  return (
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+      <Card className="w-full max-w-4xl">
+        <CardHeader className="text-center">
+          <Avatar className="h-24 w-24 mx-auto mb-4">
+            <AvatarImage src={session?.user?.image || ''} alt={user.fullName} />
+            <AvatarFallback>{user.fullName[0]}</AvatarFallback>
+          </Avatar>
+          <h1 className="text-3xl font-bold mb-2">{user.fullName}</h1>
+          <p className="text-xl text-gray-600 capitalize">{user.role}</p>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <h2 className="text-lg font-semibold mb-2">Personal Information</h2>
+              <p><strong>Full Name:</strong> {user.fullName}</p>
+              <p><strong>Email:</strong> {user.email}</p>
+              <p><strong>Role:</strong> {user.role}</p>
+            </div>
+          </div>
+        </CardContent>
+        <CardFooter className="flex justify-center space-x-4">
+          <Button onClick={() => router.push('/')} variant="default" className='bg-blue-50'>
+            Back to Home
+          </Button>
+          {/* <Button onClick={() => router.push('/edit-profile')}>
+            Edit Profile
+          </Button> */}
+        </CardFooter>
+      </Card>
+    </div>
+  );
+};
+
+export default ProfilePage;

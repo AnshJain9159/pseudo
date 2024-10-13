@@ -12,7 +12,7 @@ import {
 import Link from 'next/link';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import { useSession , signOut  } from 'next-auth/react'; // Add this import
+import { useSession, signOut } from 'next-auth/react'; // Add this import
 
   // Define types for navigation items
   type NavItem = {
@@ -66,7 +66,7 @@ import { useSession , signOut  } from 'next-auth/react'; // Add this import
     const NavLink: React.FC<{ item: NavItem; onClick?: () => void }> = ({ item, onClick }) => (
       <Link
         href={item.href}
-        className="px-4 py-1 text-md font-semibold text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full"
+        className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors duration-300"
         onClick={onClick}
       >
         {item.name}
@@ -77,8 +77,8 @@ import { useSession , signOut  } from 'next-auth/react'; // Add this import
     const NavDropdown: React.FC<{ category: string; items: NavItem[] }> = ({ category, items }) => (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="px-4 py-1 text-md font-semibold">
-            {category} <ChevronDown className="ml-1 h-2 w-8" />
+          <Button variant="ghost" className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-indigo-600">
+            {category} <ChevronDown className="ml-1 h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
@@ -91,59 +91,69 @@ import { useSession , signOut  } from 'next-auth/react'; // Add this import
       </DropdownMenu>
     );
 
+    const AuthButton: React.FC<{ href: string; onClick?: () => void; children: React.ReactNode }> = ({ href, onClick, children }) => (
+      <Link
+        href={href}
+        onClick={onClick}
+        className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-300"
+      >
+        {children}
+      </Link>
+    );
+
     const isNavCategory = (item: NavItemOrCategory): item is NavCategory => {
       return 'category' in item && 'items' in item;
     };
 
     return (
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}>
-        <div className="container mx-auto px-6 py-2">
-          <div className="flex justify-between items-center">
-            <Link href="/" className="font-bold text-xl text-blue-800">
-              Pseudo
-            </Link>
-            <div className="hidden md:flex items-center space-x-4">
-              {navItems.map((item, index) => (
-                isNavCategory(item) ? (
-                  <NavDropdown key={index} category={item.category} items={item.items} />
-                ) : (
-                  <NavLink key={index} item={item} />
-                )
-              ))}
-              {loading ? (
-                <span>Loading...</span>
-              ) : session ? (
-                <>
-                  <Link href="/profile" className="px-4 py-2 rounded-xl bg-green-700 text-white hover:bg-green-800 transition-colors duration-300">
-                  {session.user?.name || session.user?.email}
-                  </Link>
-                  <Button onClick={handleLogout} className="px-4 py-2 rounded-xl bg-red-700 text-white hover:bg-red-800 transition-colors duration-300">
-                    Logout
-                  </Button>
-                </>
+        <div className="container mx-auto px-6 py-4">
+        <div className="flex justify-between items-center">
+          <Link href="/" className="font-bold text-xl text-indigo-800">
+            Pseudo
+          </Link>
+          <div className="hidden md:flex items-center space-x-4">
+            {navItems.map((item, index) => (
+              isNavCategory(item) ? (
+                <NavDropdown key={index} category={item.category} items={item.items} />
               ) : (
-                <>
-                  <Link href="/sign-in" className="px-4 py-1 rounded-xl bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300">
-                    Login
-                  </Link>
-                  <Link href="/sign-up" className="px-4 py-1 rounded-xl bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300">
-                    Register
-                  </Link>
-                </>
-              )}
-            </div>
-            
-            <Button
-              onClick={toggleSidebar}
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
-              aria-label="Toggle menu"
-            >
-              {isSidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </Button>
+                <NavLink key={index} item={item} />
+              )
+            ))}
+            {loading ? (
+              <span>Loading...</span>
+            ) : session ? (
+              <>
+                <AuthButton href="/profile">
+                  User Profile
+                </AuthButton>
+                <AuthButton href="#" onClick={handleLogout}>
+                  Logout
+                </AuthButton>
+              </>
+            ) : (
+              <>
+                <AuthButton href="/sign-in">
+                  Login
+                </AuthButton>
+                <AuthButton href="/sign-up">
+                  Register
+                </AuthButton>
+              </>
+            )}
           </div>
+          
+          <Button
+            onClick={toggleSidebar}
+            variant="ghost"
+            size="icon"
+            className="md:hidden text-indigo-600 hover:text-indigo-800"
+            aria-label="Toggle menu"
+          >
+            {isSidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </Button>
         </div>
+      </div>
         {isSidebarOpen && (
           <div className="fixed inset-0 bg-black/50 z-40" onClick={closeSidebar}>
             <div
@@ -170,26 +180,26 @@ import { useSession , signOut  } from 'next-auth/react'; // Add this import
                   )
                 ))}
                 {loading ? (
-                  <span>Loading...</span>
-                ) : session ? (
-                  <>
-                    <Link href="/profile" className="px-4 py-2 rounded-xl bg-green-700 text-white hover:bg-green-800 transition-colors duration-300">
-                    {session.user?.name || session.user?.email}
-                    </Link>
-                    <Button onClick={handleLogout} className="px-4 py-2 rounded-xl bg-red-700 text-white hover:bg-red-800 transition-colors duration-300">
-                      Logout
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Link href="/sign-in" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300">
-                      Login
-                    </Link>
-                    <Link href="/sign-up" className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors duration-300">
-                      Register
-                    </Link>
-                  </>
-                )}
+              <span>Loading...</span>
+            ) : session ? (
+              <>
+                <AuthButton href="/profile">
+                  User Profile
+                </AuthButton>
+                <AuthButton href="#" onClick={handleLogout}>
+                  Logout
+                </AuthButton>
+              </>
+            ) : (
+              <>
+                <AuthButton href="/sign-in">
+                  Login
+                </AuthButton>
+                <AuthButton href="/sign-up">
+                  Register
+                </AuthButton>
+              </>
+            )}
               </nav>
             </div>
           </div>
