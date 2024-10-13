@@ -1,3 +1,4 @@
+"use client"
 import { useChat } from 'ai/react'
 import { Bot, User, Send } from 'lucide-react'
 import { CodeBlock } from '@/components/CodeBlock'
