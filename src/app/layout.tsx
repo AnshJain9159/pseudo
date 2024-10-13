@@ -1,11 +1,9 @@
-// ./src/app/layout.tsx
 import type { Metadata } from "next";
 import { Inter } from 'next/font/google'
 import "./globals.css";
-import { AuthProvider } from "@/context/AuthContext";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import ClientLayout from "@/helpers/ClientLayout";
 import { Toaster } from "@/components/ui/toaster";
+import { Providers } from "@/helpers/Providers";
 
 const inter = Inter({
   subsets: ['latin'],
@@ -24,18 +22,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <AuthProvider>
-        <TooltipProvider>
-          <body className={inter.className}>
-            <ClientLayout>
-              {children}
-              <Toaster />
-            </ClientLayout>
-            
-
-          </body>
-        </TooltipProvider>
-      </AuthProvider>
+      <body className={inter.className}>
+        <Providers>
+          <ClientLayout>
+            {children}
+            <Toaster />
+          </ClientLayout>
+        </Providers>
+      </body>
     </html>
   );
 }

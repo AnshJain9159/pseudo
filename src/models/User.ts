@@ -5,9 +5,9 @@ export interface User extends Document {
   email: string;
   password: string;
   role: "teacher" | "student";
-  verifyCode: string;
-  verifyCodeExpiry: Date;
-  isVerified: boolean;
+  // verifyCode: string;
+  // verifyCodeExpiry: Date;
+  // isVerified: boolean;
 }
 
 const UserSchema: Schema<User> = new mongoose.Schema({
@@ -31,18 +31,18 @@ const UserSchema: Schema<User> = new mongoose.Schema({
     enum: ["teacher", "student"],
     required: [true, "Role is required"],
   },
-  verifyCode: {
-    type: String,
-    required: [true, "VerifyCode is required"],
-  },
-  verifyCodeExpiry: {
-    type: Date,
-    required: [true, "Verify Code Expiry is required"],
-  },
-  isVerified: {
-    type: Boolean,
-    default: false,
-  },
+  // verifyCode: {
+  //   type: String,
+  //   required: [true, "VerifyCode is required"],
+  // },
+  // verifyCodeExpiry: {
+  //   type: Date,
+  //   required: [true, "Verify Code Expiry is required"],
+  // },
+  // isVerified: {
+  //   type: Boolean,
+  //   default: false,
+  // },
 });
 
 const UserModel =

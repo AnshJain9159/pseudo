@@ -1,33 +1,40 @@
-import {NextRequest , NextResponse } from 'next/server'
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { NextRequest, NextResponse } from 'next/server'
 import { getToken } from 'next-auth/jwt'
- export { default } from "next-auth/middleware"
 
- export const config = {
-    matcher: ['/sign-in',
-              '/sign-up',
-              '/',
-              '/features',
-              '/pseudobot',
-  ],
-  };
-  
-// This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
-    const token = await getToken({req:request});
-    const url= request.nextUrl;
+    const token = await getToken({ req: request });
+    const url = request.nextUrl;
 
-    if( token && 
-        ( url.pathname.startsWith('/sign-in') ||
-        url.pathname.startsWith('/sign-up') ||
-        url.pathname==='/pseudobot' )
-    ) {
+    // Public routes (accessible whether logged in or not)
+    const publicRoutes = ['/', '/features'];
+
+    // Routes that require authentication
+    const authRoutes = ['/pseudobot'];
+
+    // Routes that should redirect to home if user is already authenticated
+    const guestOnlyRoutes = ['/sign-in', '/sign-up'];
+
+    // If the user is not authenticated and trying to access an auth route
+    if (!token && authRoutes.some(route => url.pathname.startsWith(route))) {
+        return NextResponse.redirect(new URL('/sign-in', request.url));
+    }
+
+    // If the user is authenticated and trying to access guest-only routes
+    if (token && guestOnlyRoutes.some(route => url.pathname.startsWith(route))) {
         return NextResponse.redirect(new URL('/', request.url));
     }
-    if (!token && (url.pathname.startsWith('/pseudobot') || url.pathname==='/features')) {
-        return NextResponse.redirect(new URL('/sign-in', request.url));
-      }
-    
+
+    // For all other routes, allow the request to proceed
     return NextResponse.next();
 }
- 
-// See "Matching Paths" below to learn more
+
+export const config = {
+    matcher: [
+        '/sign-in',
+        '/sign-up',
+        '/',
+        '/features',
+        '/pseudobot',
+    ],
+};
