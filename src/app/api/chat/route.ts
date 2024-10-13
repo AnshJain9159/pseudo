@@ -3,7 +3,6 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { StreamingTextResponse, GoogleGenerativeAIStream } from 'ai';
 
-// Add this for better error logging
 const debug = async (error: any) => {
   console.error('API Error:', {
     name: error.name,
@@ -11,6 +10,10 @@ const debug = async (error: any) => {
     stack: error.stack,
     cause: error.cause
   });
+
+  if (process.env.NODE_ENV === 'development') {
+    console.error('Full error details:', error);
+  }
 };
 
 export async function POST(req: Request) {
@@ -18,7 +21,10 @@ export async function POST(req: Request) {
     // 1. Verify API key
     const apiKey = process.env.GOOGLE_API_KEY;
     if (!apiKey) {
-      throw new Error('GOOGLE_API_KEY is not set');
+      return new Response(JSON.stringify({ error: 'GOOGLE_API_KEY is not set' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
     // 2. Initialize Google AI
@@ -27,17 +33,19 @@ export async function POST(req: Request) {
 
     // 3. Parse request body
     const body = await req.json();
-    console.log('Request body:', body);  // Debug log
-
     if (!body.messages || !Array.isArray(body.messages)) {
       throw new Error('Invalid request body: messages array is required');
     }
 
-    // 4. Prepare chat history (Fix: Ensuring correct role and message structure)
+    // 4. Prepare chat history
     const history = body.messages.map((msg: any) => ({
-      role: msg.role === 'assistant' ? 'model' : msg.role, // Fix: Map 'assistant' to 'model'
-      parts: [{ text: msg.content }],  // Content is now an object with a 'text' field
+      role: msg.role === 'assistant' ? 'model' : msg.role,
+      parts: [{ text: msg.content }],
     }));
+
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Parsed chat history:', history);
+    }
 
     // 5. Start chat and generate response
     const chat = model.startChat({
@@ -58,7 +66,6 @@ export async function POST(req: Request) {
     // Log the error
     await debug(error);
 
-    // Return appropriate error response
     return new Response(
       JSON.stringify({
         error: error.message,

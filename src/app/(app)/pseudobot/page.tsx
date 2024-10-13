@@ -1,5 +1,3 @@
-'use client'
-
 import { useChat } from 'ai/react'
 import { Bot, User, Send } from 'lucide-react'
 import { CodeBlock } from '@/components/CodeBlock'
@@ -10,43 +8,46 @@ export default function ChatPage() {
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat()
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const [chatHistory, setChatHistory] = useState(() => {
-    // Load messages from localStorage when the component mounts
-    const savedHistory = localStorage.getItem('chatHistory');
-    return savedHistory ? JSON.parse(savedHistory) : [];
+    // Check if we're in a browser environment
+    if (typeof window !== 'undefined') {
+      const savedHistory = localStorage.getItem('chatHistory');
+      return savedHistory ? JSON.parse(savedHistory) : [];
+    }
+    return [];
   });
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages])
+    if (typeof window !== 'undefined') {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
 
   useEffect(() => {
-    // Save chat history in local storage whenever messages updates
-    const newChatHistory = [...chatHistory, ...messages];
-    setChatHistory(newChatHistory);
-    if (messages.length > 0) {
-      localStorage.setItem('chatHistory', JSON.stringify(messages));
+    if (typeof window !== 'undefined') {
+      const newChatHistory = [...chatHistory, ...messages];
+      setChatHistory(newChatHistory);
+      if (messages.length > 0) {
+        localStorage.setItem('chatHistory', JSON.stringify(messages));
+      }
     }
   }, [messages]);
 
   // Helper function to detect and extract code blocks
   const stripMarkdown = (content: string) => {
-    // Replace Markdown bold, italics, and headers
-    let strippedContent = content.replace(/(\*\*|__)(.*?)\1/g, '$2');  // Bold
-    strippedContent = strippedContent.replace(/(\*|_)(.*?)\1/g, '$2'); // Italics
-    strippedContent = strippedContent.replace(/^#+\s*(.*)$/gm, '$1');  // Headers
+    let strippedContent = content.replace(/(\*\*|__)(.*?)\1/g, '$2');
+    strippedContent = strippedContent.replace(/(\*|_)(.*?)\1/g, '$2');
+    strippedContent = strippedContent.replace(/^#+\s*(.*)$/gm, '$1');
   
     return strippedContent;
   };
-  
+
   const renderMessageContent = (content: string) => {
     const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g;
     const parts = [];
     let lastIndex = 0;
     let match;
-  
-    // Handling code blocks separately
+
     while ((match = codeBlockRegex.exec(content)) !== null) {
-      // Add plain text before the code block
       if (match.index > lastIndex) {
         parts.push(
           <p key={lastIndex} className="whitespace-pre-wrap">
@@ -54,17 +55,15 @@ export default function ChatPage() {
           </p>
         );
       }
-  
-      // Add code block
+
       const [, language = 'plaintext', code] = match;
       parts.push(
         <CodeBlock key={match.index} code={code.trim()} language={language} />
       );
-  
+
       lastIndex = match.index + match[0].length;
     }
-  
-    // Add remaining plain text
+
     if (lastIndex < content.length) {
       parts.push(
         <p key={lastIndex} className="whitespace-pre-wrap">
@@ -72,7 +71,7 @@ export default function ChatPage() {
         </p>
       );
     }
-  
+
     return parts;
   };
 
