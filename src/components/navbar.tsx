@@ -13,6 +13,7 @@ import Link from 'next/link';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useSession, signOut } from 'next-auth/react'; // Add this import
+import { useRouter } from 'next/navigation';
 
   // Define types for navigation items
   type NavItem = {
@@ -41,6 +42,7 @@ import { useSession, signOut } from 'next-auth/react'; // Add this import
     const [isScrolled, setIsScrolled] = useState<boolean>(false);
     const {loading } = useAuth(); // Use the Auth context
     const { data: session, status } = useSession(); // Add this line
+    const router = useRouter();
     useEffect(() => {
       const handleScroll = () => {
         setIsScrolled(window.scrollY > 0);
@@ -60,6 +62,9 @@ import { useSession, signOut } from 'next-auth/react'; // Add this import
     const handleLogout = async () => {
       await signOut({ redirect: false }); // Use NextAuth's signOut function
       // You can add additional logic here if needed
+      setTimeout(() => {
+        router.refresh();
+      }, 1000);
     };
 
    

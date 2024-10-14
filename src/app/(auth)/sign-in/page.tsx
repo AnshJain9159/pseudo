@@ -55,6 +55,9 @@ const LoginPage = () => {
         }
       } else if (result?.url) {
         router.replace('/');
+        setTimeout(() => {
+          router.refresh();
+        }, 1000);
       }
     } catch (error) {
       console.error('Sign-in error:', error);
