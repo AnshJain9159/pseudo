@@ -32,7 +32,13 @@ import { useRouter } from 'next/navigation';
   const navItems: NavItemOrCategory[] = [
     
     { name: 'Home', href: '/' },
-    { name: 'Features', href: '/features' },
+    {
+      category: 'Features',
+      items: [
+        { name: 'Features', href: '/features' },
+        { name: 'Canvas', href: '/canvas' },
+      ],
+    },
     { name: 'PseudoBot', href: '/pseudobot' },
     { name: 'About Us', href: '/aboutus' },
   ];
