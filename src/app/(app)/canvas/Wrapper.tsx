@@ -34,6 +34,7 @@ const ExcalidrawWrapper: React.FC = () => {
   };
 
   return (
+
     <div>
       <div style={{ height: "500px", width: "500px" }} className="min-h-screen flex justify-center items-center mx-auto py-10">
         <Excalidraw onChange={handleChange}/>
@@ -45,6 +46,7 @@ const ExcalidrawWrapper: React.FC = () => {
   Export as SVG
 </button>
     </div>
+
   );
 };
 

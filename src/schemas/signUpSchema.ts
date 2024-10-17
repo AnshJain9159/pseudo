@@ -9,7 +9,7 @@ export const fullNameValidation = z
 export const signUpSchema = z.object({
   fullName: fullNameValidation,
   email: z.string().email({ message: "Invalid Email Address" }),
-  password: z.string().min(8, { message: "Password must be at least 8 characters" }),
+  password: z.string().min(4, { message: "Password must be at least 4 characters" }),
   role: z.enum(["teacher", "student"], { 
     errorMap: () => ({ message: "Role must be either teacher or student" })
   })
