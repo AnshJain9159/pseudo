@@ -46,6 +46,7 @@ const NotebookPage = () => {
       {cells.map((cell, index) => (
         <div key={index} className="notebook-cell mb-6">
           <select
+            title="a"
             value={cell.language}
             onChange={(e) => {
               const newCells = [...cells];

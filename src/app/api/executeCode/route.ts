@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // pages/api/executeCode.js
 import { exec } from "child_process";
 import fs from "fs";

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { Excalidraw, exportToSvg } from "@excalidraw/excalidraw";
 import { useState } from "react";
