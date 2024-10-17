@@ -9,6 +9,8 @@ const ExcalidrawWrapper: React.FC = () => {
     id: "rect-1",
     width: 186.47265625,
     height: 141.9765625,
+    x:0,
+    y:0
   },]));
   return (
     <div style={{height:"500px", width:"500px"}} className="min-h-screen flex justify-center items-center mx-auto py-10">  
