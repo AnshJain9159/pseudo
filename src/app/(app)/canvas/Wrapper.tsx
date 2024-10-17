@@ -13,7 +13,7 @@ const ExcalidrawWrapper: React.FC = () => {
     y:0
   },]));
   return (
-    <div style={{height:"500px", width:"500px"}} className="min-h-screen flex justify-center items-center mx-auto py-10">  
+    <div style={{height:"500px", width:"500px"}} className="min-h-screen flex justify-center items-center mx-auto py-10  ">  
       <Excalidraw />
     </div> 
   );
