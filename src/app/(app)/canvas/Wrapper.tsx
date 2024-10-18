@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
-
+import React, { useState } from "react";
 import { Excalidraw, exportToSvg } from "@excalidraw/excalidraw";
-import { useState } from "react";
+import { Download } from 'lucide-react';
 
 const ExcalidrawWrapper: React.FC = () => {
   const [elements, setElements] = useState<any[]>([]);
@@ -22,7 +21,6 @@ const ExcalidrawWrapper: React.FC = () => {
       });
       const svgString = new XMLSerializer().serializeToString(svg);
       
-      // Download as SVG
       const link = document.createElement("a");
       link.href = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgString);
       link.download = "excalidraw-image.svg";
@@ -35,7 +33,6 @@ const ExcalidrawWrapper: React.FC = () => {
   const handlePngExport = async () => {
     if (elements.length > 0 && appState) {
       try {
-        // Get SVG data
         const svg = await exportToSvg({
           elements: elements,
           appState: appState,
@@ -43,7 +40,6 @@ const ExcalidrawWrapper: React.FC = () => {
         });
         const svgString = new XMLSerializer().serializeToString(svg);
 
-        // Send SVG to conversion API
         const response = await fetch('/api/convert', {
           method: 'POST',
           headers: {
@@ -56,10 +52,7 @@ const ExcalidrawWrapper: React.FC = () => {
           throw new Error('Failed to convert image');
         }
 
-        // Get blob from response
         const blob = await response.blob();
-
-        // Create download link
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
@@ -76,25 +69,27 @@ const ExcalidrawWrapper: React.FC = () => {
   };
 
   return (
-    <div>
-      <div 
-        style={{ height: "500px", width: "500px" }} 
-        className="min-h-screen flex justify-center items-center mx-auto py-10"
-      >
-        <Excalidraw onChange={handleChange}/>
+    <div className="bg-gray-900 min-h-screen flex flex-col justify-center items-center py-10 px-4">
+      <div className="w-full max-w-4xl h-[600px] bg-black rounded-lg overflow-hidden shadow-lg">
+        <Excalidraw
+          onChange={handleChange}
+          theme="dark"
+        />
       </div>
-      <div className="flex gap-4 justify-center">
+      <div className="flex gap-4 mt-6">
         <button
           onClick={handleSvgExport}
-          className="mt-4 bg-blue-500 text-white font-semibold py-2 px-4 rounded shadow hover:bg-blue-600 transition duration-200"
+          className="bg-gray-800 text-white font-medium py-2 px-4 rounded-md shadow hover:bg-gray-700 transition duration-200 flex items-center"
         >
-          Export as SVG
+          <Download className="w-4 h-4 mr-2" />
+          Export SVG
         </button>
         <button
           onClick={handlePngExport}
-          className="mt-4 bg-green-500 text-white font-semibold py-2 px-4 rounded shadow hover:bg-green-600 transition duration-200"
+          className="bg-gray-800 text-white font-medium py-2 px-4 rounded-md shadow hover:bg-gray-700 transition duration-200 flex items-center"
         >
-          Export as PNG
+          <Download className="w-4 h-4 mr-2" />
+          Export PNG
         </button>
       </div>
     </div>
