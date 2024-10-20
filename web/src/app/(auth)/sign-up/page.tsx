@@ -2,7 +2,7 @@
 import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { Brain, Lock, ArrowLeft } from 'lucide-react';
+import { ShieldCheck, Lock, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
@@ -19,6 +19,7 @@ import {
   FormItem,
   FormLabel,
 } from '@/components/ui/form';
+
 
 const RegisterPage = () => {
   const router = useRouter();
@@ -41,13 +42,14 @@ const RegisterPage = () => {
       if (response.status === 300) {
         toast({
           title: 'Multiple Choices',
-          description: 'There are multiple options available. Please contact support.',
+          description: 'Multiple options available. Please contact support.',
           variant: 'destructive',
         });
       } else {
         toast({
           title: 'Success',
           description: response.data.message,
+          variant: 'default'
         });
         
         router.replace(`/sign-in`);
@@ -71,23 +73,21 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-purple-100 to-indigo-100">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 to-black text-white">
       <Link href="/" className="absolute top-4 left-4">
         <Button
           variant="ghost"
-          className="p-2 rounded-full bg-white bg-opacity-50 hover:bg-opacity-75 transition-all duration-300"
+          className="p-2 rounded-full bg-white bg-opacity-10 hover:bg-opacity-30 transition-all duration-300"
         >
-          <ArrowLeft className="h-6 w-6 text-gray-600" />
+          <ArrowLeft className="h-6 w-6 text-white" />
         </Button>
       </Link>
-      <div className="max-w-md w-full space-y-8 p-10 bg-white rounded-xl shadow-lg">
+      <div className="max-w-lg w-full space-y-8 p-10 bg-gray-800 bg-opacity-60 rounded-xl shadow-2xl backdrop-filter backdrop-blur-lg border border-gray-700">
         <div className="text-center">
-          <Brain className="mx-auto h-12 w-12 text-indigo-600" />
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-            Join PSEUDO
-          </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Start learning or teaching Data Structures and Algorithms with an AI-powered assistant.
+          <ShieldCheck className="mx-auto h-12 w-12 text-indigo-500" />
+          <h2 className="mt-6 text-4xl font-extrabold font-gamer">Join Socrates</h2>
+          <p className="mt-2 text-sm text-gray-300">
+            Dive into coding challenges and AI-assisted learning on Data Structures and Algorithms.
           </p>
         </div>
         <Form {...form}>
@@ -102,7 +102,7 @@ const RegisterPage = () => {
                     <Input
                       {...field}
                       placeholder="Full Name"
-                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                      className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-500 placeholder-gray-400 text-gray-300 bg-black focus:outline-none focus:ring-indigo-600 focus:border-indigo-600 focus:z-10 sm:text-sm"
                     />
                   </FormControl>
                 </FormItem>
@@ -119,7 +119,7 @@ const RegisterPage = () => {
                       {...field}
                       type="email"
                       placeholder="Email address"
-                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                      className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-500 placeholder-gray-400 text-gray-300 bg-black focus:outline-none focus:ring-indigo-600 focus:border-indigo-600 focus:z-10 sm:text-sm"
                     />
                   </FormControl>
                 </FormItem>
@@ -136,7 +136,7 @@ const RegisterPage = () => {
                       {...field}
                       type="password"
                       placeholder="Password"
-                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                      className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-500 placeholder-gray-400 text-gray-300 bg-black focus:outline-none focus:ring-indigo-600 focus:border-indigo-600 focus:z-10 sm:text-sm"
                     />
                   </FormControl>
                 </FormItem>
@@ -152,7 +152,7 @@ const RegisterPage = () => {
                     <Input
                       {...field}
                       placeholder="Role (Student/Teacher)"
-                      className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                      className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-500 placeholder-gray-400 text-gray-300 bg-black focus:outline-none focus:ring-indigo-600 focus:border-indigo-600 focus:z-10 sm:text-sm"
                     />
                   </FormControl>
                 </FormItem>
@@ -160,11 +160,11 @@ const RegisterPage = () => {
             />
             <Button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent transition duration-300 ease-in-out transform hover:scale-105 text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="group relative w-full flex justify-center py-2 px-4 transition duration-300 ease-in-out transform hover:scale-105 text-sm font-medium rounded-lg text-black bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               disabled={form.formState.isSubmitting}
             >
               <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                <Lock className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" aria-hidden="true" />
+                <Lock className="h-5 w-5 text-indigo-400 group-hover:text-indigo-300" aria-hidden="true" />
               </span>
               {form.formState.isSubmitting ? (
                 <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -178,9 +178,9 @@ const RegisterPage = () => {
           </form>
         </Form>
         <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-400">
             Already have an account?{' '}
-            <Link href="/sign-in" className="font-medium text-indigo-600 hover:text-indigo-500">
+            <Link href="/sign-in" className="font-medium text-indigo-500 hover:text-indigo-400">
               Sign in
             </Link>
           </p>

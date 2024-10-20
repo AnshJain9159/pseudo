@@ -40,6 +40,7 @@
     "clsx": "^2.1.1",
     "codemirror": "^6.0.1",
     "crypto": "^1.0.1",
+    "fs": "^0.0.1-security",
     "lucide-react": "^0.451.0",
     "mongodb": "^6.9.0",
     "mongoose": "^8.7.1",
@@ -47,6 +48,7 @@
     "next-auth": "^4.24.8",
     "node-cmd": "^5.0.0",
     "openai": "^4.67.3",
+    "path": "^0.12.7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.0",
@@ -58,6 +60,7 @@
     "tailwind-merge": "^2.5.3",
     "tailwindcss-animate": "^1.0.7",
     "usehooks-ts": "^3.1.0",
+    "web3": "^4.13.0",
     "wired-elements": "^3.0.0-rc.6",
     "zod": "^3.23.8"
   },
