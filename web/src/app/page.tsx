@@ -12,10 +12,10 @@ interface Feature {
 
 function FeatureCard({ icon, title, description }: Feature) {
   return (
-    <Card className="bg-gray-900 border-gray-800 hover:border-gray-700 transition-colors">
-      <CardContent className="flex flex-col items-center p-4">
-        {icon && React.createElement(icon)}
-        <h3 className="text-lg font-semibold mt-3 mb-2 text-white">{title}</h3>
+    <Card className="bg-gradient-to-br from-gray-800 via-gray-900 to-black border border-gray-700 hover:border-purple-500 transition-all duration-300 transform hover:-translate-y-2 shadow-lg hover:shadow-purple-500/50">
+      <CardContent className="flex flex-col items-center p-6">
+        {icon && React.createElement(icon, { className: "w-10 h-10 text-purple-400" })}
+        <h3 className="text-xl font-semibold mt-4 mb-2 text-white">{title}</h3>
         <p className="text-gray-400 text-center text-sm">{description}</p>
       </CardContent>
     </Card>
@@ -24,23 +24,38 @@ function FeatureCard({ icon, title, description }: Feature) {
 
 export default function Home() {
   return (
-    <div className="h-screen bg-black text-gray-300 overflow-hidden flex flex-col justify-center items-center p-8 font-sans">
+    <div className="h-screen bg-gradient-to-b from-black to-gray-900 text-gray-300 overflow-hidden flex flex-col justify-center items-center p-8 font-sans">
+      {/* Logo Section */}
       <div className="max-w-4xl mx-auto text-center">
         <div className="flex justify-center mb-8">
-          <Image src="/logo.png" alt="Socrates Logo" width={80} height={80} className="rounded-full border border-gray-700 p-1" />
+          <Image 
+            src="/logo.png" 
+            alt="Socrates Logo" 
+            width={80} 
+            height={80} 
+            className="rounded-full border-4 border-purple-500 p-2 animate-pulse" 
+          />
         </div>
-        <h1 className="text-5xl font-bold mb-6 text-white">
+        
+        {/* Title and Description */}
+        <h1 className="text-6xl font-extrabold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500 tracking-wide">
           Socrates
         </h1>
-        <p className="text-lg text-gray-400 mb-8">
+        <p className="text-lg text-gray-400 mb-10">
           Master Data Structures & Algorithms through AI-powered Socratic questioning.
         </p>
-        <Button className="bg-gray-800 hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded transition duration-300 ease-in-out">
-          Start Learning
-          <ArrowRight className="w-4 h-4 ml-2" />
-        </Button>
+        
+        {/* Start Learning Button */}
+        <div className="flex justify-center">  {/* Ensure centering */}
+          <Button className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-300 ease-in-out shadow-lg hover:shadow-purple-500/50 flex items-center">
+            Start Learning
+            <ArrowRight className="w-5 h-5 ml-3 text-white" />
+          </Button>
+        </div>
       </div>
-      <div className="grid grid-cols-3 gap-6 mt-12">
+
+      {/* Features Section */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mt-16">
         <FeatureCard
           icon={Brain}
           title="Socratic Method"
