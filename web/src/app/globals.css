@@ -7,3 +7,20 @@
 body {
   font-family: 'Inter', sans-serif;
 }
+
+
+.resize-box {
+  position: relative;
+  background: white; /* or any background color you prefer */
+}
+
+.resize-handle {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 10px; /* Width of the drag handle */
+  height: 100%;
+  cursor: ew-resize; /* Change cursor to indicate resizing */
+  z-index: 1;
+  background: transparent; /* Color of the resize handle */
+}
