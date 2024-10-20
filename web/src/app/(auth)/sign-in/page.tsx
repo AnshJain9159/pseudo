@@ -70,23 +70,23 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-purple-100 to-indigo-100 relative">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 to-gray-800 relative">
       <Link href="/" className="absolute top-4 left-4">
         <Button
           variant="ghost"
-          className="p-2 rounded-full bg-white bg-opacity-50 hover:bg-opacity-75 transition-all duration-300"
+          className="p-2 rounded-full bg-gray-700 bg-opacity-50 hover:bg-opacity-75 transition-all duration-300"
         >
-          <ArrowLeft className="h-6 w-6 text-gray-600" />
+          <ArrowLeft className="h-6 w-6 text-gray-300" />
         </Button>
       </Link>
-      <div className="max-w-md w-full space-y-8 p-10 bg-white rounded-xl shadow-lg">
+      <div className="max-w-md w-full space-y-8 p-10 bg-gray-900 border border-gray-700 rounded-xl shadow-lg">
         <div className="text-center">
-          <Brain className="mx-auto h-12 w-12 text-indigo-600" />
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-            Sign in to Pseudo
+          <Brain className="mx-auto h-12 w-12 text-purple-500" />
+          <h2 className="mt-6 text-3xl font-extrabold text-gray-100">
+            Sign in to Socrates
           </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Unlock the power of AI for learning Data Structures and Algorithms.
+          <p className="mt-2 text-sm text-gray-400">
+            Unlock your AI-powered coding assistant.
           </p>
         </div>
         
@@ -105,7 +105,7 @@ const LoginPage = () => {
                         type="email"
                         autoComplete="email"
                         required
-                        className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                        className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-700 placeholder-gray-500 text-gray-100 bg-gray-800 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
                         placeholder="Email address"
                       />
                     </FormControl>
@@ -124,7 +124,7 @@ const LoginPage = () => {
                         type="password"
                         autoComplete="current-password"
                         required
-                        className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                        className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-700 placeholder-gray-500 text-gray-100 bg-gray-800 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
                         placeholder="Password"
                       />
                     </FormControl>
@@ -136,11 +136,11 @@ const LoginPage = () => {
             <div>
               <Button
                 type="submit"
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 transition duration-300 ease-in-out transform hover:scale-105 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-purple-600 transition duration-300 ease-in-out transform hover:scale-105 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
                 disabled={form.formState.isSubmitting}
               >
                 <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                  <Lock className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" aria-hidden="true" />
+                  <Lock className="h-5 w-5 text-purple-500 group-hover:text-purple-400" aria-hidden="true" />
                 </span>
                 {form.formState.isSubmitting ? (
                   <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -156,10 +156,10 @@ const LoginPage = () => {
         </Form>
 
         <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-400">
             Don&apos;t have an account?{' '}
-            <Link href="/sign-up" className="font-medium text-indigo-600 hover:text-indigo-500">
-              Sign up for Pseudo
+            <Link href="/sign-up" className="font-medium text-purple-500 hover:text-purple-400">
+              Sign up for Socrates
             </Link>
           </p>
         </div>
