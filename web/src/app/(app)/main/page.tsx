@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 import React, { useState } from 'react';
 import dynamic from "next/dynamic";
@@ -15,23 +16,38 @@ import NotebookPage from '@/components/Codepad';
 import ChatPageAlt from '@/components/ChatBotAlt';
 
 const Page: React.FC = () => {
-  // State for width of the resizable components
-  const [notebookWidth, setNotebookWidth] = useState(300);
-  const [excalidrawWidth, setExcalidrawWidth] = useState(400);
-  const [chatWidth, setChatWidth] = useState(300);
+  // State for the width of each resizable section
+  const [notebookWidth, setNotebookWidth] = useState<number>(window.innerWidth / 3);
+  const [excalidrawWidth, setExcalidrawWidth] = useState<number>(window.innerWidth / 3);
+  const [chatWidth, setChatWidth] = useState<number>(window.innerWidth / 3);
+
+  // Function to dynamically calculate the remaining width for chat
+  const adjustWidths = (size: { width: number }, type: 'notebook' | 'excalidraw') => {
+    const remainingWidth = window.innerWidth - size.width;
+    if (type === 'notebook') {
+      setExcalidrawWidth(remainingWidth / 2);
+      setChatWidth(remainingWidth / 2);
+    } else if (type === 'excalidraw') {
+      setNotebookWidth(remainingWidth / 2);
+      setChatWidth(remainingWidth / 2);
+    }
+  };
 
   return (
-    <div className='flex flex-row h-full w-full justify-around bg-slate-600 flex-grow'>
+    <div className='flex h-screen w-full bg-slate-600'>
       {/* Resizable Notebook */}
       <ResizableBox
         width={notebookWidth}
         height={Infinity} // Allow height to grow automatically
-        minConstraints={[0, Infinity]} // Min width of 200px
-        maxConstraints={[1000, Infinity]} // Max width of 600px
+        minConstraints={[window.innerWidth / 6, Infinity]} // Min width of 1/6th of window width
+        maxConstraints={[window.innerWidth / 1.5, Infinity]} // Max width of 1.5 times the window width
         axis="x"
-        onResize={(e, { size }) => setNotebookWidth(size.width)}
-        className="resize-box"
-        handle={<span className="resize-handle" />} // Custom resize handle (optional)
+        onResize={(e, { size }) => {
+          setNotebookWidth(size.width);
+          adjustWidths(size, 'notebook');
+        }}
+        className="resize-box border-r border-gray-700"
+        resizeHandles={['e']} // Only allow horizontal resizing
       >
         <NotebookPage />
       </ResizableBox>
@@ -40,18 +56,27 @@ const Page: React.FC = () => {
       <ResizableBox
         width={excalidrawWidth}
         height={Infinity}
-        minConstraints={[0, Infinity]}
-        maxConstraints={[1000, Infinity]}
+        minConstraints={[window.innerWidth / 6, Infinity]}
+        maxConstraints={[window.innerWidth / 1.5, Infinity]}
         axis="x"
-        onResize={(e, { size }) => setExcalidrawWidth(size.width)}
-        className="resize-box"
-        handle={<span className="resize-handle" />} // Custom resize handle (optional)
+        onResize={(e, { size }) => {
+          setExcalidrawWidth(size.width);
+          adjustWidths(size, 'excalidraw');
+        }}
+        className="resize-box border-r border-gray-700"
+        resizeHandles={['e']}
       >
         <ExcalidrawWrapper />
       </ResizableBox>
 
-      {/* ChatBox */}
-      <div className="flex-grow">
+      {/* ChatBox (fills the remaining space) */}
+      <div
+        className="flex-grow bg-slate-500"
+        style={{
+          width: chatWidth,
+          overflowY: 'auto',
+        }}
+      >
         <ChatPageAlt />
       </div>
     </div>

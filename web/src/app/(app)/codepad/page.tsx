@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import React, { useState } from "react";
-import { FaPlay, FaPlayCircle, FaCode, FaPenFancy } from "react-icons/fa";
+import { FaPlay, FaPlayCircle, FaCode, FaPenFancy, FaTrash } from "react-icons/fa";
 import CodeMirror from "@uiw/react-codemirror";
 import { python } from "@codemirror/lang-python";
 import { cpp } from "@codemirror/lang-cpp";
@@ -96,6 +96,19 @@ const NotebookPage = () => {
     setSelectedCellIndex(insertionIndex); // Automatically select the newly added cell
   };
 
+  const deleteCell = (index: number) => {
+    const newCells = [...cells];
+    newCells.splice(index, 1); // Remove the cell at the given index
+    setCells(newCells);
+
+    // Reset selected cell index if it's invalid after deletion
+    if (index === selectedCellIndex) {
+      setSelectedCellIndex(null);
+    } else if (index < selectedCellIndex!) {
+      setSelectedCellIndex(selectedCellIndex! - 1); // Adjust the index if earlier cells were deleted
+    }
+  };
+
   const getExtensions = () => {
     switch (selectedLanguage) {
       case "python":
@@ -124,7 +137,7 @@ const NotebookPage = () => {
 
   return (
     <div className="min-h-screen bg-[#1a1b1e] py-12 px-4 sm:px-6 lg:px-8 text-[#c7c7c7]">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto h-[80vh] overflow-y-auto bg-[#1a1b1e] p-4 rounded-md shadow-md">
         {/* Sticky Navbar with Run options */}
         <nav className="bg-[#2e2f33] text-[#c7c7c7] p-4 rounded-md flex justify-between items-center mb-8 sticky top-0 z-50 shadow-lg">
           <div className="flex space-x-4">
@@ -220,7 +233,7 @@ const NotebookPage = () => {
                     title="Heading Level"
                     value={cell.headingLevel}
                     onChange={(e) => handleHeadingChange(index, e.target.value)}
-                    className="w-auto px-3 py-2 border border-[#4a5568] rounded-md bg-[#2f3439]"
+                    className="bg-[#2f3439] border border-[#4a5568] p-2 rounded mb-2"
                   >
                     {headingLevels.map((heading) => (
                       <option key={heading.value} value={heading.value}>
@@ -228,25 +241,34 @@ const NotebookPage = () => {
                       </option>
                     ))}
                   </select>
-
-                  {/* Markdown content input */}
                   <textarea
-                    className="w-full h-48 p-4 text-[#c7c7c7] bg-[#1a1b1e] border border-[#4a5568] rounded-md mt-2"
-                    placeholder="Write your markdown here..."
                     value={cell.code}
                     onChange={(e) => {
                       const newCells = [...cells];
-                      newCells[index].code = e.target.value;
-                      setCells(newCells);
+                      if (newCells[index].type === "markdown") {
+                        newCells[index].code = e.target.value;
+                        setCells(newCells);
+                      }
                     }}
+                    placeholder="Write markdown here..."
+                    className="bg-[#1a1b1e] text-[#e2e8f0] p-4 w-full border border-[#4a5568] rounded-md h-40 resize-none mt-2"
                   />
                 </>
               ) : (
-                <div className="prose prose-lg prose-invert bg-[#2e2f33] p-4 rounded-md text-[#e2e8f0]">
-                  {/* Rendering the markdown using ReactMarkdown */}
+                <div className="markdown-body p-4 bg-[#1a1b1e] border border-[#4a5568] rounded-md overflow-hidden mt-4">
                   <ReactMarkdown remarkPlugins={[remarkGfm]}>{cell.code}</ReactMarkdown>
                 </div>
               )}
+            </div>
+            <div className="flex justify-end p-4">
+              {/* Delete button */}
+              <button
+                onClick={() => deleteCell(index)}
+                className="bg-red-600 text-white p-2 rounded hover:bg-red-500"
+                title="Delete Cell"
+              >
+                <FaTrash />
+              </button>
             </div>
           </div>
         ))}

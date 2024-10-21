@@ -26,10 +26,12 @@ const navItems = [
     category: 'Features',
     items: [
       { name: 'Canvas', href: '/canvas' },
-      { name: 'Analyzer', href: '/analyzer' },
+      { name: 'Code Analyzer', href: '/analyzer' },
+      { name: 'PseudoBot', href: '/pseudobot' },
+      { name: "DSA's Roadmap", href: '/roadmap' },
     ],
   },
-  { name: 'PseudoBot', href: '/pseudobot' },
+  { name: 'Socrator', href: '/main' },
   { name: 'About Us', href: '/aboutus' },
 ];
 
@@ -59,6 +61,7 @@ const Navbar: React.FC = () => {
   const handleLogout = async () => {
     await signOut({ redirect: false });
     setTimeout(() => {
+      router.replace(`/`);
       router.refresh();
     }, 1000);
   };

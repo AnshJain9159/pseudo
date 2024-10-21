@@ -43,13 +43,15 @@ const RegisterPage = () => {
         toast({
           title: 'Multiple Choices',
           description: 'Multiple options available. Please contact support.',
-          variant: 'destructive',
+          variant: 'default',
+          className: "bg-red-700 text-white"
         });
       } else {
         toast({
           title: 'Success',
           description: response.data.message,
-          variant: 'default'
+          variant: 'default',
+          className: 'bg-green-500 text-white toast-visible',
         });
         
         router.replace(`/sign-in`);
@@ -67,7 +69,8 @@ const RegisterPage = () => {
       toast({
         title: 'Sign Up Failed',
         description: errorMessage,
-        variant: 'destructive',
+        variant: 'default',
+        className: "bg-red-700 text-white"
       });
     }
   };

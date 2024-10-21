@@ -44,13 +44,15 @@ const LoginPage = () => {
           toast({
             title: "Login failed",
             description: "Incorrect username or password",
-            variant: "destructive"
+            variant: "destructive",
+             className: "bg-red-700 text-white"
           });
         } else {
           toast({
             title: "Error",
             description: result.error,
-            variant: "destructive"
+            variant: "destructive",
+             className: "bg-red-700 text-white"
           });
         }
       } else if (result?.url) {
@@ -64,7 +66,8 @@ const LoginPage = () => {
       toast({
         title: "Error",
         description: "An unexpected error occurred. Please try again.",
-        variant: "destructive"
+        variant: "destructive",
+         className: "bg-red-700 text-white"
       });
     }
   };

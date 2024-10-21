@@ -47,10 +47,12 @@ export default function Home() {
         
         {/* Start Learning Button */}
         <div className="flex justify-center">  {/* Ensure centering */}
-          <Button className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-300 ease-in-out shadow-lg hover:shadow-purple-500/50 flex items-center">
+          
+          <a href="/main"><Button className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-300 ease-in-out shadow-lg hover:shadow-purple-500/50 flex items-center">
             Start Learning
             <ArrowRight className="w-5 h-5 ml-3 text-white" />
           </Button>
+          </a>
         </div>
       </div>
 
