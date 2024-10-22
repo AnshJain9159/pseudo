@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-"use client";
 import React, { useState } from "react";
 import { FaPlay, FaPlayCircle, FaCode, FaPenFancy, FaTrash } from "react-icons/fa";
 import CodeMirror from "@uiw/react-codemirror";
@@ -91,21 +89,20 @@ const NotebookPage = () => {
     const newCells = [...cells];
     const insertionIndex = selectedCellIndex !== null ? selectedCellIndex + 1 : cells.length;
 
-    newCells.splice(insertionIndex, 0, newCell); // Insert the new cell just after the selected one
+    newCells.splice(insertionIndex, 0, newCell);
     setCells(newCells);
-    setSelectedCellIndex(insertionIndex); // Automatically select the newly added cell
+    setSelectedCellIndex(insertionIndex);
   };
 
   const deleteCell = (index: number) => {
     const newCells = [...cells];
-    newCells.splice(index, 1); // Remove the cell at the given index
+    newCells.splice(index, 1);
     setCells(newCells);
 
-    // Reset selected cell index if it's invalid after deletion
     if (index === selectedCellIndex) {
       setSelectedCellIndex(null);
     } else if (index < selectedCellIndex!) {
-      setSelectedCellIndex(selectedCellIndex! - 1); // Adjust the index if earlier cells were deleted
+      setSelectedCellIndex(selectedCellIndex! - 1);
     }
   };
 
@@ -136,12 +133,11 @@ const NotebookPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#1a1b1e] py-12 px-4 sm:px-6 lg:px-8 text-[#c7c7c7]">
-      <div className="max-w-4xl mx-auto h-[80vh] overflow-y-auto bg-[#1a1b1e] p-4 rounded-md shadow-md">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 py-12 px-4 sm:px-6 lg:px-8 text-[#c7c7c7]">
+      <div className="max-w-4xl mx-auto h-[80vh] overflow-y-auto bg-transparent p-4 rounded-md ">
         {/* Sticky Navbar with Run options */}
-        <nav className="bg-[#2e2f33] text-[#c7c7c7] p-4 rounded-md flex justify-between items-center mb-8 sticky top-0 z-50 shadow-lg">
+        <nav className="bg-transparent text-[#c7c7c7] p-4 rounded-md flex justify-between items-center mb-8  top-0 z-50">
           <div className="flex space-x-4">
-            {/* Run All Cells */}
             <button
               onClick={runAllCells}
               className="px-4 py-2 bg-[#2b6cb0] rounded hover:bg-[#2c5282]"
@@ -149,7 +145,6 @@ const NotebookPage = () => {
             >
               <FaPlay />
             </button>
-            {/* Run Selected Cell */}
             <button
               onClick={() => selectedCellIndex !== null && runSelectedCell(selectedCellIndex!)}
               className="px-4 py-2 bg-[#3182ce] rounded hover:bg-[#2c5282]"
@@ -160,7 +155,6 @@ const NotebookPage = () => {
             </button>
           </div>
           <div className="flex space-x-4 items-center">
-            {/* Language Selector */}
             <select
               value={selectedLanguage}
               onChange={(e) => setSelectedLanguage(e.target.value)}
@@ -173,7 +167,6 @@ const NotebookPage = () => {
                 </option>
               ))}
             </select>
-            {/* Add New Code Cell */}
             <button
               onClick={() => addCell("code")}
               className="px-4 py-2 bg-[#2f3439] rounded hover:bg-[#1f2933]"
@@ -181,7 +174,6 @@ const NotebookPage = () => {
             >
               <FaCode />
             </button>
-            {/* Add New Markdown Cell */}
             <button
               onClick={() => addCell("markdown")}
               className="px-4 py-2 bg-[#d69e2e] rounded hover:bg-[#b7791f]"
@@ -196,12 +188,12 @@ const NotebookPage = () => {
         {cells.map((cell, index) => (
           <div
             key={index}
-            className={`bg-[#2e2f33] shadow-md rounded-lg mb-8 overflow-hidden ${
+            className={`bg-transparent  rounded-lg mb-8 overflow-hidden ${
               index === selectedCellIndex ? "border-2 border-blue-500" : ""
             }`}
             onClick={() => setSelectedCellIndex(index)}
           >
-            <div className="p-4">
+            <div className="px-4">
               {cell.type === "code" ? (
                 <>
                   <CodeMirror
@@ -219,7 +211,6 @@ const NotebookPage = () => {
                     className="border border-[#4a5568] rounded-md overflow-hidden mt-4"
                   />
 
-                  {/* Only display output for code cells */}
                   {cell.output && (
                     <pre className="mt-4 p-4 bg-[#1a1b1e] text-[#e2e8f0] rounded-md overflow-x-auto">
                       {cell.output}
@@ -228,19 +219,6 @@ const NotebookPage = () => {
                 </>
               ) : !cell.markdownRendered ? (
                 <>
-                  {/* Markdown heading level selection */}
-                  <select
-                    title="Heading Level"
-                    value={cell.headingLevel}
-                    onChange={(e) => handleHeadingChange(index, e.target.value)}
-                    className="bg-[#2f3439] border border-[#4a5568] p-2 rounded mb-2"
-                  >
-                    {headingLevels.map((heading) => (
-                      <option key={heading.value} value={heading.value}>
-                        {heading.label}
-                      </option>
-                    ))}
-                  </select>
                   <textarea
                     value={cell.code}
                     onChange={(e) => {
@@ -260,11 +238,24 @@ const NotebookPage = () => {
                 </div>
               )}
             </div>
-            <div className="flex justify-end p-4">
-              {/* Delete button */}
+            <div className="flex justify-end items-center px-4 py-2 space-x-4">
+              {cell.type === "markdown" && !cell.markdownRendered && (
+                <select
+                  title="Heading Level"
+                  value={cell.headingLevel}
+                  onChange={(e) => handleHeadingChange(index, e.target.value)}
+                  className="bg-[#2f3439] border border-[#4a5568] p-2 rounded"
+                >
+                  {headingLevels.map((heading) => (
+                    <option key={heading.value} value={heading.value}>
+                      {heading.label}
+                    </option>
+                  ))}
+                </select>
+              )}
               <button
                 onClick={() => deleteCell(index)}
-                className="bg-red-600 text-white p-2 rounded hover:bg-red-500"
+                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-500 w-12 h-10 flex items-center justify-center"
                 title="Delete Cell"
               >
                 <FaTrash />

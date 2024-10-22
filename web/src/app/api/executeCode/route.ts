@@ -24,18 +24,27 @@ export async function POST(request: NextRequest) {
   const fileName = `code_${crypto.randomBytes(16).toString('hex')}`;
   const tmpDir = os.tmpdir();
   const filePath = path.join(tmpDir, `${fileName}.${getFileExtension(language)}`);
+  const outputPath = path.join(tmpDir, `${fileName}.out`);
 
   try {
     await fs.writeFile(filePath, sanitizedCode);
-    const output = await executeCode(filePath, language);
+    const { output, error } = await executeCode(filePath, outputPath, language);
+    
+    if (error) {
+      return NextResponse.json({ error: error }, { status: 400 }); // Changed to 400 for compilation errors
+    }
+    
     return NextResponse.json({ output });
   } catch (error) {
     console.error('Code execution error:', error);
-    return NextResponse.json({ error: 'Code execution failed' }, { status: 500 });
+    return NextResponse.json({ 
+      error: error instanceof Error ? error.message : 'Code execution failed' 
+    }, { status: 500 });
   } finally {
-    // Clean up the file
+    // Clean up the files
     try {
-      await fs.unlink(filePath);
+      await fs.unlink(filePath).catch(() => {});
+      await fs.unlink(outputPath).catch(() => {});
     } catch (error) {
       console.error('File cleanup error:', error);
     }
@@ -67,38 +76,44 @@ function getFileExtension(language: string): string {
     python: 'py',
     cpp: 'cpp',
     c: 'c',
-    // java: 'java'
   };
   return extensions[language];
 }
 
-function executeCode(filePath: string, language: string): Promise<string> {
+function executeCode(filePath: string, outputPath: string, language: string): Promise<{ output: string; error?: string }> {
   return new Promise((resolve, reject) => {
     let command: string;
 
     switch (language) {
       case 'python':
-        command = `python "${filePath}"`;
+        command = `python3 "${filePath}"`;
         break;
       case 'cpp':
-        command = `g++ "${filePath}" -o "${filePath}.out" && "${filePath}.out"`;
+        // Added -std=c++11 flag and separated compilation and execution
+        command = `g++ -std=c++11 "${filePath}" -o "${outputPath}" && "${outputPath}"`;
         break;
       case 'c':
-        command = `gcc "${filePath}" -o "${filePath}.out" && "${filePath}.out"`;
+        command = `gcc "${filePath}" -o "${outputPath}" && "${outputPath}"`;
         break;
-      // case 'java':
-      //   const className = path.basename(filePath, '.java');
-      //   command = `javac "${filePath}" && java -cp "${path.dirname(filePath)}" ${className}`;
-      //   break;
       default:
         return reject(new Error('Unsupported language'));
     }
 
     exec(command, { timeout: TIMEOUT, maxBuffer: MAX_BUFFER }, (error, stdout, stderr) => {
       if (error) {
-        reject(stderr || error.message);
+        // Return compilation errors with more detail
+        resolve({ 
+          output: '', 
+          error: stderr || error.message 
+        });
+      } else if (stderr) {
+        // Handle warnings but successful compilation
+        resolve({ 
+          output: stdout,
+          error: stderr 
+        });
       } else {
-        resolve(stdout);
+        resolve({ output: stdout });
       }
     });
   });

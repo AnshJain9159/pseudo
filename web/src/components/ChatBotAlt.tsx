@@ -76,8 +76,8 @@ export default function ChatPageAlt() {
 
   return (
     <div className="flex flex-col min-h-screen px-16 py-16 bg-gradient-to-b from-gray-900 to-gray-800 text-gray-200">
-      <header className="p-4 bg-gray-800 shadow">
-        <h1 className="text-2xl font-bold text-center text-gray-100">Algorithm Tutor</h1>
+      <header className="p-4 ">
+        <h1 className="text-3xl font-bold text-center text-gray-100">SOCRATE</h1>
       </header>
 
       <div className="flex-1 overflow-y-auto p-4">
@@ -119,7 +119,7 @@ export default function ChatPageAlt() {
             type="text"
             value={input}
             onChange={handleInputChange}
-            placeholder="Ask about sorting algorithms..."
+            placeholder="Ask me anything...."
             className="flex-1 p-2 border border-gray-600 bg-gray-700 text-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button

@@ -44,7 +44,7 @@ const Page: React.FC = () => {
   };
 
   return (
-    <div className='flex h-screen w-full bg-[#191919]'>
+    <div className='flex h-screen w-full bg-[#191919] overflow-y-hidden'>
       {/* Chat Section (Left) */}
       <ResizableBox
         width={chatWidth}
