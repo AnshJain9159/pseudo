@@ -32,7 +32,15 @@ const navItems = [
     ],
   },
   { name: 'Socrator', href: '/main' },
-  { name: 'About Us', href: '/aboutus' },
+  {
+    category: 'More',
+    items: [
+      { name: 'User Dashboard', href: '/u/dashboard' },
+      { name: 'About Us', href: '/aboutus' },
+      
+    ],
+  },
+  
 ];
 
 const Navbar: React.FC = () => {
@@ -126,7 +134,7 @@ const Navbar: React.FC = () => {
               <span>Loading...</span>
             ) : session ? (
               <>
-                <AuthButton href="/profile">User Profile</AuthButton>
+                <AuthButton href="/u/profile">User Profile</AuthButton>
                 <AuthButton href="#" onClick={handleLogout}>Logout</AuthButton>
               </>
             ) : (
