@@ -40,7 +40,7 @@ const PeerLearningNetwork = () => {
 
   return (
     <div className="w-full max-w-6xl mx-auto p-4 space-y-6">
-      <Card className="bg-[#1a1b1e] border border-[#2e2f33] text-[#c7c7c7] shadow-xl">
+      <Card className=" border border-[#2e2f33] text-[#c7c7c7] shadow-xl">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-[#e2e8f0]">
             <Users className="h-6 w-6 text-[#6b7280]" />

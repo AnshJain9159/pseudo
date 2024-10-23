@@ -1,25 +1,34 @@
 "use client"
 import React from 'react';
-import { useRouter } from 'next/navigation'; // Import from next/navigation for App Router compatibility
-import RoadmapFlow from '@/components/RoadmapFlow';
-import  { Node} from 'reactflow';
+import { useRouter } from 'next/navigation';
+import DSARoadmap from '@/components/RoadmapFlow';
+import type { Node } from 'reactflow';
+
 interface CustomNodeData {
   label: string;
   description: string;
+  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
+  estimatedHours: number;
+  prerequisites: string[];
 }
-const Roadmap = () => {
-  const router = useRouter(); // This is now from next/navigation
 
-  // This handler is passed down to the RoadmapFlow component
+const RoadmapPage = () => {
+  const router = useRouter();
+
   const handleNodeClick = (event: React.MouseEvent, node: Node<CustomNodeData>) => {
+    // Prevent navigation if clicking the info button
+    if ((event.target as HTMLElement).closest('button')) {
+      return;
+    }
     router.push(`/topics/${node.id}`);
   };
 
   return (
-    <div>
-      <RoadmapFlow onNodeClick={handleNodeClick} />
+    <div className="w-full h-screen">
+     
+      <DSARoadmap onNodeClick={handleNodeClick} />
     </div>
   );
 };
 
-export default Roadmap;
+export default RoadmapPage;

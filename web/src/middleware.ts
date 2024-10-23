@@ -10,7 +10,7 @@ export async function middleware(request: NextRequest) {
     const publicRoutes = ['/', '/aboutus','/roadmap'];
 
     // Routes that require authentication
-    const authRoutes = ['/pseudobot', '/profile','/canvas','/analyzer','/main','/dashboard'];
+    const authRoutes = ['/pseudobot', '/profile','/analyzer','/main','/dashboard'];
 
     // Routes that should redirect to home if user is already authenticated
     const guestOnlyRoutes = ['/sign-in', '/sign-up'];
@@ -37,7 +37,7 @@ export const config = {
         '/pseudobot',
         '/u/profile',
         '/aboutus',
-        '/canvas',
+        
         '/analyzer',
         '/main',
         '/u/dashboard',

@@ -26,7 +26,6 @@ const navItems = [
   {
     category: 'Features',
     items: [
-      { name: 'Canvas', href: '/canvas' },
       { name: 'Code Analyzer', href: '/analyzer' },
       { name: 'PseudoBot', href: '/pseudobot' },
       { name: "DSA's Roadmap", href: '/roadmap' },

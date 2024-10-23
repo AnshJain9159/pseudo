@@ -1,14 +1,60 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import React from 'react';
-import ReactFlow, { Node, Edge, MiniMap, Controls, Background } from 'reactflow'; // Import necessary types and components
+import React, { useState } from 'react';
+import ReactFlow, { Node, Edge, Controls, Background } from 'reactflow';
 import '@xyflow/react/dist/style.css';
-import { useRouter } from 'next/router';
-
+import { Info } from 'lucide-react';
+import Link from 'next/link';
+import {  ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 interface CustomNodeData {
   label: string;
   description: string;
+  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
+  estimatedHours: number;
+  prerequisites: string[];
 }
+
+const getDifficultyColor = (difficulty: string) => {
+  switch (difficulty) {
+    case 'Beginner':
+      return 'bg-green-600';
+    case 'Intermediate':
+      return 'bg-yellow-600';
+    case 'Advanced':
+      return 'bg-red-600';
+    default:
+      return 'bg-blue-600';
+  }
+};
+
+const CustomNode = ({ data }: { data: CustomNodeData }) => {
+  const [showInfo, setShowInfo] = useState(false);
+  
+  return (
+    <div className={`rounded-lg p-4 ${getDifficultyColor(data.difficulty)} text-white min-w-[200px]`}>
+      <div className="flex justify-between items-start">
+        <h3 className="font-bold text-lg">{data.label}</h3>
+        <button 
+          className="p-1 hover:bg-white/20 rounded-full transition-colors"
+          onClick={() => setShowInfo(!showInfo)}
+        >
+          <Info size={16} />
+        </button>
+      </div>
+      {showInfo && (
+        <div className="mt-2 text-sm bg-black/20 p-2 rounded">
+          <p className="mb-1">{data.description}</p>
+          <p className="mb-1">Difficulty: {data.difficulty}</p>
+          <p className="mb-1">Est. Time: {data.estimatedHours}h</p>
+          {data.prerequisites.length > 0 && (
+            <p>Prerequisites: {data.prerequisites.join(', ')}</p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const nodes: Node<CustomNodeData>[] = [
   {
@@ -17,6 +63,9 @@ const nodes: Node<CustomNodeData>[] = [
     data: {
       label: 'Arrays & Hashing',
       description: 'Learn about arrays and hashing data structures and their applications.',
+      difficulty: 'Beginner',
+      estimatedHours: 0,
+      prerequisites: []
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
@@ -26,6 +75,9 @@ const nodes: Node<CustomNodeData>[] = [
     data: {
       label: 'Two Pointers',
       description: 'Understand the two pointers technique and its use cases.',
+      difficulty: 'Beginner',
+      estimatedHours: 0,
+      prerequisites: []
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
@@ -35,6 +87,9 @@ const nodes: Node<CustomNodeData>[] = [
     data: {
       label: 'Stack',
       description: 'Learn about the stack data structure and its applications.',
+      difficulty: 'Beginner',
+      estimatedHours: 0,
+      prerequisites: []
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
@@ -44,6 +99,9 @@ const nodes: Node<CustomNodeData>[] = [
     data: {
       label: 'Binary Search',
       description: 'Master the binary search algorithm and its variations.',
+      difficulty: 'Beginner',
+      estimatedHours: 0,
+      prerequisites: []
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
@@ -53,6 +111,9 @@ const nodes: Node<CustomNodeData>[] = [
     data: {
       label: 'Sliding Window',
       description: 'Learn about the sliding window technique and its applications.',
+      difficulty: 'Beginner',
+      estimatedHours: 0,
+      prerequisites: []
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
@@ -62,6 +123,9 @@ const nodes: Node<CustomNodeData>[] = [
     data: {
       label: 'Linked List',
       description: 'Understand linked list data structures and their applications.',
+      difficulty: 'Beginner',
+      estimatedHours: 0,
+      prerequisites: []
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
@@ -71,6 +135,9 @@ const nodes: Node<CustomNodeData>[] = [
     data: {
       label: 'Trees',
       description: 'Learn about tree data structures and their traversal algorithms.',
+      difficulty: 'Beginner',
+      estimatedHours: 0,
+      prerequisites: []
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
@@ -80,6 +147,9 @@ const nodes: Node<CustomNodeData>[] = [
     data: {
       label: 'Tries',
       description: 'Understand trie data structures and their applications.',
+      difficulty: 'Beginner',
+      estimatedHours: 0,
+      prerequisites: []
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
@@ -89,6 +159,9 @@ const nodes: Node<CustomNodeData>[] = [
     data: {
       label: 'Backtracking',
       description: 'Learn about the backtracking algorithm and its applications.',
+      difficulty: 'Advanced',
+      estimatedHours: 0,
+      prerequisites: []
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
@@ -98,6 +171,9 @@ const nodes: Node<CustomNodeData>[] = [
     data: {
       label: 'Heap / Priority Queue',
       description: 'Understand heap and priority queue data structures and their applications.',
+      difficulty: 'Beginner',
+      estimatedHours: 0,
+      prerequisites: []
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
@@ -107,6 +183,9 @@ const nodes: Node<CustomNodeData>[] = [
     data: {
       label: 'Intervals',
       description: 'Learn about interval data structures and their applications.',
+      difficulty: 'Beginner',
+      estimatedHours: 0,
+      prerequisites: []
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
@@ -116,6 +195,9 @@ const nodes: Node<CustomNodeData>[] = [
     data: {
       label: 'Greedy',
       description: 'Understand the greedy algorithm and its applications.',
+      difficulty: 'Beginner',
+      estimatedHours: 0,
+      prerequisites: []
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
@@ -125,6 +207,9 @@ const nodes: Node<CustomNodeData>[] = [
     data: {
       label: 'Graphs',
       description: 'Learn about graph data structures and their traversal algorithms.',
+      difficulty: 'Advanced',
+      estimatedHours: 0,
+      prerequisites: []
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
@@ -134,6 +219,9 @@ const nodes: Node<CustomNodeData>[] = [
     data: {
       label: 'Advanced Graphs',
       description: 'Explore advanced graph algorithms and data structures.',
+      difficulty: 'Advanced',
+      estimatedHours: 0,
+      prerequisites: []
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
@@ -143,6 +231,9 @@ const nodes: Node<CustomNodeData>[] = [
     data: {
       label: 'DP (1D)',
       description: 'Learn about dynamic programming with 1D arrays.',
+      difficulty: 'Beginner',
+      estimatedHours: 0,
+      prerequisites: []
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
@@ -152,6 +243,9 @@ const nodes: Node<CustomNodeData>[] = [
     data: {
       label: 'DP (2D)',
       description: 'Learn about dynamic programming with 2D arrays.',
+      difficulty: 'Advanced',
+      estimatedHours: 0,
+      prerequisites: []
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
@@ -161,6 +255,9 @@ const nodes: Node<CustomNodeData>[] = [
     data: {
       label: 'Bit Manipulation',
       description: 'Understand bitwise operations and their applications.',
+      difficulty: 'Advanced',
+      estimatedHours: 0,
+      prerequisites: []
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
@@ -170,6 +267,9 @@ const nodes: Node<CustomNodeData>[] = [
     data: {
       label: 'Math & Geometry',
       description: 'Learn about mathematical concepts and geometric algorithms.',
+      difficulty: 'Beginner',
+      estimatedHours: 0,
+      prerequisites: []
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
@@ -198,25 +298,54 @@ const edges = [
   { id: 'e17-18', source: '17', target: '18', animated: true, style: { stroke: '#fff' } },
 ];
 
-interface RoadmapFlowProps {
-    onNodeClick: (event: React.MouseEvent, node: Node<CustomNodeData>) => void;
-  }
-  
-  const RoadmapFlow: React.FC<RoadmapFlowProps> = ({ onNodeClick }) => {
-    return (
-      <div style={{ height: '100vh' }}>
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          fitView
-          style={{ background: '#000' }}
-          onNodeClick={(event, node) => onNodeClick(event, node)} // Pass both event and node to the handler
-        >
-          <Controls />
-          <Background color="#000" />
-        </ReactFlow>
+const nodeTypes = {
+  custom: CustomNode,
+};
+
+const DSARoadmap = () => {
+  const [selectedNode, setSelectedNode] = useState<Node<CustomNodeData> | null>(null);
+
+  return (
+    <div className="h-screen w-full bg-gray-900 ">
+      
+      <div className="absolute top-4 left-4 z-10 flex gap-4">
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 rounded-full bg-green-600" />
+          <span className="text-white">Beginner</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 rounded-full bg-yellow-600" />
+          <span className="text-white">Intermediate</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 rounded-full bg-red-600" />
+          <span className="text-white">Advanced</span>
+        </div>
       </div>
-    );
-  };
-  
-  export default RoadmapFlow;
+      
+      {selectedNode && (
+        <div className="absolute top-4 right-4 z-10 bg-gray-800 p-4 rounded-lg text-white max-w-md">
+          <h2 className="text-xl font-bold mb-2">{selectedNode.data.label}</h2>
+          <p className="mb-2">{selectedNode.data.description}</p>
+          <p className="mb-1">Difficulty: {selectedNode.data.difficulty}</p>
+          <p className="mb-1">Estimated Time: {selectedNode.data.estimatedHours} hours</p>
+          <p>Prerequisites: {selectedNode.data.prerequisites.join(', ') || 'None'}</p>
+        </div>
+      )}
+
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        nodeTypes={nodeTypes}
+        fitView
+        onNodeClick={(_, node) => setSelectedNode(node)}
+        className="bg-gray-900"
+      >
+        
+        <Background color="#fff" variant={"dots"} />
+      </ReactFlow>
+    </div>
+  );
+};
+
+export default DSARoadmap;

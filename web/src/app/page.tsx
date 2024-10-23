@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -95,9 +96,9 @@ export default function Home() {
                     <span className="px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
                       In [1]:
                     </span>
-                    <button className="p-0.5 rounded hover:bg-blue-500/10 text-blue-400">
+                    <span className="p-0.5 rounded hover:bg-blue-500/10 text-blue-400">
                       <Play className="w-4 h-4" />
-                    </button>
+                    </span>
                   </div>
                 </div>
                 <pre className="font-mono text-sm text-zinc-300 bg-zinc-950 p-3 rounded-lg flex-1">
