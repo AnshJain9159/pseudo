@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-//not working
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
@@ -14,7 +12,7 @@ const contractABI = JSON.parse(
     readFileSync(join(process.cwd(), "src", "lib", "contracts", "UserManager.json"), "utf8")
 );
 
-const contractAddress = "0x60fa0a07ed23c68120c14f61099a5534cfa11f8b";
+const contractAddress = "0x801e7817a0E29993B84374D5Ca1c4c11ADa85839";
 const web3 = new Web3("http://localhost:8545");
 const userRegistryContract = new web3.eth.Contract(contractABI.abi, contractAddress);
 
@@ -36,6 +34,10 @@ export const authOptions: NextAuthOptions = {
                 password: { label: 'Password', type: 'password' }
             },
             async authorize(credentials: any): Promise<any> {
+                if (!credentials?.email || !credentials?.password) {
+                    throw new Error('Email and password required');
+                }
+
                 await dbConnect();
                 try {
                     console.log("Attempting to find user with email:", credentials.email);
@@ -52,35 +54,86 @@ export const authOptions: NextAuthOptions = {
 
                     const isPasswordCorrect = await bcrypt.compare(credentials.password, user.password);
 
-                    if (isPasswordCorrect) {
-                        console.log("Password is correct");
-                        // MongoDB authentication successful, now verify with blockchain
+                    if (!isPasswordCorrect) {
+                        console.log('Incorrect Password');
+                        throw new Error("Incorrect Password");
+                    }
+
+                    console.log("Password is correct");
+                    
+                    try {
+                        // Get the Ethereum accounts
+                        const accounts = await web3.eth.getAccounts();
+                        console.log('Available accounts:', accounts);
+                        
+                        // Check user's Ethereum address
+                        console.log('User Ethereum address:', user.ethereumAddress);
+                        
+                        // Check user's balance
+                        const balance = await web3.eth.getBalance(user.ethereumAddress);
+                        console.log('User balance:', balance);
+
+                        // If balance is low, fund the account
+                        if (web3.utils.toBN(balance).lt(web3.utils.toBN(web3.utils.toWei('0.01', 'ether')))) {
+                            console.log('Funding user account...');
+                            await web3.eth.sendTransaction({
+                                from: accounts[0],
+                                to: user.ethereumAddress,
+                                value: web3.utils.toWei('0.1', 'ether')
+                            });
+                        }
+
+                        // Create the hashes
                         const emailHashBuffer = crypto.createHash("sha256").update(credentials.email).digest();
                         const passwordHashBuffer = crypto.createHash("sha256").update(credentials.password).digest();
                         
                         const emailHashBytes32 = convertToBytes32(emailHashBuffer.toString('hex'));
                         const passwordHashBytes32 = convertToBytes32(passwordHashBuffer.toString('hex'));
 
-                        try {
-                            console.log("Attempting blockchain authentication for user:", user.ethereumAddress);
-                            const isAuthenticatedOnBlockchain = await userRegistryContract.methods
-                                .authenticateUser(emailHashBytes32, passwordHashBytes32)
-                                .call({ from: user.ethereumAddress });
+                        console.log('Email hash:', emailHashBytes32);
+                        console.log('Password hash:', passwordHashBytes32);
 
-                            if (isAuthenticatedOnBlockchain) {
-                                console.log("Blockchain authentication successful");
-                                return user;
-                            } else {
-                                console.log('Blockchain authentication failed');
-                                throw new Error("Blockchain authentication failed");
-                            }
-                        } catch (blockchainError) {
-                            console.error('Blockchain authentication error:', blockchainError);
-                            throw new Error("Blockchain authentication error");
+                        // Get the deployed contract
+                        const code = await web3.eth.getCode(contractAddress);
+                        console.log('Contract exists:', code !== '0x');
+
+                        // Call the authenticateUser function
+                        console.log("Attempting blockchain authentication for user:", user.ethereumAddress);
+                        const isAuthenticatedOnBlockchain = await userRegistryContract.methods
+                            .authenticateUser(emailHashBytes32, passwordHashBytes32)
+                            .call({ 
+                                from: user.ethereumAddress,
+                                gas: '200000'  // Specify gas limit
+                            });
+
+                        console.log('Blockchain authentication result:', isAuthenticatedOnBlockchain);
+
+                        if (isAuthenticatedOnBlockchain) {
+                            console.log("Blockchain authentication successful");
+                            return {
+                                //id: user._id.toString(),
+                                email: user.email,
+                                ethereumAddress: user.ethereumAddress,
+                                role: user.role
+                            };
+                        } else {
+                            console.log('Blockchain authentication failed - hashes did not match');
+                            throw new Error("Blockchain authentication failed - invalid credentials");
                         }
-                    } else {
-                        console.log('Incorrect Password');
-                        throw new Error("Incorrect Password");
+                    } catch (blockchainError: any) {
+                        console.error('Detailed blockchain error:', blockchainError);
+                        
+                        // Check if it's a revert error
+                        if (blockchainError.message.includes('revert')) {
+                            throw new Error(`Smart contract revert: ${blockchainError.message}`);
+                        }
+                        
+                        // Check if it's a connection error
+                        if (blockchainError.message.includes('connection')) {
+                            throw new Error('Failed to connect to blockchain network');
+                        }
+                        
+                        throw new Error(`Blockchain authentication error: ${blockchainError.message}`);
                     }
                 } catch (error: any) {
                     console.error('Error in authorize:', error);
@@ -92,15 +145,19 @@ export const authOptions: NextAuthOptions = {
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
-                token._id = user._id?.toString();
+                token._id = user._id;
+                //token.email = user.email;
                 token.ethereumAddress = user.ethereumAddress;
+                //token.role = user.role;
             }
             return token;
         },
         async session({ session, token }) {
-            if (token) {
+            if (token && session.user) {
                 session.user._id = token._id;
+                //session.user.email = token.email;
                 session.user.ethereumAddress = token.ethereumAddress;
+               // session.user.role = token.role;
             }
             return session;
         },
@@ -111,5 +168,6 @@ export const authOptions: NextAuthOptions = {
     session: {
         strategy: "jwt",
     },
+    debug: true,  // Enable debug mode
     secret: process.env.NEXTAUTH_SECRET,
 };

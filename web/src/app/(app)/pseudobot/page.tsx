@@ -9,7 +9,6 @@ export default function ChatPage() {
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat()
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const [chatHistory, setChatHistory] = useState(() => {
-    // Check if we're in a browser environment
     if (typeof window !== 'undefined') {
       const savedHistory = localStorage.getItem('chatHistory');
       return savedHistory ? JSON.parse(savedHistory) : [];
@@ -33,7 +32,6 @@ export default function ChatPage() {
     }
   }, [messages]);
 
-  // Helper function to detect and extract code blocks
   const stripMarkdown = (content: string) => {
     let strippedContent = content.replace(/(\*\*|__)(.*?)\1/g, '$2');
     strippedContent = strippedContent.replace(/(\*|_)(.*?)\1/g, '$2');
@@ -77,13 +75,15 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen px-16 py-16 bg-gradient-to-b from-purple-100 to-indigo-100">
-      <header className="p-4 bg-white shadow">
-        <h1 className="text-2xl font-bold text-center">Algorithm Tutor</h1>
+    <div className="flex flex-col h-screen px-4 lg:px-16 py-16 bg-gradient-to-b from-gray-900 via-indigo-900 to-blue-900 text-white">
+      <header className="p-4 bg-gray-800 rounded-lg shadow-lg">
+        <h1 className="text-3xl lg:text-4xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-600">
+          Pseudo Bot
+        </h1>
       </header>
 
-      <div className="flex-1 overflow-y-auto p-4">
-        <div className="space-y-4">
+      <div className="flex-1 overflow-y-auto mt-8">
+        <div className="space-y-4 px-4">
           {messages.map((message) => (
             <div
               key={message.id}
@@ -92,20 +92,20 @@ export default function ChatPage() {
               }`}
             >
               {message.role === 'assistant' && (
-                <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center shadow-lg">
                   <Bot className="w-5 h-5 text-white" />
                 </div>
               )}
               <div
-                className={`p-3 rounded-lg max-w-[80%] ${
-                  message.role === 'assistant' ? 'bg-white' : 'bg-blue-500 text-white'
+                className={`p-4 rounded-lg max-w-[75%] shadow-md ${
+                  message.role === 'assistant' ? 'bg-gray-800' : 'bg-blue-600 text-white'
                 }`}
               >
                 {renderMessageContent(message.content)}
               </div>
               {message.role === 'user' && (
-                <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
-                  <User className="w-5 h-5 text-gray-600" />
+                <div className="w-8 h-8 rounded-full bg-gray-500 flex items-center justify-center shadow-lg">
+                  <User className="w-5 h-5 text-white" />
                 </div>
               )}
             </div>
@@ -115,19 +115,19 @@ export default function ChatPage() {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="p-4 bg-white shadow">
+      <form onSubmit={handleSubmit} className="p-4 bg-gray-800 shadow-lg rounded-lg mt-8">
         <div className="flex space-x-4">
           <input
             type="text"
             value={input}
             onChange={handleInputChange}
-            placeholder="Ask about sorting algorithms..."
-            className="flex-1 p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Ask your coding question..."
+            className="flex-1 p-2 rounded-lg border-none bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg"
           />
           <button
             type="submit"
             disabled={isLoading || !input.trim()}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-gray-500 disabled:cursor-not-allowed"
           >
             {isLoading ? (
               <div className="w-6 h-6 border-t-2 border-white rounded-full animate-spin" />
@@ -138,5 +138,5 @@ export default function ChatPage() {
         </div>
       </form>
     </div>
-  )
+  );
 }

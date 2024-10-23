@@ -4,13 +4,14 @@ import "./globals.css";
 import ClientLayout from "@/helpers/ClientLayout";
 import { Toaster } from "@/components/ui/toaster";
 import { Providers } from "@/helpers/Providers";
+
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
 })
 
 export const metadata: Metadata = {
-  title: "Socrate",
+  title: "Socrates",
   description: "Developed by Team Pseudo Coder",
 };
 

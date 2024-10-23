@@ -22,6 +22,7 @@ import '@fontsource/jetbrains-mono'; // Or any other font suitable to your theme
 // Define navigation items with categories
 const navItems = [
   { name: 'Home', href: '/' },
+  { name: 'Socrator', href: '/main' },
   {
     category: 'Features',
     items: [
@@ -31,7 +32,6 @@ const navItems = [
       { name: "DSA's Roadmap", href: '/roadmap' },
     ],
   },
-  { name: 'Socrator', href: '/main' },
   {
     category: 'More',
     items: [
@@ -77,7 +77,7 @@ const Navbar: React.FC = () => {
   const NavLink: React.FC<{ item: any; onClick?: () => void }> = ({ item, onClick }) => (
     <Link
       href={item.href}
-      className="px-4 py-2 text-sm font-medium text-cyan-200 hover:text-cyan-300 transition-colors duration-300"
+      className="px-4 py-2 text-sm font-medium text-white hover:text-cyan-300 transition-colors duration-300"
       onClick={onClick}
     >
       {item.name}
@@ -87,7 +87,7 @@ const Navbar: React.FC = () => {
   const NavDropdown: React.FC<{ category: string; items: any[] }> = ({ category, items }) => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="px-4 py-2 text-sm font-medium text-cyan-200 hover:text-cyan-300">
+        <Button variant="ghost" className="px-4 py-2 text-sm font-medium text-white hover:text-cyan-300">
           {category} <ChevronDown className="ml-1 h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
@@ -119,7 +119,7 @@ const Navbar: React.FC = () => {
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-black shadow-md' : 'bg-transparent'}`}>
       <div className="container mx-auto px-6 py-4">
         <div className="flex justify-between items-center">
-          <Link href="/" className="font-bold text-xl text-cyan-200">
+          <Link href="/" className="font-bold text-xl text-white">
             Socrates
           </Link>
           <div className="hidden md:flex items-center space-x-4">

@@ -79,14 +79,14 @@ const ExcalidrawWrapper: React.FC = () => {
       <div className="flex gap-4 mt-6">
         <button
           onClick={handleSvgExport}
-          className="bg-gray-800 text-white font-medium py-2 px-4 rounded-md shadow hover:bg-gray-700 transition duration-200 flex items-center"
+          className="bg-green-500 text-white font-medium py-2 px-4 rounded-md shadow hover:bg-gray-700 transition duration-200 flex items-center"
         >
           <Download className="w-4 h-4 mr-2" />
           Export SVG
         </button>
         <button
           onClick={handlePngExport}
-          className="bg-gray-800 text-white font-medium py-2 px-4 rounded-md shadow hover:bg-gray-700 transition duration-200 flex items-center"
+          className="bg-green-500 text-white font-medium py-2 px-4 rounded-md shadow hover:bg-gray-700 transition duration-200 flex items-center"
         >
           <Download className="w-4 h-4 mr-2" />
           Export PNG
