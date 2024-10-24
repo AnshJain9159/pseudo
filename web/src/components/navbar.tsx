@@ -29,6 +29,8 @@ const navItems = [
       { name: 'Code Analyzer', href: '/analyzer' },
       { name: 'PseudoBot', href: '/pseudobot' },
       { name: "DSA's Roadmap", href: '/roadmap' },
+      { name: "What's Different?", href: '/visualizer' },
+
     ],
   },
   {
