@@ -329,7 +329,15 @@ const DSARoadmap = () => {
           <p className="mb-2">{selectedNode.data.description}</p>
           <p className="mb-1">Difficulty: {selectedNode.data.difficulty}</p>
           <p className="mb-1">Estimated Time: {selectedNode.data.estimatedHours} hours</p>
-          <p>Prerequisites: {selectedNode.data.prerequisites.join(', ') || 'None'}</p>
+            <div className="flex justify-between items-center">
+            <p>Prerequisites: {selectedNode.data.prerequisites.join(', ') || 'None'}</p>
+            <button 
+              className="p-1 hover:bg-white/20 rounded-full transition-colors"
+              onClick={() => setSelectedNode(null)}
+            >
+              <ArrowLeft size={16} />
+            </button>
+            </div>
         </div>
       )}
 

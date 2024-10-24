@@ -9,7 +9,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const pathname = usePathname();
 
   // Conditions to hide the default Navbar and Footer
-  const hideNavbarAndFooter = ['/sign-in', '/sign-up'].includes(pathname);
+  const hideNavbarAndFooter = ['/sign-in', '/sign-up',"/roadmap"].includes(pathname);
   
   // Check if it's the /main page to show SpecialNavbar
   const isMainPage = pathname === '/main';
