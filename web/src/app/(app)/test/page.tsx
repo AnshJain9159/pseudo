@@ -106,7 +106,7 @@ export default function ChatPage() {
     return (
         <div className="flex flex-col h-screen px-16 py-16 bg-gradient-to-b from-purple-100 to-indigo-100">
             <header className="p-4 bg-white shadow">
-                <h1 className="text-2xl font-bold text-center">Algorithm Tutor</h1>
+                <h1 className="text-2xl font-bold text-center">Socrator</h1>
             </header>
 
             {/* {error && (
