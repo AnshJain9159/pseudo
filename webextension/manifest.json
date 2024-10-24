@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "sexy Question Copier",
+  "name": "James Bond",
   "version": "1.0",
   "description": "A web extension to copy LeetCode questions to clipboard.",
   "permissions": ["activeTab", "scripting", "clipboardWrite"],

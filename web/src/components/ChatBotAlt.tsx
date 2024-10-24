@@ -5,17 +5,9 @@ import { CodeBlock } from '@/components/CodeBlock';
 import { MessageSkeleton } from '@/components/MessageSkeleton';
 import { useRef, useEffect, useState } from 'react';
 
-interface ChatBotAltProps {
-  copiedText: string | null; // Add prop type for copiedText
-}
-
-export default function ChatPageAlt({ copiedText }: ChatBotAltProps) {
+export default function ChatPageAlt() {
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat();
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  
-  // State to store text when the extension explicitly sends it
-  const [extensionCopiedText, setExtensionCopiedText] = useState<string | null>(null);
-  
   const [chatHistory, setChatHistory] = useState(() => {
     if (typeof window !== 'undefined') {
       const savedHistory = localStorage.getItem('chatHistory');
@@ -24,31 +16,11 @@ export default function ChatPageAlt({ copiedText }: ChatBotAltProps) {
     return [];
   });
 
-  // Listen for messages sent by the Chrome extension
-  useEffect(() => {
-    // Check if we're in a browser environment and if the 'chrome' object exists
-    if (typeof window !== 'undefined' && typeof chrome !== 'undefined' && chrome.runtime?.onMessage) {
-      const listener = (request: any) => {
-        if (request.action === 'sendCopiedText') {
-          setExtensionCopiedText(request.text); // Set the copied text when the extension sends it
-        }
-      };
-  
-      chrome.runtime.onMessage.addListener(listener);
-  
-      // Clean up the event listener when the component unmounts
-      return () => {
-        chrome.runtime.onMessage.removeListener(listener);
-      };
-    }
-  }, []);
-  
-
   useEffect(() => {
     if (typeof window !== 'undefined') {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messages, chatHistory]);
+  }, [messages]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -60,24 +32,11 @@ export default function ChatPageAlt({ copiedText }: ChatBotAltProps) {
     }
   }, [messages]);
 
-  // Add extensionCopiedText to the message list when it changes
-  useEffect(() => {
-    if (extensionCopiedText) {
-      const newMessage = {
-        id: Date.now().toString(), // Generate a unique ID
-        role: 'user', // Assuming the copied text is from the user
-        content: extensionCopiedText,
-      };
-      // Append copied text to messages
-      setChatHistory((prevChat: any) => [...prevChat, newMessage]);
-    }
-  }, [extensionCopiedText]);
-
   const stripMarkdown = (content: string) => {
     let strippedContent = content.replace(/(\*\*|__)(.*?)\1/g, '$2');
     strippedContent = strippedContent.replace(/(\*|_)(.*?)\1/g, '$2');
     strippedContent = strippedContent.replace(/^#+\s*(.*)$/gm, '$1');
-
+  
     return strippedContent;
   };
 
@@ -116,14 +75,13 @@ export default function ChatPageAlt({ copiedText }: ChatBotAltProps) {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-gray-200">
-      <header className="p-4">
-        <h1 className="text-3xl font-bold text-center text-gray-100">SOCRATE</h1>
-      </header>
+    <div className="flex flex-col h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-gray-200">
+      
 
-      <div className="flex-1 p-4 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 150px)' }}>
+      {/* Chat messages container with fixed height and scrollable content */}
+      <div className="flex-1 p-4 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 200px)' }}>
         <div className="space-y-4">
-          {chatHistory.map((message: any) => (
+          {messages.map((message) => (
             <div
               key={message.id}
               className={`flex items-start space-x-2 ${
@@ -154,6 +112,7 @@ export default function ChatPageAlt({ copiedText }: ChatBotAltProps) {
         </div>
       </div>
 
+      {/* Input form for chat */}
       <form onSubmit={handleSubmit} className="p-4 bg-gray-800 shadow">
         <div className="flex space-x-4">
           <input

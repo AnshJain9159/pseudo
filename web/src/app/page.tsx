@@ -35,7 +35,7 @@ export default function Home() {
       <div className="max-w-4xl mx-auto text-center">
         <div className="flex justify-center py-6">
                   <img
-                    src="/Socrates Logo.svg"
+                    src="/SOCRATES.svg"
                     alt="Socrates Logo"
                     className="h-full"
                   />
@@ -44,7 +44,7 @@ export default function Home() {
         {/* Title and Description */}
         
         <p className="text-lg text-gray-400 mb-10">
-          Master Data Structures & Algorithms through AI-powered Socratic questioning.
+          Master Computer Science through AI-powered Socratic questioning.
         </p>
         
         {/* Start Learning Button */}
