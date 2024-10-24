@@ -12,7 +12,7 @@ const contractABI = JSON.parse(
     readFileSync(join(process.cwd(), "src", "lib", "contracts", "UserManager.json"), "utf8")
 );
 
-const contractAddress = "0x801e7817a0E29993B84374D5Ca1c4c11ADa85839";
+const contractAddress = "0x07254deD9EeA5cA826C9d1F3F939eA38924D5941";
 const web3 = new Web3("http://localhost:8545");
 const userRegistryContract = new web3.eth.Contract(contractABI.abi, contractAddress);
 

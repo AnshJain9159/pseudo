@@ -1,91 +1,92 @@
 const UserManager = artifacts.require("UserManager");
-const crypto = require('crypto');
-
-function hashToBytes32(str) {
-  const hash = crypto.createHash('sha256').update(str).digest();
-  return '0x' + hash.toString('hex');
-}
 
 contract("UserManager", (accounts) => {
-  let userManager;
+  // Assign accounts for convenience
+  const [deployer, user1] = accounts;
 
+  // Helper function to generate SHA3 hashes for email and password
+  const sha3Hash = (value) => web3.utils.sha3(value);
+
+  let userManagerInstance;
+
+  // Before each test case, deploy a fresh contract
   before(async () => {
-    userManager = await UserManager.deployed();
+    userManagerInstance = await UserManager.new();
   });
 
   it("should register a new user", async () => {
+    const emailHash = sha3Hash("user@example.com");
+    const passwordHash = sha3Hash("password123");
     const fullName = "John Doe";
-    const email = "johndoe@example.com";
-    const password = "password123";
     const role = "student";
 
-    const emailHash = hashToBytes32(email);
-    const passwordHash = hashToBytes32(password);
+    // Register the user
+    const registerTx = await userManagerInstance.registerUser(fullName, emailHash, passwordHash, role, {
+      from: user1,
+    });
 
-    await userManager.registerUser(fullName, emailHash, passwordHash, role, { from: accounts[0] });
-
-    const user = await userManager.users(accounts[0]);
-    assert.equal(user.fullName, fullName, "Full name does not match");
-    assert.equal(user.emailHash, emailHash, "Email hash does not match");
-    assert.equal(user.passwordHash, passwordHash, "Password hash does not match");
-    assert.equal(user.role, role, "Role does not match");
+    // Check the emitted event for user registration
+    const event = registerTx.logs[0].args;
+    assert.equal(event.userAddress, user1, "The event address should match the user's address");
+    assert.equal(event.fullName, fullName, "The event should log the correct user full name");
+    assert.equal(event.role, role, "The event should log the correct user role");
   });
 
-  it("should authenticate a user", async () => {
-    const email = "johndoe@example.com";
-    const password = "password123";
+  it("should authenticate a registered user with correct credentials", async () => {
+    const emailHash = sha3Hash("user@example.com");
+    const passwordHash = sha3Hash("password123");
 
-    const emailHash = hashToBytes32(email);
-    const passwordHash = hashToBytes32(password);
+    // Authenticate the user
+    const isAuthenticated = await userManagerInstance.authenticateUser(emailHash, passwordHash, {
+      from: user1,
+    });
 
-    const isAuthenticated = await userManager.authenticateUser(emailHash, passwordHash, { from: accounts[0] });
-    assert.isTrue(isAuthenticated, "User should be authenticated");
+    assert.isTrue(isAuthenticated, "The authentication should return true for correct credentials");
   });
 
-  it("should not authenticate a user with incorrect credentials", async () => {
-    const email = "johndoe@example.com";
-    const password = "wrongpassword";
+  it("should fail to authenticate a user with incorrect credentials", async () => {
+    const wrongEmailHash = sha3Hash("wrong@example.com");
+    const wrongPasswordHash = sha3Hash("wrongpassword");
 
-    const emailHash = hashToBytes32(email);
-    const passwordHash = hashToBytes32(password);
+    // Try to authenticate with incorrect email and password
+    const isAuthenticated = await userManagerInstance.authenticateUser(wrongEmailHash, wrongPasswordHash, {
+      from: user1,
+    });
 
-    const isAuthenticated = await userManager.authenticateUser(emailHash, passwordHash, { from: accounts[0] });
-    assert.isFalse(isAuthenticated, "User should not be authenticated");
+    assert.isFalse(isAuthenticated, "The authentication should return false for incorrect credentials");
   });
 
   it("should not register a user with an invalid role", async () => {
-    const fullName = "Jane Doe";
-    const email = "janedoe@example.com";
-    const password = "password123";
-    const role = "admin";
-
-    const emailHash = hashToBytes32(email);
-    const passwordHash = hashToBytes32(password);
+    const emailHash = sha3Hash("invalid@example.com");
+    const passwordHash = sha3Hash("password123");
+    const fullName = "Invalid User";
+    const invalidRole = "admin";
 
     try {
-      await userManager.registerUser(fullName, emailHash, passwordHash, role, { from: accounts[1] });
-      assert.fail("Expected an error but did not get one");
+      // Attempt to register a user with an invalid role
+      await userManagerInstance.registerUser(fullName, emailHash, passwordHash, invalidRole, {
+        from: user1,
+      });
+      assert.fail("Registration should have failed with an invalid role");
     } catch (error) {
-      assert.include(error.message, "Invalid role", "Error message should contain 'Invalid role'");
+      assert.include(error.message, "Invalid role", "Expected invalid role error message");
     }
   });
 
-  it("should not register a user with an existing email hash", async () => {
-    const fullName = "John Smith";
-    const email = "johndoe@example.com";
-    const password = "password123";
+  it("should not register a user who is already registered", async () => {
+    const emailHash = sha3Hash("user@example.com");
+    const passwordHash = sha3Hash("password123");
+    const fullName = "John Doe";
     const role = "student";
-  
-    const emailHash = hashToBytes32(email);
-    const passwordHash = hashToBytes32(password);
-  
+
     try {
-      const tx = await userManager.registerUser(fullName, emailHash, passwordHash, role, { from: accounts[2] });
-      assert.fail("Expected an error but did not get one");
+      // Attempt to register the same user again
+      await userManagerInstance.registerUser(fullName, emailHash, passwordHash, role, {
+        from: user1,
+      });
+      assert.fail("Registration should have failed for an already registered user");
     } catch (error) {
-      assert.isTrue(error.message.includes("User already registered"), "Error message should contain 'User already registered'");
+      assert.include(error.message, "User already registered", "Expected user already registered error message");
     }
   });
-  
-  
 });
