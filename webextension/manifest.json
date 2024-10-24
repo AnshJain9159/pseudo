@@ -1,9 +1,18 @@
 {
   "manifest_version": 3,
-  "name": "James Bond",
+  "name": "BroCode",
   "version": "1.0",
-  "description": "A web extension to copy LeetCode questions to clipboard.",
-  "permissions": ["activeTab", "scripting", "clipboardWrite"],
+  "description": "A Socratic teaching assistant for LeetCode problems",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "clipboardWrite",
+    "storage",
+    "notifications"
+  ],
+  "host_permissions": [
+    "https://leetcode.com/*"
+  ],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
@@ -15,7 +24,18 @@
   "content_scripts": [
     {
       "matches": ["https://leetcode.com/problems/*"],
-      "js": ["content.js"]
+      "js": ["content.js"],
+      "css": ["styles.css"]
     }
-  ]
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "web_accessible_resources": [{
+    "resources": ["icons/*"],
+    "matches": ["https://leetcode.com/*"]
+  }],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
 }
