@@ -75,12 +75,11 @@ export default function ChatPageAlt() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen px-16 py-16 bg-gradient-to-b from-gray-900 to-gray-800 text-gray-200">
-      <header className="p-4 ">
-        <h1 className="text-3xl font-bold text-center text-gray-100">SOCRATE</h1>
-      </header>
+    <div className="flex flex-col h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-gray-200">
+      
 
-      <div className="flex-1 overflow-y-auto p-4">
+      {/* Chat messages container with fixed height and scrollable content */}
+      <div className="flex-1 p-4 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 200px)' }}>
         <div className="space-y-4">
           {messages.map((message) => (
             <div
@@ -113,6 +112,7 @@ export default function ChatPageAlt() {
         </div>
       </div>
 
+      {/* Input form for chat */}
       <form onSubmit={handleSubmit} className="p-4 bg-gray-800 shadow">
         <div className="flex space-x-4">
           <input
