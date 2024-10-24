@@ -9,6 +9,13 @@ const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
 })
+import { Caesar_Dressing } from 'next/font/google';
+
+const caesarDressing = Caesar_Dressing({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: "Socrates",
@@ -22,7 +29,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+   
       <body className={inter.className}>
+        
         <Providers>
           <ClientLayout>
             {children}
@@ -30,6 +39,7 @@ export default function RootLayout({
           </ClientLayout>
         </Providers>
       </body>
+      
     </html>
   );
 }
