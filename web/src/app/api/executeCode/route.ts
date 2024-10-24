@@ -86,7 +86,7 @@ function executeCode(filePath: string, outputPath: string, language: string): Pr
 
     switch (language) {
       case 'python':
-        command = `python3 "${filePath}"`;
+        command = `python "${filePath}"`;
         break;
       case 'cpp':
         // Added -std=c++11 flag and separated compilation and execution
