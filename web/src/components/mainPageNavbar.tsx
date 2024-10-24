@@ -2,12 +2,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { Menu, X } from 'lucide-react';
+import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { Menu, X, ChevronDown, ChevronUp } from 'lucide-react';
-import Link from 'next/link';
 
 // Import a cool font from Google Fonts
 import '@fontsource/jetbrains-mono'; // Or any other font suitable to your theme
@@ -15,30 +15,27 @@ import '@fontsource/jetbrains-mono'; // Or any other font suitable to your theme
 const navItems = [
   { name: 'Home', href: '/' },
   { name: 'Socrator', href: '/main' },
-  {
-    category: 'Features',
-    items: [
-      { name: 'Code Analyzer', href: '/analyzer' },
-      { name: 'PseudoBot', href: '/pseudobot' },
-      { name: "DSA's Roadmap", href: '/roadmap' },
-      { name: "What's Different?", href: '/visualizer' },
-    ],
-  },
-  {
-    category: 'More',
-    items: [
-      { name: 'User Dashboard', href: '/u/dashboard' },
-      { name: 'About Us', href: '/aboutus' },
-    ],
-  },
+  { name: 'Code Analyzer', href: '/analyzer' },
+  { name: 'PseudoBot', href: '/pseudobot' },
+  { name: "DSA's Roadmap", href: '/roadmap' },
+  { name: "What's Different?", href: '/visualizer' },
+  { name: 'User Dashboard', href: '/u/dashboard' },
 ];
 
 const SpecialNavbar: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
-  const [isFeaturesDropdownOpen, setIsFeaturesDropdownOpen] = useState<boolean>(false);
-  const [isMoreDropdownOpen, setIsMoreDropdownOpen] = useState<boolean>(false); // State for "More" dropdown
+  const [isScrolled, setIsScrolled] = useState<boolean>(false); // Control background color on scroll
   const { data: session, status } = useSession();
   const router = useRouter();
+
+  // Handle scroll effect for the navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const toggleSidebar = (): void => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -46,14 +43,6 @@ const SpecialNavbar: React.FC = () => {
 
   const closeSidebar = (): void => {
     setIsSidebarOpen(false);
-  };
-
-  const toggleFeaturesDropdown = (): void => {
-    setIsFeaturesDropdownOpen(!isFeaturesDropdownOpen);
-  };
-
-  const toggleMoreDropdown = (): void => {
-    setIsMoreDropdownOpen(!isMoreDropdownOpen);
   };
 
   const handleLogout = async () => {
@@ -75,7 +64,11 @@ const SpecialNavbar: React.FC = () => {
   );
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-black shadow-md transition-all duration-300">
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled ? 'bg-black shadow-md' : 'bg-transparent'
+      }`}
+    >
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
         {/* Logo on the left side */}
         <Link href="/" className="font-bold text-xl text-white">
@@ -115,66 +108,9 @@ const SpecialNavbar: React.FC = () => {
 
           {/* Navigation Links */}
           <nav className="flex flex-col space-y-4 p-4">
-            {navItems.map((item, index) => {
-              // Check if the item is a category (like "Features" or "More")
-              if (item.category) {
-                return (
-                  <div key={index}>
-                    {/* Dropdown Toggle for Category */}
-                    <div
-                      className="flex justify-between items-center cursor-pointer"
-                      onClick={() => {
-                        if (item.category === 'Features') toggleFeaturesDropdown();
-                        if (item.category === 'More') toggleMoreDropdown();
-                      }}
-                    >
-                      <h3 className="font-semibold text-sm text-gray-500 uppercase tracking-wider mb-2">
-                        {item.category}
-                      </h3>
-                      {/* Chevron to show expand/collapse */}
-                      {(item.category === 'Features' && (
-                        <Button variant="ghost" size="icon">
-                          {isFeaturesDropdownOpen ? (
-                            <ChevronUp className="h-4 w-4 text-gray-500" />
-                          ) : (
-                            <ChevronDown className="h-4 w-4 text-gray-500" />
-                          )}
-                        </Button>
-                      )) ||
-                        (item.category === 'More' && (
-                          <Button variant="ghost" size="icon">
-                            {isMoreDropdownOpen ? (
-                              <ChevronUp className="h-4 w-4 text-gray-500" />
-                            ) : (
-                              <ChevronDown className="h-4 w-4 text-gray-500" />
-                            )}
-                          </Button>
-                        ))}
-                    </div>
-
-                    {/* Dropdown Content for Features */}
-                    {item.category === 'Features' && isFeaturesDropdownOpen && (
-                      <div className="flex flex-col space-y-2 ml-4">
-                        {item.items.map((subItem) => (
-                          <NavLink key={subItem.name} item={subItem} onClick={closeSidebar} />
-                        ))}
-                      </div>
-                    )}
-
-                    {/* Dropdown Content for More */}
-                    {item.category === 'More' && isMoreDropdownOpen && (
-                      <div className="flex flex-col space-y-2 ml-4">
-                        {item.items.map((subItem) => (
-                          <NavLink key={subItem.name} item={subItem} onClick={closeSidebar} />
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              } else {
-                return <NavLink key={index} item={item} onClick={closeSidebar} />;
-              }
-            })}
+            {navItems.map((item, index) => (
+              <NavLink key={index} item={item} onClick={closeSidebar} />
+            ))}
 
             {/* Authentication Links */}
             {status === 'loading' ? (
