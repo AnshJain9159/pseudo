@@ -16,7 +16,7 @@ const StepVisualizer: React.FC<StepVisualizerProps> = ({ step }) => {
               cols={6} 
               isActive={true} 
             />
-            <div className="text-center text-sm text-gray-600">
+            <div className="text-center text-sm text-white">
               <p>Original Model</p>
               <p className="text-xs mt-1">Large Parameter Space</p>
             </div>
@@ -39,7 +39,7 @@ const StepVisualizer: React.FC<StepVisualizerProps> = ({ step }) => {
                 isActive={true}
               />
             </div>
-            <p className="text-sm text-gray-600">4-bit Precision Conversion</p>
+            <p className="text-sm text-white">4-bit Precision Conversion</p>
           </div>
         );
       
@@ -63,7 +63,7 @@ const StepVisualizer: React.FC<StepVisualizerProps> = ({ step }) => {
                 isActive={true}
               />
             </div>
-            <p className="text-sm text-gray-600">Low-Rank Decomposition</p>
+            <p className="text-sm text-white">Low-Rank Decomposition</p>
           </div>
         );
       
@@ -79,10 +79,10 @@ const StepVisualizer: React.FC<StepVisualizerProps> = ({ step }) => {
               />
               <div className="flex flex-col items-center">
                 <span className="text-2xl text-green-500">✓</span>
-                <span className="text-sm text-gray-500">Optimized</span>
+                <span className="text-sm text-white">Optimized</span>
               </div>
             </div>
-            <p className="text-sm text-gray-600">Task-Specific Model</p>
+            <p className="text-sm text-white">Task-Specific Model</p>
           </div>
         );
       
@@ -92,7 +92,7 @@ const StepVisualizer: React.FC<StepVisualizerProps> = ({ step }) => {
   };
 
   return (
-    <div className="bg-slate-600 rounded-2xl shadow-xl p-8 transition-all duration-500">
+    <div className="bg-transparent rounded-2xl shadow-xl p-8 transition-all duration-500">
       {renderVisualization()}
     </div>
   );

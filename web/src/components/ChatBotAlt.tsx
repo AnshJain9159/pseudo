@@ -75,7 +75,7 @@ export default function ChatPageAlt() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-gray-200">
+    <div className="flex flex-col pl-4 h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-gray-200">
       
 
       {/* Chat messages container with fixed height and scrollable content */}

@@ -44,7 +44,7 @@ const Page: React.FC = () => {
   };
 
   return (
-    <div className='flex h-screen w-full bg-[#191919] overflow-y-hidden'>
+    <div className='flex h-screen w-full bg-[#191919] overflow-y-hidden' > {/* Adjust padding-top to fit the navbar height */}
       {/* Chat Section (Left) */}
       <ResizableBox
         width={chatWidth}
