@@ -308,20 +308,7 @@ const DSARoadmap = () => {
   return (
     <div className="h-screen w-full bg-gray-900 ">
       
-      <div className="absolute top-4 left-4 z-10 flex gap-4">
-        <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded-full bg-green-600" />
-          <span className="text-white">Beginner</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded-full bg-yellow-600" />
-          <span className="text-white">Intermediate</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded-full bg-red-600" />
-          <span className="text-white">Advanced</span>
-        </div>
-      </div>
+      
       
       {selectedNode && (
         <div className="absolute top-4 right-4 z-10 bg-gray-800 p-4 rounded-lg text-white max-w-md">
@@ -349,8 +336,21 @@ const DSARoadmap = () => {
         onNodeClick={(_, node) => setSelectedNode(node)}
         className="bg-gray-900"
       >
-        
-        <Background color="#fff" variant={"dots"} />
+        <Background color="#fff" variant="dots" />
+        <div className="absolute top-4 left-4 z-10 flex gap-4">
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 rounded-full bg-green-600" />
+          <span className="text-white">Beginner</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 rounded-full bg-yellow-600" />
+          <span className="text-white">Intermediate</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 rounded-full bg-red-600" />
+          <span className="text-white">Advanced</span>
+        </div>
+      </div>
       </ReactFlow>
     </div>
   );

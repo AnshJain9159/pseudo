@@ -140,7 +140,7 @@ export default function Home() {
                 </div>
                 <div className="space-y-3 text-sm">
                   <p className="text-zinc-400">
-                    I see you're implementing binary search. Let me help
+                    I see you&apos;re implementing binary search. Let me help
                     explain the algorithm step by step...
                   </p>
                   <div className="flex items-center space-x-2 text-blue-400">
