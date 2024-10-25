@@ -50,18 +50,25 @@ const EditProfilePage: React.FC = () => {
           );
           if (response.ok) {
             const userData = await response.json();
+            // console.log(userData)
             setUser(userData);
+            // const mergedTopics=userData.topics
             // Merge existing user topics with initial topics
-            const mergedTopics = getInitialTopics().map(initialTopic => {
+            let mergedTopics = getInitialTopics().map(initialTopic => {
               const existingTopic = userData.topics?.find(
                 (t: Topic) => t.name === initialTopic.name
               );
               return existingTopic || initialTopic;
             });
+            // mergedTopics=userData.topics
+            
+            // console.log(mergedTopics)
             setFormValues({
               fullName: userData.fullName,
               topics: mergedTopics,
             });
+            // console.log(formValues)
+            // console.log(userData.topics)
           }
         } catch (error) {
           console.error('Error fetching user data:', error);

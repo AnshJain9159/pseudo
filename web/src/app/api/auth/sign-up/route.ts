@@ -39,7 +39,7 @@ export async function POST(request: Request) {
         // MongoDB user creation
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create bytes32 hashes for blockchain
+        //Create bytes32 hashes for blockchain
         const emailHashBuffer = crypto.createHash("sha256").update(email).digest();
         const passwordHashBuffer = crypto.createHash("sha256").update(password).digest();
 
@@ -98,7 +98,7 @@ export async function POST(request: Request) {
             email,
             password: hashedPassword,
             role,
-            ethereumAddress: newAccount.address,
+            // ethereumAddress: newAccount.address,
             topics: getInitialTopics(),
         });
         
@@ -107,7 +107,7 @@ export async function POST(request: Request) {
         return new Response(JSON.stringify({
             success: true,
             message: "User registered Successfully.",
-            ethereumAddress: newAccount.address
+            // ethereumAddress: newAccount.address
         }), { status: 200 });
     } catch (error) {
         console.error('Error Registering User', error);
