@@ -1,3 +1,4 @@
+// signup route
 import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/models/User";
 import bcrypt from "bcryptjs";
@@ -5,11 +6,11 @@ import Web3 from "web3";
 import { join } from "path";
 import crypto from "crypto";
 import { readFileSync } from "fs";
+import { getInitialTopics } from '@/utils/initializeTopics';
 
 const contractABI = JSON.parse(
     readFileSync(join(process.cwd(), "src", "lib", "contracts", "UserManager.json"), "utf8")
 );
-
 const contractAddress = "0x30a0Da8ae95e49D1Fb6137BE262088237596AC87";
 const web3 = new Web3("http://localhost:8545");
 const userRegistryContract = new web3.eth.Contract(contractABI.abi, contractAddress);
@@ -29,25 +30,25 @@ export async function POST(request: Request) {
         const existingUserByEmail = await UserModel.findOne({ email });
 
         if (existingUserByEmail) {
-            return Response.json({
+            return new Response(JSON.stringify({
                 success: false,
                 message: "User Already Exist With This Email",
-            }, { status: 300 });
+            }), { status: 300 });
         }
 
         // MongoDB user creation
         const hashedPassword = await bcrypt.hash(password, 10);
-        
+
         // Create bytes32 hashes for blockchain
         const emailHashBuffer = crypto.createHash("sha256").update(email).digest();
         const passwordHashBuffer = crypto.createHash("sha256").update(password).digest();
-        
+
         const emailHashBytes32 = convertToBytes32(emailHashBuffer.toString('hex'));
         const passwordHashBytes32 = convertToBytes32(passwordHashBuffer.toString('hex'));
 
         // Generate a new Ethereum account for this user
         const newAccount = web3.eth.accounts.create();
-
+        
         // Get the first account (assuming it has funds)
         const accounts = await web3.eth.getAccounts();
         const fundingAccount = accounts[0];
@@ -89,7 +90,6 @@ export async function POST(request: Request) {
 
         // Send the signed transaction
         const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
-
         console.log('Transaction receipt:', receipt);
 
         // Create and save the new user
@@ -98,27 +98,27 @@ export async function POST(request: Request) {
             email,
             password: hashedPassword,
             role,
-            ethereumAddress: newAccount.address
+            ethereumAddress: newAccount.address,
+            topics: getInitialTopics(),
         });
-
+        
         await newUser.save();
 
-        return Response.json({
+        return new Response(JSON.stringify({
             success: true,
             message: "User registered Successfully.",
             ethereumAddress: newAccount.address
-        }, { status: 200 });
+        }), { status: 200 });
     } catch (error) {
         console.error('Error Registering User', error);
-        return Response.json(
+        return new Response(JSON.stringify(
             {
                 success: false,
                 message: "Error Registering User",
                 //error: error.message
-            },
-            {
-                status: 500,
             }
-        );
+        ), {
+            status: 500,
+        });
     }
 }

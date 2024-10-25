@@ -37,7 +37,6 @@ const navItems = [
     items: [
       { name: 'User Dashboard', href: '/u/dashboard' },
       { name: 'About Us', href: '/aboutus' },
-      
     ],
   },
   

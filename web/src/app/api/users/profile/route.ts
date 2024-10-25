@@ -23,6 +23,7 @@ export async function GET(request: NextRequest) {
       fullName: user.fullName,
       email: user.email,
       role: user.role,
+      ethereumAddress:user.ethereumAddress,
     };
 
     return NextResponse.json(safeUser);
