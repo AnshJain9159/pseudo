@@ -9,23 +9,23 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 const features = [
   {
     icon: <Code className="text-blue-400 w-10 h-10" />,
-    title: "Algorithm Learning",
-    description: "Master algorithms through Socratic questioning and step-by-step guidance.",
+    title: "Comprehensive Computer Science Learning",
+    description: "Master core concepts in Computer Science, including algorithms, data structures, and systems design.",
   },
   {
     icon: <Search className="text-green-400 w-10 h-10" />,
     title: "Interactive Visualizations",
-    description: "Real-time visualizations tailored to your learning path.",
+    description: "Real-time visualizations tailored to enhance your understanding of complex topics.",
   },
   {
     icon: <BadgeCheck className="text-yellow-500 w-10 h-10" />,
     title: "Performance Tracking",
-    description: "Monitor your progress with detailed insights into algorithm mastery.",
+    description: "Monitor your progress with detailed insights into your mastery of Computer Science concepts.",
   },
   {
     icon: <ChevronRight className="text-purple-400 w-10 h-10" />,
     title: "AI-Powered Assistance",
-    description: "Get personalized guidance through AI-driven analysis.",
+    description: "Receive personalized guidance and support through AI-driven analysis.",
   },
 ];
 
@@ -37,7 +37,7 @@ const AboutUs = () => {
         <div className="text-center mb-12">
           <h1 className="text-5xl font-extrabold text-white tracking-wider">About Socrates</h1>
           <p className="mt-4 text-lg text-gray-400">
-            Your AI-powered companion to mastering algorithms and data structures through inquiry.
+            Your AI-powered companion for mastering Computer Science through inquiry.
           </p>
         </div>
 
@@ -67,7 +67,7 @@ const AboutUs = () => {
             </h2>
             <CardContent>
               <p className="text-gray-400">
-                At Socrates, we’re changing how students learn algorithms through AI-driven Socratic teaching, ensuring deeper comprehension.
+                At Socrates, we aim to transform how students learn Computer Science, including algorithms, data structures, and software engineering principles through AI-driven Socratic teaching, ensuring deeper comprehension.
               </p>
             </CardContent>
           </Card>
@@ -79,7 +79,7 @@ const AboutUs = () => {
             </h2>
             <CardContent>
               <p className="text-gray-400">
-                Socrates uses AI to guide students with questions, encouraging them to discover solutions and develop critical thinking.
+                Socrates uses AI to guide students with questions across a wide range of Computer Science topics, encouraging them to discover solutions and develop critical thinking skills.
               </p>
             </CardContent>
           </Card>
@@ -95,7 +95,7 @@ const AboutUs = () => {
             </h2>
             <CardContent>
               <p className="text-gray-400">
-                Tailored lessons based on your learning pace, ensuring you stay on track.
+                Tailored lessons based on your learning pace, ensuring you stay on track with all aspects of Computer Science.
               </p>
             </CardContent>
           </Card>
@@ -107,7 +107,7 @@ const AboutUs = () => {
             </h2>
             <CardContent>
               <p className="text-gray-400">
-                Socrates makes high-quality, AI-driven learning available to everyone, anytime, anywhere.
+                Socrates makes high-quality, AI-driven learning accessible to everyone, anytime, anywhere, across all Computer Science disciplines.
               </p>
             </CardContent>
           </Card>
@@ -119,7 +119,7 @@ const AboutUs = () => {
             </h2>
             <CardContent>
               <p className="text-gray-400">
-                We focus on building lasting comprehension through inquiry, guiding students to solutions on their own.
+                We focus on building lasting comprehension through inquiry, guiding students through the full breadth of Computer Science concepts.
               </p>
             </CardContent>
           </Card>
