@@ -190,6 +190,7 @@ const EditProfilePage: React.FC = () => {
                   className="mt-1 bg-gray-700 border border-gray-600 text-gray-200"
                 />
               </div>
+              
             </div>
 
             {/* Topics Section */}
