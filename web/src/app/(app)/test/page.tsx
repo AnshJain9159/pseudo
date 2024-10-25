@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-"use client"
+'use client'
 import { useChat } from 'ai/react'
 import { Bot, User, Send } from 'lucide-react'
 import { CodeBlock } from '@/components/CodeBlock'
@@ -8,17 +6,24 @@ import { MessageSkeleton } from '@/components/MessageSkeleton'
 import { useRef, useEffect, useState } from 'react';
 
 export default function ChatPage() {
-    const [currentMessage, setCurrentMessage] = useState('');
+    interface ChatMessage {
+        role: 'user' | 'assistant';
+        content: string;
+    }
 
-    const { messages, input, handleInputChange, handleSubmit, isLoading, error, append } = useChat({
+    const [currentMessage, setCurrentMessage] = useState('');
+    const [chat, setChat] = useState<ChatMessage[]>([]); // New state for chat messages
+
+    const { messages, input, handleInputChange, handleSubmit, isLoading, error } = useChat({
         api: '/api/chat1',
         onResponse: async (response) => {
             console.log('Response status:', response.status);
             console.log('Response headers:', Object.fromEntries(response.headers.entries()));
 
-            const clonedResponse = response.clone(); // Clone the response to avoid locking issues
+            const clonedResponse = response.clone();
             const reader = clonedResponse.body?.locked ? null : clonedResponse.body?.getReader();
             const decoder = new TextDecoder();
+            let fullMessage = ''; // Temporary variable for the full response
 
             if (reader) {
                 while (true) {
@@ -26,14 +31,20 @@ export default function ChatPage() {
                     if (done) break;
 
                     const chunk = decoder.decode(value, { stream: true });
+                    fullMessage += chunk;
                     setCurrentMessage((prev) => prev + chunk);
-                    console.log(chunk);
                 }
+
+                setCurrentMessage(fullMessage); // Set full response to currentMessage after reading is done
+                setChat((prev) => [
+                    ...prev,
+                    { role: 'assistant', content: fullMessage }
+                ]); // Add the completed message to chat
             }
         },
-
         onFinish: (message) => {
             console.log('Finished message:', message);
+           
         },
 
         onError: (error) => {
@@ -42,19 +53,10 @@ export default function ChatPage() {
     });
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
-    const [chatHistory, setChatHistory] = useState(() => {
-        if (typeof window !== 'undefined') {
-            const savedHistory = localStorage.getItem('chatHistory');
-            return savedHistory ? JSON.parse(savedHistory) : [];
-        }
-        return [];
-    });
 
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-        }
-    }, [messages, currentMessage]);
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [chat, currentMessage]); // Update to watch 'chat'
 
     const stripMarkdown = (content: string) => {
         let strippedContent = content.replace(/(\*\*|__)(.*?)\1/g, '$2');
@@ -62,7 +64,6 @@ export default function ChatPage() {
         strippedContent = strippedContent.replace(/^#+\s*(.*)$/gm, '$1');
         return strippedContent;
     };
-
     const renderMessageContent = (content: string) => {
         const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g;
         const parts = [];
@@ -96,11 +97,12 @@ export default function ChatPage() {
 
         return parts;
     };
-
     const customSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log('Submitting message:', input);
         handleSubmit(e);
+        setChat((prev) => [...prev, { role: 'user', content: input }]); // Add user message to chat
+        
     };
 
     return (
@@ -109,20 +111,12 @@ export default function ChatPage() {
                 <h1 className="text-2xl font-bold text-center">Algorithm Tutor</h1>
             </header>
 
-            {/* {error && (
-                <div className="p-4 m-4 bg-red-100 text-red-700 rounded-lg">
-                    Error: {error.message}
-                </div>
-            )} */}
-
             <div className="flex-1 overflow-y-auto p-4">
                 <div className="space-y-4">
-                    {messages.map((message) => (
+                    {chat.map((message, index) => (
                         <div
-                            key={message.id}
-                            className={`flex items-start space-x-2 ${
-                                message.role === 'assistant' ? 'justify-start' : 'justify-end'
-                            }`}
+                            key={index} // Using index as key since chat messages can change
+                            className={`flex items-start space-x-2 ${message.role === 'assistant' ? 'justify-start' : 'justify-end'}`}
                         >
                             {message.role === 'assistant' && (
                                 <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
@@ -130,9 +124,7 @@ export default function ChatPage() {
                                 </div>
                             )}
                             <div
-                                className={`p-3 rounded-lg max-w-[80%] ${
-                                    message.role === 'assistant' ? 'bg-white' : 'bg-blue-500 text-white'
-                                }`}
+                                className={`p-3 rounded-lg max-w-[80%] ${message.role === 'assistant' ? 'bg-white' : 'bg-blue-500 text-white'}`}
                             >
                                 {renderMessageContent(message.content)}
                             </div>
@@ -144,7 +136,7 @@ export default function ChatPage() {
                         </div>
                     ))}
 
-                    {currentMessage && (
+                    {/* {currentMessage && (
                         <div className="flex items-start space-x-2 justify-start">
                             <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
                                 <Bot className="w-5 h-5 text-white" />
@@ -153,7 +145,7 @@ export default function ChatPage() {
                                 <p className="whitespace-pre-wrap">{currentMessage}</p>
                             </div>
                         </div>
-                    )}
+                    )} */}
 
                     {isLoading && <MessageSkeleton />}
                     <div ref={messagesEndRef} />
@@ -185,3 +177,4 @@ export default function ChatPage() {
         </div>
     );
 }
+ 

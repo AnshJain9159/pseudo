@@ -14,7 +14,7 @@ const debug = async (error: any) => {
   if (process.env.NODE_ENV === 'development') {
     console.error('Full error details:', error);
   }
-};
+};         
 
 export async function POST(req: Request) {
   try {
