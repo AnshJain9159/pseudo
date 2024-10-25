@@ -11,7 +11,7 @@ const ExcalidrawWrapper = dynamic(
 );
 
 import NotebookPage from '@/components/Codepad';
-import ChatPageAlt from '@/components/ChatBotAlt';
+import ChatPage from '@/components/ChatBotAlt';
 
 const Page: React.FC = () => {
   const [mounted, setMounted] = useState(false);
@@ -59,7 +59,7 @@ const Page: React.FC = () => {
         className="resize-box border-r border-[#2F2F2F]"
         resizeHandles={['e']}
       >
-        <ChatPageAlt />
+        <ChatPage/>
       </ResizableBox>
 
       {/* Code Section (Middle) */}
