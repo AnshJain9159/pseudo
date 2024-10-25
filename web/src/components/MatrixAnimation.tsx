@@ -9,30 +9,36 @@ interface MatrixAnimationProps {
 
 const MatrixAnimation: React.FC<MatrixAnimationProps> = ({ rows, cols, highlight, isActive }) => {
   const [values, setValues] = useState<number[][]>([]);
-  
+
   useEffect(() => {
-    const newValues = Array(rows).fill(0).map(() => 
-      Array(cols).fill(0).map(() => parseFloat((Math.random()).toFixed(1)))
-    );
+    const newValues = Array(rows)
+      .fill(0)
+      .map(() =>
+        Array(cols)
+          .fill(0)
+          .map(() => parseFloat(Math.random().toFixed(1)))
+      );
     setValues(newValues);
   }, [rows, cols, isActive]);
 
   const baseClasses = "grid transition-all duration-500";
-  const highlightClasses = highlight 
-    ? "bg-blue-100 border-blue-400 shadow-lg" 
+  const highlightClasses = highlight
+    ? "bg-blue-100 border-blue-400 shadow-lg"
     : "bg-gray-50 border-gray-200";
-  const activeClasses = isActive 
-    ? "scale-105 shadow-xl" 
-    : "scale-100";
+  const activeClasses = isActive ? "scale-105 shadow-xl" : "scale-100";
 
   return (
-    <div className={`
-      ${baseClasses} 
-      ${highlightClasses} 
-      ${activeClasses}
-      border rounded-lg p-1
-      grid-cols-${cols}
-    `}>
+    <div
+      className={`
+        ${baseClasses}
+        ${highlightClasses}
+        ${activeClasses}
+        border rounded-lg p-1
+      `}
+      style={{
+        gridTemplateColumns: `repeat(${cols}, 1fr)` // Ensure correct number of columns
+      }}
+    >
       {values.flat().map((value, i) => (
         <div
           key={i}
