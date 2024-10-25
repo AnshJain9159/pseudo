@@ -1,5 +1,4 @@
 import React from 'react';
-import { Grid, ArrowRight, Layers, Cpu } from 'lucide-react';
 
 interface MatrixProps {
   size: 'sm' | 'lg';
