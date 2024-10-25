@@ -26,7 +26,6 @@ const navItems = [
   {
     category: 'Features',
     items: [
-      { name: 'PseudoBot', href: '/pseudobot' },
       { name: "DSA's Roadmap", href: '/roadmap' },
       { name: "LLM's Visualization", href: '/visualizer' },
 
