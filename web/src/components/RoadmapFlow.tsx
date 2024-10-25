@@ -190,16 +190,51 @@ const CSRoadmap = () => {
   };
 
   return (
-    <div className="h-screen w-full bg-gray-900">
+    <div className="h-screen w-full bg-gray-900 ">
+      
+      
+      
+      {selectedNode && (
+        <div className="absolute top-4 right-4 z-10 bg-gray-800 p-4 rounded-lg text-white max-w-md">
+          <h2 className="text-xl font-bold mb-2">{selectedNode.data.label}</h2>
+          <p className="mb-2">{selectedNode.data.description}</p>
+          <p className="mb-1">Difficulty: {selectedNode.data.difficulty}</p>
+          <p className="mb-1">Estimated Time: {selectedNode.data.estimatedHours} hours</p>
+            <div className="flex justify-between items-center">
+            <p>Prerequisites: {selectedNode.data.prerequisites.join(', ') || 'None'}</p>
+            <button 
+              className="p-1 hover:bg-white/20 rounded-full transition-colors"
+              onClick={() => setSelectedNode(null)}
+            >
+              <ArrowLeft size={16} />
+            </button>
+            </div>
+        </div>
+      )}
+
       <ReactFlow
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeTypes}
         fitView
-        onNodeClick={(_, node) => expandSubtree(node.id)} // Expand on node click
+        onNodeClick={(_, node) => setSelectedNode(node)}
         className="bg-gray-900"
       >
         <Background color="#fff" variant="dots" />
+        <div className="absolute top-4 left-4 z-10 flex gap-4">
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 rounded-full bg-green-600" />
+          <span className="text-white">Beginner</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 rounded-full bg-yellow-600" />
+          <span className="text-white">Intermediate</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 rounded-full bg-red-600" />
+          <span className="text-white">Advanced</span>
+        </div>
+      </div>
       </ReactFlow>
     </div>
   );

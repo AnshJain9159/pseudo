@@ -15,8 +15,9 @@ export default function Footer() {
           {/* Middle section - Horizontal Quick Links */}
           <div className="flex space-x-6">
             <a href="/main" className="hover:text-white text-sm">Socrator</a>
-            <a href="/aboutus" className="hover:text-white text-sm">About</a>
-            <a href="/visualizer" className="hover:text-white text-sm">Analyzer</a>
+            <a href="/workflow" className="hover:text-white text-sm">Our Workflow</a>
+            <a href="/visualizer" className="hover:text-white text-sm">Visualizer</a>
+            <a href="/aboutus" className="hover:text-white text-sm">About Us</a>
           </div>
           
           {/* Right section - Social media */}
