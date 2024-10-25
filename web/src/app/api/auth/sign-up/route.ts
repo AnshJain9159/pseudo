@@ -6,7 +6,7 @@ import Web3 from "web3";
 import { join } from "path";
 import crypto from "crypto";
 import { readFileSync } from "fs";
-
+import { getInitialTopics } from '@/utils/initializeTopics';
 const contractABI = JSON.parse(
     readFileSync(join(process.cwd(), "src", "lib", "contracts", "UserManager.json"), "utf8")
 );
@@ -38,7 +38,7 @@ export async function POST(request: Request) {
         // MongoDB user creation
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create bytes32 hashes for blockchain
+        //Create bytes32 hashes for blockchain
         const emailHashBuffer = crypto.createHash("sha256").update(email).digest();
         const passwordHashBuffer = crypto.createHash("sha256").update(password).digest();
 
@@ -98,6 +98,7 @@ export async function POST(request: Request) {
             password: hashedPassword,
             role,
             ethereumAddress: newAccount.address,
+            topics: getInitialTopics(),
         });
         
         await newUser.save();
