@@ -1,6 +1,5 @@
-// models/UserModel.ts
-import { getInitialTopics } from '@/utils/initializeTopics';
 import mongoose, { Schema, Document } from 'mongoose';
+import { getInitialTopics } from '@/utils/initializeTopics';
 
 export interface Topic {
   name: string;
@@ -33,7 +32,7 @@ const TopicSchema: Schema = new mongoose.Schema({
   },
 });
 
-const UserSchema: Schema = new mongoose.Schema({
+const UserSchema: Schema<User> = new mongoose.Schema({
   fullName: {
     type: String,
     required: [true, 'Full name is required'],
@@ -63,11 +62,11 @@ const UserSchema: Schema = new mongoose.Schema({
     sparse: true,
   },
   topics: {
-    type: [TopicSchema], // Reference the TopicSchema directly
+    type: [TopicSchema],
     default: getInitialTopics, // Use the function to initialize topics
   },
 });
 
-const UserModel = mongoose.models.User as mongoose.Model<User> || mongoose.model<User>('User', UserSchema);
+const UserModel = mongoose.models.User || mongoose.model<User>('User', UserSchema);
 
 export default UserModel;

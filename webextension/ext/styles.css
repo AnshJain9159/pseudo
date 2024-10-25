@@ -27,6 +27,7 @@ body {
 
 .popup-title {
   font-size: 18px;
+  font-family:Verdana, Geneva, Tahoma, sans-serif;
   margin: 0 0 4px 0;
   color: #00d4ff;
 }

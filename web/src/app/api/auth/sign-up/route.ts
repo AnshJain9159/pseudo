@@ -6,7 +6,6 @@ import Web3 from "web3";
 import { join } from "path";
 import crypto from "crypto";
 import { readFileSync } from "fs";
-import { getInitialTopics } from '@/utils/initializeTopics';
 
 const contractABI = JSON.parse(
     readFileSync(join(process.cwd(), "src", "lib", "contracts", "UserManager.json"), "utf8")
@@ -98,8 +97,11 @@ export async function POST(request: Request) {
             email,
             password: hashedPassword,
             role,
-            // ethereumAddress: newAccount.address,
+
+            ethereumAddress: newAccount.address,
             topics: getInitialTopics(),
+            ethereumAddress: newAccount.address,
+
         });
         
         await newUser.save();
@@ -107,7 +109,7 @@ export async function POST(request: Request) {
         return new Response(JSON.stringify({
             success: true,
             message: "User registered Successfully.",
-            // ethereumAddress: newAccount.address
+            ethereumAddress: newAccount.address
         }), { status: 200 });
     } catch (error) {
         console.error('Error Registering User', error);
