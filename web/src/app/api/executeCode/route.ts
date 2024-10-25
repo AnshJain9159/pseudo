@@ -5,8 +5,8 @@ import path from 'path';
 import crypto from 'crypto';
 import os from 'os';
 
-const TIMEOUT = 5000; // 5 seconds
-const MAX_BUFFER = 1024 * 1024; // 1 MB
+const TIMEOUT = 5000; // 5 seconds timeout for the execution
+const MAX_BUFFER = 1024 * 1024; // 1 MB buffer size for stdout/stderr
 
 export async function POST(request: NextRequest) {
   const { code, language } = await request.json();
@@ -20,53 +20,49 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unsupported language' }, { status: 400 });
   }
 
-  const sanitizedCode = sanitizeCode(code);
+  const sanitizedCode = sanitizeCode(code); // Optional: remove unsafe code
   const fileName = `code_${crypto.randomBytes(16).toString('hex')}`;
   const tmpDir = os.tmpdir();
   const filePath = path.join(tmpDir, `${fileName}.${getFileExtension(language)}`);
   const outputPath = path.join(tmpDir, `${fileName}.out`);
 
   try {
+    // Write the code to a file
     await fs.writeFile(filePath, sanitizedCode);
+    
+    // Execute the code (compile + run)
     const { output, error } = await executeCode(filePath, outputPath, language);
-    
+
     if (error) {
-      return NextResponse.json({ error: error }, { status: 400 }); // Changed to 400 for compilation errors
+      return NextResponse.json({ error }, { status: 400 }); // Compilation or execution error
     }
-    
-    return NextResponse.json({ output });
+
+    return NextResponse.json({ output }); // Send back the program output
   } catch (error) {
-    console.error('Code execution error:', error);
-    return NextResponse.json({ 
-      error: error instanceof Error ? error.message : 'Code execution failed' 
+    return NextResponse.json({
+      error: error instanceof Error ? error.message : 'Code execution failed',
     }, { status: 500 });
   } finally {
-    // Clean up the files
+    // Cleanup temporary files
     try {
-      await fs.unlink(filePath).catch(() => {});
-      await fs.unlink(outputPath).catch(() => {});
-    } catch (error) {
-      console.error('File cleanup error:', error);
+      await fs.unlink(filePath);
+      await fs.unlink(outputPath);
+    } catch (cleanupError) {
+      console.error('Error cleaning up files:', cleanupError);
     }
   }
 }
 
+// Sanitize input code (optional)
 function sanitizeCode(code: string): string {
-  // Basic sanitization: remove potential harmful system calls
   const forbiddenPatterns = [
-    /system\s*\(/g,
-    /exec\s*\(/g,
-    /eval\s*\(/g,
-    /shellexec\s*\(/g,
-    /popen\s*\(/g,
-    /proc_open\s*\(/g,
-    /passthru\s*\(/g,
+    /system\s*\(/g, /exec\s*\(/g, /eval\s*\(/g, /shellexec\s*\(/g, /popen\s*\(/g,
   ];
 
   let sanitizedCode = code;
-  for (const pattern of forbiddenPatterns) {
+  forbiddenPatterns.forEach((pattern) => {
     sanitizedCode = sanitizedCode.replace(pattern, '');
-  }
+  });
 
   return sanitizedCode;
 }
@@ -89,10 +85,11 @@ function executeCode(filePath: string, outputPath: string, language: string): Pr
         command = `python "${filePath}"`;
         break;
       case 'cpp':
-        // Added -std=c++11 flag and separated compilation and execution
-        command = `g++ -std=c++11 "${filePath}" -o "${outputPath}" && "${outputPath}"`;
+        // Compile and execute C++ code
+        command = `g++ "${filePath}" -o "${outputPath}" && "${outputPath}"`;
         break;
       case 'c':
+        // Compile and execute C code
         command = `gcc "${filePath}" -o "${outputPath}" && "${outputPath}"`;
         break;
       default:
@@ -100,18 +97,8 @@ function executeCode(filePath: string, outputPath: string, language: string): Pr
     }
 
     exec(command, { timeout: TIMEOUT, maxBuffer: MAX_BUFFER }, (error, stdout, stderr) => {
-      if (error) {
-        // Return compilation errors with more detail
-        resolve({ 
-          output: '', 
-          error: stderr || error.message 
-        });
-      } else if (stderr) {
-        // Handle warnings but successful compilation
-        resolve({ 
-          output: stdout,
-          error: stderr 
-        });
+      if (error || stderr) {
+        resolve({ output: '', error: stderr || "error" });
       } else {
         resolve({ output: stdout });
       }
