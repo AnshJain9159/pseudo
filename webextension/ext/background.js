@@ -70,30 +70,31 @@ chrome.runtime.onInstalled.addListener((details) => {
 
   // background.js
 
-  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.action === 'sendMessageToServer') {
-      fetch('http://localhost:11434/api/generate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'hwm:latest',
-          messages: [{ role: 'user', content: message.userMessage }],
-          stream: true,
-        }),
-      })
-      .then(response => response.json())
-      .then(data => {
-        sendResponse({ success: true, data });
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        sendResponse({ success: false, error });
-      });
-  
-      // Keep the message channel open for async response
-      return true;
-    }
-  });
+  // background.js
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === 'sendMessageToServer') {
+    fetch('http://localhost:3001/api/generate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',  // Add this line
+      },
+      body: JSON.stringify({
+        model: 'hwm:latest',
+        messages: [{ role: 'user', content: message.userMessage }],
+        stream: true,
+      }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      sendResponse({ success: true, data });
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      sendResponse({ success: false, error });
+    });
+
+    return true;
+  }
+});
   

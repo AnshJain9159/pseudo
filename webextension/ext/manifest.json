@@ -2,16 +2,17 @@
   "manifest_version": 3,
   "name": "BroCode",
   "version": "1.0",
-  "description": "A Socratic teaching assistant for LeetCode problems",
+  "description": "A Socratic teaching assistant for LeetCode / GFG/ Code Forces problems",
   "permissions": [
     "activeTab",
     "scripting",
     "clipboardWrite",
     "storage",
-    "notifications"
+    "notifications",
+    "http://localhost:3001/*"
   ],
   "host_permissions": [
-    "https://leetcode.com/*","http://localhost:11434/*"
+    "https://leetcode.com/*","http://localhost:3001/*"
   ],
   "action": {
     "default_popup": "popup.html",
