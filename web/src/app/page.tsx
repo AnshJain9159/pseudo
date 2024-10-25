@@ -44,7 +44,7 @@ export default function Home() {
         {/* Start Learning Button */}
         <div className="flex justify-center"> 
           <a href="/main">
-            <Button className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-300 ease-in-out shadow-lg hover:shadow-purple-500/50 flex items-center">
+            <Button className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-8 rounded-lg transition duration-300 ease-in-out shadow-lg hover:shadow-purple-500/50 flex items-center">
               Start Learning
               <ArrowRight className="w-5 h-5 ml-3 text-white" />
             </Button>
@@ -70,7 +70,7 @@ export default function Home() {
           description="Practice and test your code in real-time"
         />
       </div>
-
+      {/* <h1 className='text-3xl font-semibold text-white px-4 py-4'>All at one place...</h1> */}
       <div className="flex-1 max-w-6xl mx-auto px-4 pb-4 mt-8">
         <div className="h-full rounded-xl overflow-hidden border border-zinc-800/50">
           <div className="flex items-center space-x-2 px-3 py-2 bg-zinc-900/80 border-b border-zinc-800/50">
