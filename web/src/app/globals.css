@@ -3,9 +3,20 @@
 @tailwind utilities;
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+@import "prismjs/themes/prism-tomorrow.css"; /* Dark theme */
 
 body {
   font-family: 'Inter', sans-serif;
+}
+
+/* Custom styles for the Ace Editor */
+.ace_editor_custom .ace_content {
+  background-color: black !important; /* Ensure editor content is black */
+}
+
+.ace_editor_custom .ace_gutter {
+  background-color: black !important; /* Make the gutter black as well */
+  color: white !important; /* Ensure gutter text is visible */
 }
 
 
