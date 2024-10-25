@@ -43,6 +43,14 @@
       </div>
     </div>
 
+    <div class="chat-window">
+      <div id="chatMessages" class="messages"></div>
+      <form id="chatForm" class="chat-form">
+        <input type="text" id="chatInput" placeholder="Ask about sorting algorithms..." class="chat-input">
+        <button type="submit" class="chat-submit-button">&#x1F4E4;</button> <!-- Paper Plane Emoji -->
+      </form>
+    </div>
+
     <div class="footer">
       <button id="settings" class="icon-button">&#x2699;</button> <!-- Gear Emoji -->
       <button id="help" class="icon-button">&#x2754;</button> <!-- Question Mark Emoji -->
@@ -55,5 +63,6 @@
     </div>
   </div>
   <script src="popup.js"></script>
+  <script src="chatbot.js"></script>
 </body>
 </html>

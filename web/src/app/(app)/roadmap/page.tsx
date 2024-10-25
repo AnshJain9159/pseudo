@@ -23,7 +23,7 @@ const RoadmapPage = () => {
   //   if ((event.target as HTMLElement).closest('button')) {
   //     return;
   //   }
-  //   router.push(`/topics/${node.id}`);
+  //   router.push(⁠ /topics/${node.id} ⁠);
   // };
 
   return (
