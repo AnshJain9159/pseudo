@@ -11,7 +11,7 @@
     "notifications"
   ],
   "host_permissions": [
-    "https://leetcode.com/*"
+    "https://leetcode.com/*","http://localhost:11434/*"
   ],
   "action": {
     "default_popup": "popup.html",

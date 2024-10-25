@@ -11,8 +11,10 @@ body {
 .container {
   background: #16213e;
   border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px; /* Increased padding for better spacing */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Enhanced shadow for more depth */
+  max-height: 100vh; /* Prevents overflow */
+  overflow-y: auto;  /* Scroll if content exceeds viewport */
 }
 
 /* Header Styles */
@@ -62,6 +64,70 @@ body {
 .status-text {
   font-size: 12px;
   color: #a6b1e1;
+}
+
+.chat-window {
+  background: #1f2947;
+  border-radius: 8px;
+  padding: 12px;
+  max-height: 400px; /* Ensures chat doesn't overflow */
+  overflow-y: auto;
+  margin-bottom: 16px;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.message {
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.message.user {
+  background-color: #2575fc;
+  color: white;
+  align-self: flex-end;
+}
+
+.message.assistant {
+  background-color: #6a11cb;
+  color: white;
+  align-self: flex-start;
+}
+
+.chat-form {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  background: #2a2a4a;
+  color: white;
+  font-size: 14px;
+}
+
+.chat-submit-button {
+  background-color: #2575fc;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.chat-submit-button:hover {
+  background-color: #1a56db;
 }
 
 /* Button Styles */
@@ -152,6 +218,7 @@ body {
 
 .icon-button:hover {
   opacity: 1;
+  transform: scale(1.05); /* Slight scaling on hover */
 }
 
 /* Animations */
