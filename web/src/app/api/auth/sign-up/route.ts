@@ -6,7 +6,6 @@ import Web3 from "web3";
 import { join } from "path";
 import crypto from "crypto";
 import { readFileSync } from "fs";
-import { getInitialTopics } from '@/utils/initializeTopics';
 
 const contractABI = JSON.parse(
     readFileSync(join(process.cwd(), "src", "lib", "contracts", "UserManager.json"), "utf8")
@@ -99,7 +98,6 @@ export async function POST(request: Request) {
             password: hashedPassword,
             role,
             ethereumAddress: newAccount.address,
-            topics: getInitialTopics(),
         });
         
         await newUser.save();

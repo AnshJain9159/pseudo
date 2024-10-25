@@ -51,13 +51,15 @@ const EditProfilePage: React.FC = () => {
           if (response.ok) {
             const userData = await response.json();
             setUser(userData);
-            // Merge existing user topics with initial topics
-            const mergedTopics = getInitialTopics().map(initialTopic => {
+  
+            // Merge initial topics with user topics while preserving existing states
+            const mergedTopics = getInitialTopics().map((initialTopic) => {
               const existingTopic = userData.topics?.find(
                 (t: Topic) => t.name === initialTopic.name
               );
               return existingTopic || initialTopic;
             });
+  
             setFormValues({
               fullName: userData.fullName,
               topics: mergedTopics,
@@ -70,13 +72,14 @@ const EditProfilePage: React.FC = () => {
         }
       }
     };
-
+  
     if (status === 'authenticated') {
       fetchUserData();
     } else if (status === 'unauthenticated') {
       router.push('/sign-in');
     }
   }, [session, status, router]);
+  
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormValues({
@@ -86,15 +89,22 @@ const EditProfilePage: React.FC = () => {
   };
 
   const handleTopicChange = (index: number, completed: boolean) => {
+    // Create a new copy of topics
     const updatedTopics = [...formValues.topics];
-    updatedTopics[index].completed = completed;
+    // Update the 'completed' field of the selected topic
+    updatedTopics[index] = {
+      ...updatedTopics[index],
+      completed,
+    };
+  
     setFormValues({ ...formValues, topics: updatedTopics });
   };
+  
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-
+  
     try {
       const response = await fetch('/api/users/edit-profile', {
         method: 'POST',
@@ -107,7 +117,7 @@ const EditProfilePage: React.FC = () => {
           topics: formValues.topics,
         }),
       });
-
+  
       if (response.ok) {
         router.push('/u/profile');
       } else {
@@ -119,6 +129,7 @@ const EditProfilePage: React.FC = () => {
       setLoading(false);
     }
   };
+  
 
   // Render loading state
   if (status === 'loading' || loading) {
@@ -145,7 +156,7 @@ const EditProfilePage: React.FC = () => {
   const csTopics = formValues.topics.filter(topic => topic.category === 'CS');
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 flex items-center justify-center p-4 font-sans text-gray-200">
+    <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 flex items-center justify-center py-12 px-12 font-sans text-gray-200">
       <Card className="w-full max-w-4xl bg-gray-800 border border-gray-700 shadow-lg">
         <CardHeader className="text-center">
           <Avatar className="h-24 w-24 mx-auto mb-4">
@@ -201,37 +212,38 @@ const EditProfilePage: React.FC = () => {
                   Data Structures & Algorithms
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {dsaTopics.map((topic, index) => (
-                    <div
-                      key={index}
-                      className={`flex items-center space-x-2 p-2 rounded-lg transition-all ${
-                        topic.completed ? 'bg-green-900/20' : 'hover:bg-gray-700/30'
+                {dsaTopics.map((topic, index) => (
+                  <div
+                    key={index}
+                    className={`flex items-center space-x-2 p-2 rounded-lg transition-all ${
+                      topic.completed ? 'bg-green-900/20' : 'hover:bg-gray-700/30'
+                    }`}
+                  >
+                    <Checkbox
+                      checked={topic.completed}
+                      onCheckedChange={(checked) =>
+                        handleTopicChange(
+                          formValues.topics.findIndex((t) => t.name === topic.name),
+                          checked as boolean
+                        )
+                      }
+                      className={`${
+                        topic.completed ? 'bg-green-500 border-green-500' : ''
+                      }`}
+                    />
+                    <Label
+                      className={`flex items-center space-x-2 text-gray-300 ${
+                        topic.completed ? 'line-through text-green-500' : ''
                       }`}
                     >
-                      <Checkbox
-                        checked={topic.completed}
-                        onCheckedChange={(checked) =>
-                          handleTopicChange(
-                            formValues.topics.findIndex((t) => t.name === topic.name),
-                            checked as boolean
-                          )
-                        }
-                        className={`${
-                          topic.completed ? 'bg-green-500 border-green-500' : ''
-                        }`}
-                      />
-                      <Label
-                        className={`flex items-center space-x-2 text-gray-300 ${
-                          topic.completed ? 'line-through text-green-500' : ''
-                        }`}
-                      >
-                        {topic.name}
-                        {topic.completed && (
-                          <CheckCircle2 className="h-4 w-4 text-green-500 ml-2" />
-                        )}
-                      </Label>
-                    </div>
-                  ))}
+                      {topic.name}
+                      {topic.completed && (
+                        <CheckCircle2 className="h-4 w-4 text-green-500 ml-2" />
+                      )}
+                    </Label>
+                  </div>
+                ))}
+
                 </div>
               </div>
 
