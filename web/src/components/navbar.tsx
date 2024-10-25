@@ -21,14 +21,15 @@ import '@fontsource/jetbrains-mono'; // Or any other font suitable to your theme
 
 // Define navigation items with categories
 const navItems = [
-  { name: 'Home', href: '/' },
   { name: 'Socrator', href: '/main' },
+  { name: 'Code Analyzer', href: '/analyzer' },
   {
     category: 'Features',
     items: [
-      { name: 'Code Analyzer', href: '/analyzer' },
       { name: 'PseudoBot', href: '/pseudobot' },
       { name: "DSA's Roadmap", href: '/roadmap' },
+      { name: "LLM's Visualization", href: '/visualizer' },
+
     ],
   },
   {

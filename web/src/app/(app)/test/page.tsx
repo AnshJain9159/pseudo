@@ -106,9 +106,9 @@ export default function ChatPage() {
     };
 
     return (
-        <div className="flex flex-col h-screen px-16 py-16 bg-gradient-to-b from-purple-100 to-indigo-100">
-            <header className="p-4 bg-white shadow">
-                <h1 className="text-2xl font-bold text-center">Algorithm Tutor</h1>
+        <div className="flex flex-col h-screen px-16 py-16 bg-gradient-to-b from-black to-gray-900">
+            <header className="p-4 bg-transparent shadow">
+                <h1 className="text-2xl font-bold text-center text-white">SOCRATOR</h1>
             </header>
 
             <div className="flex-1 overflow-y-auto p-4">
@@ -129,7 +129,7 @@ export default function ChatPage() {
                                 {renderMessageContent(message.content)}
                             </div>
                             {message.role === 'user' && (
-                                <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+                                <div className="w-8 h-8 rounded-full bg-gray-300 flex  items-center justify-center">
                                     <User className="w-5 h-5 text-gray-600" />
                                 </div>
                             )}
@@ -152,7 +152,7 @@ export default function ChatPage() {
                 </div>
             </div>
 
-            <form onSubmit={customSubmitHandler} className="p-4 bg-white shadow">
+            <form onSubmit={customSubmitHandler} className="p-4 bg-transparent shadow">
                 <div className="flex space-x-4">
                     <input
                         type="text"

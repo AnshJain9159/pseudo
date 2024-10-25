@@ -3,19 +3,27 @@ import { NextRequest, NextResponse } from 'next/server';
 import { parseCode, analyzeComplexity } from '@/utils/codeAnalysis';
 import { generateFeedback } from '@/utils/feedBackGenerator';
 
+interface AnalyzeRequest {
+  code: string;
+  language: 'javascript' | 'python' | 'cpp'; // Specify supported languages
+}
+
 export async function POST(req: NextRequest) {
-  //parameters me code or code ki language aayegi
-  const { code, language } = await req.json() as { code: string; language: string };
+  const { code, language } = await req.json() as AnalyzeRequest;
+
+  // Validate language
+  if (!['javascript', 'python', 'cpp'].includes(language)) {
+    return NextResponse.json({ error: "Unsupported language" }, { status: 400 });
+  }
 
   try {
-    //code ko parse karwakr usse analyzer me bhejdenge,
     const parsedCode = await parseCode(code, language);
     const analysis = await analyzeComplexity(parsedCode);
-    //fir analysis ko feedback me bhejkr feedback return krwao
     const feedback = generateFeedback(analysis);
 
-    return NextResponse.json({ analysis, feedback }); //response me feedback or complexity fekdi
+    return NextResponse.json({ analysis, feedback });
   } catch (error: any) {
+    console.error("Error during code analysis:", error); // Log the error
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
 }

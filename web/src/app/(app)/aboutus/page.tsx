@@ -139,7 +139,7 @@ const AboutUs = () => {
               </a>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Join Socrates and master algorithms today!</p>
+              <p>Join Socrates and master Computer Science today!</p>
             </TooltipContent>
           </Tooltip>
         </div>
