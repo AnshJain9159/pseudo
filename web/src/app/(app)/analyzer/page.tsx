@@ -16,24 +16,37 @@ interface Analysis {
 
 const ComplexityAnalyzer: React.FC = () => {
   const [code, setCode] = useState<string>('');
+  const [language, setLanguage] = useState<string>('cpp'); // Default language set to C++
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [feedback, setFeedback] = useState<string[]>([]);
-  //api call hai code ko bhejne ki
+
+  // API call to analyze the code
   const analyzeCode = async () => {
     try {
       const response = await fetch('/api/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code, language: 'javascript' }),
+        body: JSON.stringify({ code, language }), // Pass selected language
       });
       const data = await response.json();
-      setAnalysis(data.analysis);
-      setFeedback(data.feedback);
+      console.log("API Response Data:", data); // Debugging log
+
+      // Validate the response to ensure all necessary fields are present
+      if (data.analysis && data.feedback) {
+        setAnalysis({
+          ...data.analysis,
+          dataStructures: new Set(data.analysis.dataStructures || []) // Ensure it's a Set
+        });
+        setFeedback(data.feedback);
+      } else {
+        console.error("Invalid response data:", data);
+      }
     } catch (error) {
       console.error("Error analyzing code:", error);
     }
   };
 
+  // Prepare complexity data for visualization
   const complexityData = [
     { n: 1, O1: 1, Ologn: 0, On: 1, Onlogn: 0, On2: 1, O2n: 2 },
     { n: 2, O1: 1, Ologn: 1, On: 2, Onlogn: 2, On2: 4, O2n: 4 },
@@ -60,7 +73,7 @@ const ComplexityAnalyzer: React.FC = () => {
       'O(n^2)': 'On2',
       'O(2^n)': 'O2n'
     };
-    return map[complexity] || 'On';  // default to 'On' if not found
+    return map[complexity] || 'On'; // default to 'On' if not found
   };
 
   return (
@@ -70,10 +83,23 @@ const ComplexityAnalyzer: React.FC = () => {
           Algorithmic Complexity Analyzer
         </CardHeader>
         <CardContent className="p-6">
+          <div className="mb-4">
+            <label className="block text-gray-400 mb-2">Select Language</label>
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              className="w-full bg-gray-900 border border-gray-700 text-gray-300 py-2 px-4 rounded-lg focus:ring-2 focus:ring-purple-500 transition duration-300"
+            >
+              <option value="javascript">JavaScript</option>
+              <option value="python">Python</option>
+              <option value="cpp">C++</option>
+            </select>
+          </div>
+
           <Textarea
             value={code}
             onChange={(e) => setCode(e.target.value)}
-            placeholder="Paste your JavaScript code here..."
+            placeholder="Paste your code here..."
             className="h-48 mb-4 bg-gray-900 text-gray-300 border border-gray-700 focus:ring-2 focus:ring-purple-500 transition duration-300"
           />
           <div className="flex justify-center">
@@ -84,7 +110,7 @@ const ComplexityAnalyzer: React.FC = () => {
               Analyze Complexity
             </Button>
           </div>
-          {/* analysis ka result jo ayega yaha  render hoga */}
+
           {analysis && (
             <div className="mt-6">
               <h3 className="text-lg font-semibold text-purple-400">Analysis Results:</h3>
@@ -95,7 +121,7 @@ const ComplexityAnalyzer: React.FC = () => {
               <p>Data Structures Used: {Array.from(analysis.dataStructures).join(', ')}</p>
             </div>
           )}
-          {/* agar koi feedback hoga ya honge to yaha render hoge */}
+
           {feedback.length > 0 && (
             <div className="mt-6">
               <h3 className="text-lg font-semibold text-purple-400">Feedback:</h3>
@@ -107,7 +133,6 @@ const ComplexityAnalyzer: React.FC = () => {
             </div>
           )}
 
-        {/* yeh sirf acting hai ki graph banega complexity ka dhyan mat do */}
           {analysis && (
             <div className="mt-8">
               <h3 className="text-lg font-semibold text-purple-400">Complexity Visualization:</h3>
@@ -120,10 +145,10 @@ const ComplexityAnalyzer: React.FC = () => {
                     <Tooltip contentStyle={{ backgroundColor: '#1F2937', border: 'none' }} />
                     <Legend />
                     {Object.entries(complexityColors).map(([complexity, color]) => (
-                      <Line 
+                      <Line
                         key={complexity}
-                        type="monotone" 
-                        dataKey={getComplexityKey(complexity)} 
+                        type="monotone"
+                        dataKey={getComplexityKey(complexity)}
                         stroke={color}
                         strokeWidth={complexity === analysis.timeComplexity ? 3 : 1}
                         dot={complexity === analysis.timeComplexity}
@@ -142,3 +167,4 @@ const ComplexityAnalyzer: React.FC = () => {
 };
 
 export default ComplexityAnalyzer;
+  
