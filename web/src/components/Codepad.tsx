@@ -1,165 +1,223 @@
-import React, { useState } from "react";
-import { FaPlay, FaPlayCircle, FaCode, FaPenFancy, FaTrash } from "react-icons/fa";
-import CodeMirror from "@uiw/react-codemirror";
-import { python } from "@codemirror/lang-python";
-import { cpp } from "@codemirror/lang-cpp";
-import { oneDark } from "@codemirror/theme-one-dark";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { FaFileCode, FaPlay, FaRegFileAlt, FaRegEdit } from "react-icons/fa";
+import { AiOutlinePlayCircle } from "react-icons/ai";
+
+import AceEditor from "react-ace";
 import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import "ace-builds/src-noconflict/mode-python";
+import "ace-builds/src-noconflict/mode-c_cpp";
+import "ace-builds/src-noconflict/mode-markdown";
+import "ace-builds/src-noconflict/theme-tomorrow";
 
-// Define the types for code and markdown cells
-type CodeCell = { type: "code"; code: string; output: string };
-type MarkdownCell = { type: "markdown"; code: string; markdownRendered: boolean; headingLevel: string };
+type Cell = {
+  id: number;
+  type: "code" | "markdown";
+  content: string;
+  output: string;
+  showMarkdownOutput: boolean;
+};
 
-// Union type for both types of cells
-type Cell = CodeCell | MarkdownCell;
-
-// Define available languages for code cells
 const languages = [
   { value: "python", label: "Python" },
-  { value: "c", label: "C" },
   { value: "cpp", label: "C++" },
+  { value: "c", label: "C" },
+  { value: "markdown", label: "Markdown" },
 ];
 
-const headingLevels = [
-  { value: "#", label: "H1" },
-  { value: "##", label: "H2" },
-  { value: "###", label: "H3" },
-  { value: "####", label: "H4" },
-  { value: "#####", label: "H5" },
-  { value: "######", label: "H6" },
-];
-
-const NotebookPage = () => {
-  // Initialize both code and markdown cells
-  const [cells, setCells] = useState<Cell[]>([
-    { type: "markdown", code: "", markdownRendered: false, headingLevel: "#" },
-    { type: "code", code: "", output: "" },
-  ]);
-
-  const [selectedLanguage, setSelectedLanguage] = useState("python");
-  const [selectedCellIndex, setSelectedCellIndex] = useState<number | null>(null);
-
-  const runCode = async (index: number, code: string) => {
-    const response = await axios.post("/api/executeCode", { code, language: selectedLanguage });
-    const newCells = [...cells];
-    if (newCells[index].type === "code") {
-      newCells[index].output = response.data.output;
-      setCells(newCells);
+const addCustomStyles = () => {
+  const style = document.createElement('style');
+  style.textContent = `
+    .ace_editor_custom {
+      background: black !important;
     }
+    .ace_editor_custom .ace_gutter {
+      background: black !important;
+    }
+    .ace_editor_custom .ace_content {
+      background: black !important;
+    }
+    .ace_editor_custom .ace_active-line {
+      background: #1a1a1a !important;
+    }
+    .ace_editor_custom .ace_gutter-active-line {
+      background: #1a1a1a !important;
+    }
+    .ace_editor {
+      border-radius: 4px;
+      width: 100% !important;
+    }
+  `;
+  document.head.appendChild(style);
+};
+
+const CustomCodeEditor: React.FC = () => {
+  const [cells, setCells] = useState<Cell[]>([]);
+  const [cellId, setCellId] = useState<number>(0);
+  const [language, setLanguage] = useState<string>("python");
+
+  const addCell = (type: "code" | "markdown", afterId: number | null = null) => {
+    const newCell = { 
+      id: cellId, 
+      type, 
+      content: "", 
+      output: "", 
+      showMarkdownOutput: false 
+    };
+    let newCells = [...cells];
+
+    if (afterId !== null) {
+      const index = newCells.findIndex((cell) => cell.id === afterId);
+      newCells.splice(index + 1, 0, newCell);
+    } else {
+      newCells = [...newCells, newCell];
+    }
+
+    setCells(newCells);
+    setCellId(cellId + 1);
   };
 
-  const runSelectedCell = (index: number) => {
-    const cell = cells[index];
-    if (cell.type === "code") {
-      runCode(index, cell.code);
-    } else if (cell.type === "markdown") {
-      const newCells = [...cells];
-      newCells[index] = {
-        ...newCells[index],
-        markdownRendered: true,
-      };
-      setCells(newCells);
-    }
+  const updateCellContent = (id: number, content: string) => {
+    setCells(cells.map((cell) => (cell.id === id ? { ...cell, content } : cell)));
   };
 
-  const runAllCells = async () => {
-    const newCells = await Promise.all(
-      cells.map(async (cell, index) => {
-        if (cell.type === "code") {
-          const response = await axios.post("/api/executeCode", {
-            code: cell.code,
-            language: selectedLanguage,
-          });
-          return { ...cell, output: response.data.output };
+  const toggleMarkdownView = (id: number) => {
+    setCells(cells.map((cell) => 
+      cell.id === id 
+        ? { ...cell, showMarkdownOutput: !cell.showMarkdownOutput, output: cell.content } 
+        : cell
+    ));
+  };
+
+  const runCell = (id: number) => {
+    const cellToRun = cells.find((cell) => cell.id === id);
+    if (cellToRun) {
+      let output = "";
+
+      if (cellToRun.type === "code") {
+        if (language === "python" && cellToRun.content.includes("print")) {
+          const match = cellToRun.content.match(/print\(([^)]+)\)/);
+          output = match ? `Output: ${match[1]}` : "Output: (no output)";
+        } else if (language === "cpp") {
+          output = "C++ execution result (simulated)";
+        } else if (language === "c") {
+          output = "C execution result (simulated)";
         } else {
-          return { ...cell, markdownRendered: true };
+          output = "No valid code to execute";
         }
-      })
-    );
-    setCells(newCells);
-  };
-
-  const addCell = (type: "code" | "markdown") => {
-    const newCell = type === "code"
-      ? { type: "code", code: "", output: "" }
-      : { type: "markdown", code: "", markdownRendered: false, headingLevel: "#" };
-
-    const newCells = [...cells];
-    const insertionIndex = selectedCellIndex !== null ? selectedCellIndex + 1 : cells.length;
-
-    newCells.splice(insertionIndex, 0, newCell);
-    setCells(newCells);
-    setSelectedCellIndex(insertionIndex);
-  };
-
-  const deleteCell = (index: number) => {
-    const newCells = [...cells];
-    newCells.splice(index, 1);
-    setCells(newCells);
-
-    if (index === selectedCellIndex) {
-      setSelectedCellIndex(null);
-    } else if (index < selectedCellIndex!) {
-      setSelectedCellIndex(selectedCellIndex! - 1);
+        setCells(cells.map((cell) => (cell.id === id ? { ...cell, output } : cell)));
+      } else if (cellToRun.type === "markdown") {
+        toggleMarkdownView(id);
+      }
     }
   };
 
-  const getExtensions = () => {
-    switch (selectedLanguage) {
-      case "python":
-        return [python()];
-      case "c":
-      case "cpp":
-        return [cpp()];
-      default:
-        return [];
-    }
-  };
+  useEffect(() => {
+    addCell("code");
+    addCustomStyles();
+  }, []);
 
-  const handleHeadingChange = (index: number, headingLevel: string) => {
-    const newCells = [...cells];
-    const cell = newCells[index];
+  const renderCell = (cell: Cell) => {
+    const editorProps = {
+      editorProps: { $blockScrolling: true },
+      fontSize: 16,
+      width: "100%", // Full width for editor
+      setOptions: {
+        showLineNumbers: false,
+        highlightActiveLine: true,
+        tabSize: 4,
+        showGutter: false,
+        showPrintMargin: false,
+      },
+      className: "ace_editor_custom",
+      wrapEnabled: true,
+      style: {
+        background: 'black',
+        margin: 0,
+        padding: 0,
+      }
+    };
 
-    if (cell.type === "markdown") {
-      const currentCode = cell.code;
-      const newCode = currentCode.match(/^(#{1,6})\s/)
-        ? currentCode.replace(/^(#{1,6})\s*/, headingLevel + " ")
-        : `${headingLevel} ${currentCode}`;
-      newCells[index] = { ...cell, headingLevel, code: newCode };
-      setCells(newCells);
+    if (cell.type === "code") {
+      return (
+        <div className="relative bg-[#191919] px-3 py-2 rounded-md w-full">
+          {/* Custom styled Run button above the editor */}
+          <button
+            onClick={() => runCell(cell.id)}
+            className="absolute top-2 right-4 text-white px-3 py-1 rounded hover:bg-[#4a4a50] flex items-center space-x-1"
+          >
+            {cell.showMarkdownOutput ? (
+              <FaRegEdit className="text-sm" /> // Pencil icon for "Edit"
+            ) : (
+              <FaPlay className="text-sm" />  // Play icon for "Preview"
+            )}
+          </button>
+
+          <div className="w-full overflow-hidden bg-black rounded-md mt-8"> {/* Add margin for space between button and editor */}
+            <AceEditor
+              {...editorProps}
+              mode={language === "python" ? "python" : "c_cpp"}
+              theme="tomorrow"
+              onChange={(value) => updateCellContent(cell.id, value)}
+              value={cell.content}
+              name={`code-editor-${cell.id}`}
+              height="400px"
+            />
+          </div>
+
+          {cell.output && (
+            <div className="bg-black text-white p-4 mt-2 rounded">
+              <h3 className="text-md mb-1"></h3>
+              <pre>{cell.output}</pre>
+            </div>
+          )}
+        </div>
+      );
+    } else {
+      return (
+        <div className="relative bg-[#2b2b2b] p-4 rounded-md w-full">
+          {/* Custom styled Run button above the editor */}
+          <button
+            onClick={() => runCell(cell.id)}
+            className="absolute top-2 right-4 bg-transparent text-white px-3 py-1 rounded hover:bg-[#4a4a50] flex items-center space-x-1"
+          >
+            {cell.showMarkdownOutput ? (
+              <FaRegEdit className="text-sm" /> // Pencil icon for "Edit"
+            ) : (
+              <FaPlay className="text-sm" />  // Play icon for "Preview"
+            )}
+          </button>
+          {!cell.showMarkdownOutput ? (
+            <div className="w-full overflow-hidden text-white bg-black rounded-md mt-8"> {/* Add margin for space between button and editor */}
+              <AceEditor
+                {...editorProps}
+                mode="markdown"
+                theme="tomorrow"
+                onChange={(value) => updateCellContent(cell.id, value)}
+                value={cell.content}
+                name={`markdown-editor-${cell.id}`}
+                height="300px"
+              />
+            </div>
+          ) : (
+            <div className="bg-black text-white p-4 mt-2 rounded w-full prose prose-invert max-w-none">
+              <ReactMarkdown>{cell.content}</ReactMarkdown>
+            </div>
+          )}
+        </div>
+      );
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 py-12 px-4 sm:px-6 lg:px-8 text-[#c7c7c7]">
-      <div className="max-w-4xl mx-auto h-[80vh] overflow-y-auto bg-transparent p-4 rounded-md ">
-        {/* Sticky Navbar with Run options */}
-        <nav className="bg-transparent text-[#c7c7c7] p-4 rounded-md flex justify-between items-center mb-8  top-0 z-50">
-          <div className="flex space-x-4">
-            <button
-              onClick={runAllCells}
-              className="px-4 py-2 bg-[#2b6cb0] rounded hover:bg-[#2c5282]"
-              title="Run All Cells"
-            >
-              <FaPlay />
-            </button>
-            <button
-              onClick={() => selectedCellIndex !== null && runSelectedCell(selectedCellIndex!)}
-              className="px-4 py-2 bg-[#3182ce] rounded hover:bg-[#2c5282]"
-              title="Run Selected Cell"
-              disabled={selectedCellIndex === null}
-            >
-              <FaPlayCircle />
-            </button>
-          </div>
-          <div className="flex space-x-4 items-center">
+    <div className="min-h-screen bg-black py-12 flex flex-col">
+      <div className="w-full bg-black p-6 rounded-md shadow-lg flex-grow flex flex-col">
+        <nav className="flex justify-center items-center bg-black p-4 rounded-md mb-4">
+          <div>
             <select
-              value={selectedLanguage}
-              onChange={(e) => setSelectedLanguage(e.target.value)}
-              className="bg-[#2f3439] border border-[#4a5568] p-2 rounded"
-              title="Select Language"
+              id="language"
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              className="bg-[#191919] text-white w-24 text-center p-2 rounded"
             >
               {languages.map((lang) => (
                 <option key={lang.value} value={lang.value}>
@@ -167,105 +225,36 @@ const NotebookPage = () => {
                 </option>
               ))}
             </select>
-            <button
-              onClick={() => addCell("code")}
-              className="px-4 py-2 bg-[#2f3439] rounded hover:bg-[#1f2933]"
-              title="Add Code Cell"
-            >
-              <FaCode />
-            </button>
-            <button
-              onClick={() => addCell("markdown")}
-              className="px-4 py-2 bg-[#d69e2e] rounded hover:bg-[#b7791f]"
-              title="Add Markdown Cell"
-            >
-              <FaPenFancy />
-            </button>
           </div>
         </nav>
 
-        {/* Cells */}
-        {cells.map((cell, index) => (
-          <div
-            key={index}
-            className={`bg-transparent  rounded-lg mb-8 overflow-hidden ${
-              index === selectedCellIndex ? "border-2 border-blue-500" : ""
-            }`}
-            onClick={() => setSelectedCellIndex(index)}
-          >
-            <div className="px-4">
-              {cell.type === "code" ? (
-                <>
-                  <CodeMirror
-                    value={cell.code}
-                    height="200px"
-                    theme={oneDark}
-                    extensions={getExtensions()}
-                    onChange={(value: string) => {
-                      const newCells = [...cells];
-                      if (newCells[index].type === "code") {
-                        newCells[index].code = value;
-                        setCells(newCells);
-                      }
-                    }}
-                    className="border border-[#4a5568] rounded-md overflow-hidden mt-4"
-                  />
+        <div className="max-h-[800px] overflow-y-auto bg-black flex-grow">
+          {cells.map((cell) => (
+            <div key={cell.id} className="mb-4 w-full">
+              {renderCell(cell)}
 
-                  {cell.output && (
-                    <pre className="mt-4 p-4 bg-[#1a1b1e] text-[#e2e8f0] rounded-md overflow-x-auto">
-                      {cell.output}
-                    </pre>
-                  )}
-                </>
-              ) : !cell.markdownRendered ? (
-                <>
-                  <textarea
-                    value={cell.code}
-                    onChange={(e) => {
-                      const newCells = [...cells];
-                      if (newCells[index].type === "markdown") {
-                        newCells[index].code = e.target.value;
-                        setCells(newCells);
-                      }
-                    }}
-                    placeholder="Write markdown here..."
-                    className="bg-[#1a1b1e] text-[#e2e8f0] p-4 w-full border border-[#4a5568] rounded-md h-40 resize-none mt-2"
-                  />
-                </>
-              ) : (
-                <div className="markdown-body p-4 bg-[#1a1b1e] border border-[#4a5568] rounded-md overflow-hidden mt-4">
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{cell.code}</ReactMarkdown>
-                </div>
-              )}
-            </div>
-            <div className="flex justify-end items-center px-4 py-2 space-x-4">
-              {cell.type === "markdown" && !cell.markdownRendered && (
-                <select
-                  title="Heading Level"
-                  value={cell.headingLevel}
-                  onChange={(e) => handleHeadingChange(index, e.target.value)}
-                  className="bg-[#2f3439] border border-[#4a5568] p-2 rounded"
+              <div className="flex justify-center space-x-2 mt-4">
+                <button
+                  onClick={() => addCell("code", cell.id)}
+                  className="flex items-center space-x-1 bg-[#323236] text-white px-2 py-1 rounded-md hover:bg-[#4a4a50] text-sm"
                 >
-                  {headingLevels.map((heading) => (
-                    <option key={heading.value} value={heading.value}>
-                      {heading.label}
-                    </option>
-                  ))}
-                </select>
-              )}
-              <button
-                onClick={() => deleteCell(index)}
-                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-500 w-12 h-10 flex items-center justify-center"
-                title="Delete Cell"
-              >
-                <FaTrash />
-              </button>
+                  <FaFileCode />
+                  <span>+ Code</span>
+                </button>
+                <button
+                  onClick={() => addCell("markdown", cell.id)}
+                  className="flex items-center space-x-1 bg-[#323236] text-white px-2 py-1 rounded-md hover:bg-[#4a4a50] text-sm"
+                >
+                  <FaRegFileAlt />
+                  <span>+ Markdown</span>
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
 };
 
-export default NotebookPage;
+export default CustomCodeEditor;
