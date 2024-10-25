@@ -24,6 +24,7 @@ export async function GET(request: NextRequest) {
       email: user.email,
       role: user.role,
       ethereumAddress:user.ethereumAddress,
+      topics: user.topics
     };
 
     return NextResponse.json(safeUser);
