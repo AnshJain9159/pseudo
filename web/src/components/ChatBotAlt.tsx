@@ -35,7 +35,7 @@ export default function ChatPage() {
                     setCurrentMessage((prev) => prev + chunk);
                 }
 
-                setCurrentMessage(fullMessage); // Set full response to currentMessage after reading is done
+                setCurrentMessage(''); // Set full response to currentMessage after reading is done
                 setChat((prev) => [
                     ...prev,
                     { role: 'assistant', content: fullMessage }
@@ -136,7 +136,7 @@ export default function ChatPage() {
                         </div>
                     ))}
 
-                    {/* {currentMessage && (
+                    {currentMessage && (
                         <div className="flex items-start space-x-2 justify-start">
                             <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
                                 <Bot className="w-5 h-5 text-white" />
@@ -145,7 +145,7 @@ export default function ChatPage() {
                                 <p className="whitespace-pre-wrap">{currentMessage}</p>
                             </div>
                         </div>
-                    )} */}
+                    )}
 
                     {isLoading && <MessageSkeleton />}
                     <div ref={messagesEndRef} />
