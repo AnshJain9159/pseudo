@@ -81,7 +81,7 @@ const Page: React.FC = () => {
 
       {/* Excalidraw Section (Right) */}
       <div
-        className="flex-grow bg-[#191919] "
+        className="flex-grow bg-gradient-to-b from-black to-gray-900 "
         style={{
           width: excalidrawWidth,
           overflowY: 'auto',
