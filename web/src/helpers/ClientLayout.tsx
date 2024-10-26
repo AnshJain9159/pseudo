@@ -3,7 +3,7 @@
 import { usePathname } from 'next/navigation';
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
-import SpecialNavbar from '@/components/mainPageNavbar'// Import the special navbar
+import SimpleNavbar from '@/components/backbuttonnav'
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -18,7 +18,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   return (
     <>
       {/* Show SpecialNavbar on /main, otherwise show the default Navbar */}
-      {!hideNav && (isMainPage ? <SpecialNavbar /> : <Navbar />)}
+      {!hideNav && (isMainPage ? <SimpleNavbar /> : <Navbar />)}
       {children}
       {!hideFoot && <Footer />}
     </>
