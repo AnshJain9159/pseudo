@@ -69,7 +69,11 @@ const ExcalidrawWrapper: React.FC = () => {
   };
 
   return (
-<div className="flex-grow flex flex-col items-center bg-gradient-to-b from-black to-gray-900 min-h-screen w-full py-10 px-4">      <div className="w-full flex-grow h-[80vh] bg-black rounded-lg overflow-hidden shadow-lg">
+<div className="flex-grow flex flex-col items-center bg-gradient-to-b from-black to-gray-900 min-h-screen w-full py-10 px-4">
+      <div className="w-full flex-grow h-[80vh]  rounded-lg overflow-hidden shadow-lg">
+      <header className="p-4 bg-transparent shadow">
+                <h1 className="text-2xl font-bold text-center text-white">CANVAS</h1>
+            </header>
         <Excalidraw
           onChange={handleChange}
           theme="dark"

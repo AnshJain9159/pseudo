@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import UserModel from '@/models/User';
+interface SafeUser {
+  fullName: string;
+  email: string;
+  role: string;
+  ethereumAddress: string;
+  topics: string[]; // assuming topics is an array of strings
+}
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -18,12 +25,12 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    // Only send necessary user information
-    const safeUser = {
+    // Assert the type of `user`
+    const safeUser: SafeUser = {
       fullName: user.fullName,
       email: user.email,
       role: user.role,
-      ethereumAddress:user.ethereumAddress,
+      ethereumAddress: user.ethereumAddress,
       topics: user.topics
     };
 
