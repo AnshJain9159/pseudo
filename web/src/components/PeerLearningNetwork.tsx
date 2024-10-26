@@ -9,7 +9,35 @@ import { Users, MessageSquare, Brain } from 'lucide-react';
 
 const PeerLearningNetwork = () => {
   const [currentTopic, setCurrentTopic] = useState('Sorting Algorithms');
+  // Creating a new discussion
+const createDiscussion = async (data: { topic: string; content: string }) => {
+  const response = await fetch('/api/discussions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  return response.json();
+};
 
+// Fetching discussions
+const fetchDiscussions = async (topic?: string, page = 1) => {
+  const params = new URLSearchParams({
+    ...(topic && { topic }),
+    page: page.toString(),
+  });
+  const response = await fetch(`/api/discussions?${params}`);
+  return response.json();
+};
+
+// Adding a response to a discussion
+const addResponse = async (discussionId: string, content: string) => {
+  const response = await fetch(`/api/discussions/${discussionId}/responses`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ content }),
+  });
+  return response.json();
+};
   // Sample peer data - in real app, this would come from your backend
   const peers = [
     {
