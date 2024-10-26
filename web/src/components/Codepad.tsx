@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaFileCode, FaPlay, FaRegFileAlt, FaRegEdit } from "react-icons/fa";
 import { AiOutlinePlayCircle } from "react-icons/ai";
-
+import axios from "axios";
 import AceEditor from "react-ace";
 import ReactMarkdown from "react-markdown";
 import "ace-builds/src-noconflict/mode-python";
@@ -37,10 +37,10 @@ const addCustomStyles = () => {
       background: black !important;
     }
     .ace_editor_custom .ace_active-line {
-      background: #1a1a1a !important;
+      background: white !important;
     }
     .ace_editor_custom .ace_gutter-active-line {
-      background: #1a1a1a !important;
+      background: white !important;
     }
     .ace_editor {
       border-radius: 4px;
@@ -88,23 +88,21 @@ const CustomCodeEditor: React.FC = () => {
     ));
   };
 
-  const runCell = (id: number) => {
+  const runCell = async (id: number) => {
     const cellToRun = cells.find((cell) => cell.id === id);
     if (cellToRun) {
-      let output = "";
-
       if (cellToRun.type === "code") {
-        if (language === "python" && cellToRun.content.includes("print")) {
-          const match = cellToRun.content.match(/print\(([^)]+)\)/);
-          output = match ? `Output: ${match[1]}` : "Output: (no output)";
-        } else if (language === "cpp") {
-          output = "C++ execution result (simulated)";
-        } else if (language === "c") {
-          output = "C execution result (simulated)";
-        } else {
-          output = "No valid code to execute";
+        try {
+          const response = await axios.post("/api/executeCode", {
+            code: cellToRun.content,
+            language,
+          });
+  
+          const output = response.data.output || "No output";
+          setCells(cells.map((cell) => (cell.id === id ? { ...cell, output } : cell)));
+        } catch (error) {
+          setCells(cells.map((cell) => (cell.id === id ? { ...cell, output: "Error running code" } : cell)));
         }
-        setCells(cells.map((cell) => (cell.id === id ? { ...cell, output } : cell)));
       } else if (cellToRun.type === "markdown") {
         toggleMarkdownView(id);
       }
