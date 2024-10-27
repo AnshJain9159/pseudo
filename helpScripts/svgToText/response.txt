@@ -1,0 +1,6 @@
+    How can you use the information given in this diagram to determine which path represents a node with more children? What factors would be crucial in deciding upon such a choice, and why?
+
+    Think about how we might define "child," or rather "grandchildren" since these trees are quite complex. Is there a way to identify the number of levels a node is rooted in without even looking at its immediate descendants? How could you determine if one path represents more nodes than another based solely on their structure without examining the data itself?
+    
+    *   What criteria for comparing paths might be useful in this situation?
+    *   Why would these factors matter when it comes to deciding upon which branch leads further into an individual tree's subtree?
