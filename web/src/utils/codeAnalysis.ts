@@ -19,6 +19,17 @@ export async function parseCode(code: string, language: string): Promise<acorn.N
   return acorn.parse(code, { ecmaVersion: 2020 }) as acorn.Node;
 }
 
+function adjustTimeComplexity(state: Complexity) {
+  if (state.loopNestDepth === 1) {
+    state.timeComplexity = mergeComplexities(state.timeComplexity, 'O(n)');
+  } else if (state.loopNestDepth === 2) {
+    state.timeComplexity = mergeComplexities(state.timeComplexity, 'O(n^2)');
+  } else if (state.loopNestDepth > 2) {
+    state.timeComplexity = mergeComplexities(state.timeComplexity, `O(n^${state.loopNestDepth})`);
+  }
+}
+
+
 export async function analyzeComplexity(ast: acorn.Node): Promise<Complexity> {
   const complexity: Complexity = {
     timeComplexity: 'O(1)',
@@ -39,6 +50,7 @@ export async function analyzeComplexity(ast: acorn.Node): Promise<Complexity> {
         state.timeComplexity = mergeComplexities(state.timeComplexity, 'O(n log n)');
       }
       state.loopNestDepth++;
+      adjustTimeComplexity(state);
       c((node as any).body, state);
       state.loopNestDepth--;
     },
@@ -46,6 +58,7 @@ export async function analyzeComplexity(ast: acorn.Node): Promise<Complexity> {
       // Assume `while` loops are at least linear unless further analysis is added
       state.timeComplexity = mergeComplexities(state.timeComplexity, 'O(n)');
       state.loopNestDepth++;
+      adjustTimeComplexity(state);
       c((node as any).body, state);
       state.loopNestDepth--;
     },
@@ -53,12 +66,15 @@ export async function analyzeComplexity(ast: acorn.Node): Promise<Complexity> {
       // Assume `do while` loops are at least linear unless further analysis is added
       state.timeComplexity = mergeComplexities(state.timeComplexity, 'O(n)');
       state.loopNestDepth++;
+      adjustTimeComplexity(state);
       c((node as any).body, state);
       state.loopNestDepth--;
     },
     FunctionDeclaration(node, state, c) {
       // Check for recursion by seeing if the function calls itself
       const functionName = (node as any).id?.name;
+      const innerState = { ...state, currentFunctionName: functionName };
+
       if (
         functionName &&
         (node as any).body.body.some(
@@ -71,7 +87,7 @@ export async function analyzeComplexity(ast: acorn.Node): Promise<Complexity> {
         state.recursion = true;
         state.timeComplexity = mergeComplexities(state.timeComplexity, 'O(2^n)'); // Assume exponential for basic recursion
       }
-      c((node as any).body, state);
+      c((node as any).body, innerState) ;
     },
     ArrayExpression(node, state) {
       state.dataStructures.add('Array');
@@ -81,22 +97,23 @@ export async function analyzeComplexity(ast: acorn.Node): Promise<Complexity> {
       state.dataStructures.add('Object');
       state.spaceComplexity = mergeComplexities(state.spaceComplexity, 'O(n)');
     },
+    
   });
   return complexity;
 }
 
 // Utility function to determine if a loop is likely linear
 function isLinearLoop(init: any, update: any): boolean {
-  // Check if the loop variable is being incremented or decremented by a constant value
   if (
     init.type === 'VariableDeclaration' &&
-    update.type === 'UpdateExpression' &&
-    (update.operator === '++' || update.operator === '--')
+    ((update.type === 'UpdateExpression' && ['++', '--'].includes(update.operator)) ||
+     (update.type === 'AssignmentExpression' && update.operator === '+='))
   ) {
     return true;
   }
   return false;
 }
+
 
 // Improved function to merge complexities correctly
 function mergeComplexities(current: string, newComplexity: string): string {
