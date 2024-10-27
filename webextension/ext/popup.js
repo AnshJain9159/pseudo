@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Start session button functionality
   document.getElementById('startSession').addEventListener('click', async () => {
     const mode = document.getElementById('learningMode').value;
-    // TODO: Implement session start logic
+    // TODO: Implement session start logic  
     console.log('Starting session in mode:', mode);
   });
 
@@ -27,6 +27,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // TODO: Implement help documentation
     console.log('Help clicked');
   });
+});
+
+document.getElementById('helpButton').addEventListener('click', function() {
+  document.getElementById('chatWindow').classList.toggle('hidden');
 });
 
 // Your existing copy functionality

@@ -74,6 +74,8 @@ body {
   max-height: 400px; /* Ensures chat doesn't overflow */
   overflow-y: auto;
   margin-bottom: 16px;
+    transition: all 0.3s ease;
+
 }
 
 .messages {
@@ -87,6 +89,10 @@ body {
   border-radius: 8px;
   font-size: 13px;
   line-height: 1.4;
+}
+
+.hidden {
+  display: none;
 }
 
 .message.user {
