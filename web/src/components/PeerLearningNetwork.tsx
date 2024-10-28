@@ -134,12 +134,12 @@ const PeerLearningNetwork = () => {
           <div className="mb-6">
             <h3 className="text-lg font-medium mb-2 text-[#c7c7c7]">Current Topic: {currentTopic}</h3>
             <div className="flex gap-2 flex-wrap">
-              {['Quick Sort', 'Merge Sort', 'Heap Sort'].map((topic) => (
+              {['Quick Sort', 'Merge Sort', 'Heap Sort','Operating Systems'].map((topic) => (
                 <Badge
                   key={topic}
                   variant="secondary"
                   className="cursor-pointer bg-[#2b6cb0] text-white hover:bg-[#1e4a73]"
-                  onClick={() => setCurrentTopic(topic)}
+                  onClick={() => setCurrentTopic(topic.toLowerCase())}
                 >
                   {topic}
                 </Badge>
@@ -153,19 +153,22 @@ const PeerLearningNetwork = () => {
               {discussions.map((discussion) => (
                 <div
                   key={discussion._id}
-                  className="mb-4 p-4 border border-[#3b3e46] bg-[#232529] rounded-lg shadow-md hover:shadow-lg"
+                  className="mb-4 p-3 border border-[#3b3e46] bg-[#232529] rounded-xl shadow-md hover:shadow-lg"
                 >
                   <div className="flex items-center justify-between">
-                    <div>
-                      <h5 className="font-medium text-[#c7c7c7]">{discussion.topic}</h5>
-                      <p className="text-sm text-[#9ca3af]">{discussion.content}</p>
-                      <p className="text-sm text-[#9ca3af]">By: {discussion.author.fullName}</p>
+                    <div className='flex gap-3'>
+                      <Brain className="h-5 w-5 mt-1 text-[#6b7280]" />
+                      <div>
+                        <h5 className="font-medium text-md text-[#c7c7c7]">{discussion.topic}</h5>
+                        <p className="text-sm text-[#9ca3af]">{discussion.content}</p>
+                        <p className="text-sm text-[#9ca3af]">By: {discussion.author.fullName}</p>
+                      </div>
                     </div>
                     {userId === discussion.author._id.toString() && (
                       <Button
-                        variant="outline"
+                        variant="default"
                         size="sm"
-                        className="border-[#f87171] text-[#f87171] hover:bg-[#b91c1c]"
+                        className="border-[#f87171] rounded-xl text-[#f87171] hover:bg-[#b91c1c]"
                         onClick={() => deleteDiscussion(discussion._id)}
                       >
                         <Trash2 className="h-4 w-4 mr-1" />
@@ -181,7 +184,7 @@ const PeerLearningNetwork = () => {
               <h4 className="text-lg font-medium mb-4 text-[#e2e8f0]">Socratic Discussion Guide</h4>
               <div className="space-y-4">
                 {["What's the main difference between this algorithm and the one we discussed earlier?", 'How would this approach perform with a very large dataset?', 'Can you identify any potential edge cases?', "What's the time complexity of this solution?"].map((prompt, index) => (
-                  <div key={index} className="p-4 border border-[#3b3e46] bg-[#232529] rounded-lg shadow-md hover:shadow-lg">
+                  <div key={index} className="p-3 border border-[#3b3e46] bg-[#232529] rounded-xl shadow-md hover:shadow-lg">
                     <div className="flex items-start gap-3">
                       <Brain className="h-5 w-5 mt-1 text-[#6b7280]" />
                       <p className="text-[#c7c7c7]">{prompt}</p>
