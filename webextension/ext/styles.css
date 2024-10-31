@@ -3,18 +3,19 @@ body {
   width: 320px;
   margin: 0;
   padding: 16px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #1a1a2e;
-  color: #ffffff;
+  font-family: 'Poppins', Tahoma, Geneva, Verdana, sans-serif;
+  background: black;
+  color: #f8fafc; /* Slate-50 */
 }
 
 .container {
-  background: #16213e;
+  background: linear-gradient(to bottom right, #0f172a, #020617); /* Slate-900 to 950 */
   border-radius: 12px;
-  padding: 20px; /* Increased padding for better spacing */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Enhanced shadow for more depth */
-  max-height: 100vh; /* Prevents overflow */
-  overflow-y: auto;  /* Scroll if content exceeds viewport */
+  padding: 20px;
+  box-shadow: 0 6px 12px rgba(255, 255, 255, 0.1);
+  max-height: 100vh;
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Header Styles */
@@ -22,20 +23,18 @@ body {
   text-align: center;
   margin-bottom: 20px;
   padding-bottom: 12px;
-  border-bottom: 1px solid #2a2a4a;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .popup-title {
-  font-size: 18px;
-  font-family:Verdana, Geneva, Tahoma, sans-serif;
-  margin: 0 0 4px 0;
-  color: #00d4ff;
+  font-size: 20px;
+  font-weight: 600;
+  color: #ffffff;
 }
 
 .popup-subtitle {
-  font-size: 12px;
-  margin: 0;
-  color: #a6b1e1;
+  font-size: 14px;
+  color: #94a3b8; /* Slate-400 */
 }
 
 /* Status Indicator */
@@ -44,8 +43,9 @@ body {
   align-items: center;
   margin-bottom: 16px;
   padding: 8px;
-  background: #1f2947;
+  background: #1e293b; /* Slate-800 */
   border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .status-indicator {
@@ -57,25 +57,25 @@ body {
 .dot {
   width: 8px;
   height: 8px;
-  background: #4ade80;
+  background: #ffffff;
   border-radius: 50%;
   animation: pulse 2s infinite;
 }
 
 .status-text {
   font-size: 12px;
-  color: #a6b1e1;
+  color: #94a3b8; /* Slate-400 */
 }
 
+/* Chat Window */
 .chat-window {
-  background: #1f2947;
+  background: #1e293b; /* Slate-800 */
   border-radius: 8px;
   padding: 12px;
-  max-height: 400px; /* Ensures chat doesn't overflow */
+  max-height: 400px;
   overflow-y: auto;
   margin-bottom: 16px;
-    transition: all 0.3s ease;
-
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .messages {
@@ -91,22 +91,20 @@ body {
   line-height: 1.4;
 }
 
-.hidden {
-  display: none;
-}
-
 .message.user {
-  background-color: #2575fc;
+  background: linear-gradient(135deg, #475569, #334155); /* Slate-600 to Slate-700 */
   color: white;
   align-self: flex-end;
 }
 
 .message.assistant {
-  background-color: #6a11cb;
+  background: #0f172a; /* Slate-900 */
   color: white;
   align-self: flex-start;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* Chat Form */
 .chat-form {
   display: flex;
   gap: 10px;
@@ -117,24 +115,26 @@ body {
   flex: 1;
   padding: 8px 12px;
   border-radius: 8px;
-  border: none;
-  background: #2a2a4a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #1e293b; /* Slate-800 */
   color: white;
   font-size: 14px;
 }
 
 .chat-submit-button {
-  background-color: #2575fc;
-  color: white;
+  background: linear-gradient(135deg, #f8fafc, #e2e8f0); /* Slate-50 to Slate-200 */
+  color: #020617; /* Slate-950 */
   padding: 10px 16px;
   border-radius: 8px;
   border: none;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .chat-submit-button:hover {
-  background-color: #1a56db;
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
 }
 
 /* Button Styles */
@@ -157,33 +157,38 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: transform 0.2s, background 0.3s;
+  transition: all 0.3s ease;
 }
 
 .primary-button {
-  background: linear-gradient(135deg, #6a11cb, #2575fc);
-  color: white;
+  background: linear-gradient(135deg, #f8fafc, #e2e8f0); /* Slate-50 to Slate-200 */
+  color: #020617; /* Slate-950 */
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
 }
 
 .secondary-button {
-  background: #2a2a4a;
+  background: #1e293b; /* Slate-800 */
   color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.primary-button:hover, .secondary-button:hover {
+.primary-button:hover {
   transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(255, 255, 255, 0.15);
 }
 
-.primary-button:active, .secondary-button:active {
-  transform: translateY(1px);
+.secondary-button:hover {
+  transform: translateY(-1px);
+  background: #334155; /* Slate-700 */
 }
 
 /* Settings Panel */
 .settings-panel {
-  background: #1f2947;
+  background: #1e293b; /* Slate-800 */
   border-radius: 6px;
   padding: 12px;
   margin-bottom: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .difficulty-selector {
@@ -194,12 +199,12 @@ body {
 
 .difficulty-selector label {
   font-size: 12px;
-  color: #a6b1e1;
+  color: #94a3b8; /* Slate-400 */
 }
 
 .difficulty-selector select {
-  background: #2a2a4a;
-  border: none;
+  background: #334155; /* Slate-700 */
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: white;
   padding: 4px 8px;
   border-radius: 4px;
@@ -219,13 +224,13 @@ body {
   cursor: pointer;
   font-size: 16px;
   padding: 4px;
-  opacity: 0.7;
-  transition: opacity 0.2s;
+  color: #94a3b8; /* Slate-400 */
+  transition: all 0.2s;
 }
 
 .icon-button:hover {
-  opacity: 1;
-  transform: scale(1.05); /* Slight scaling on hover */
+  color: #ffffff;
+  transform: scale(1.05);
 }
 
 /* Animations */
@@ -244,19 +249,15 @@ body {
   }
 }
 
-/* General icon styles */
-.icon {
-  font-size: 16px;
-}
-
 .github-link {
   margin-left: 10px;
   display: inline-block;
-  color: #fff;
+  color: #94a3b8; /* Slate-400 */
+  transition: color 0.3s ease;
 }
 
 .github-link:hover {
-  color: #4078c0; /* GitHub blue */
+  color: #ffffff;
 }
 
 .github-icon {
