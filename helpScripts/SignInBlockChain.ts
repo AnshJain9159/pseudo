@@ -1,6 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
+import BN from 'bn.js';
+
 import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/models/User";
 import Web3 from "web3";
@@ -14,7 +18,7 @@ const contractABI = JSON.parse(
 
 const contractAddress = "0x07254deD9EeA5cA826C9d1F3F939eA38924D5941";
 const web3 = new Web3("http://localhost:8545");
-const userRegistryContract = new web3.eth.Contract(contractABI.abi, contractAddress);
+const   userRegistryContract = new web3.eth.Contract(contractABI.abi, contractAddress);
 
 function convertToBytes32(hexString: string): string {
     hexString = hexString.replace('0x', '');
@@ -72,16 +76,17 @@ export const authOptions: NextAuthOptions = {
                         // Check user's balance
                         const balance = await web3.eth.getBalance(user.ethereumAddress);
                         console.log('User balance:', balance);
-
+                        const balanceBN = new BN(balance);
+                        const minimumBalance = new BN(web3.utils.toWei('0.01', 'ether'));
                         // If balance is low, fund the account
-                        if (web3.utils.toBN(balance).lt(web3.utils.toBN(web3.utils.toWei('0.01', 'ether')))) {
+                        if (balanceBN.lt(minimumBalance)) {
                             console.log('Funding user account...');
                             await web3.eth.sendTransaction({
-                                from: accounts[0],
-                                to: user.ethereumAddress,
-                                value: web3.utils.toWei('0.1', 'ether')
+                              from: accounts[0],
+                              to: user.ethereumAddress,
+                              value: web3.utils.toWei('0.1', 'ether'),
                             });
-                        }
+                          }
 
                         // Create the hashes
                         const emailHashBuffer = crypto.createHash("sha256").update(credentials.email).digest();

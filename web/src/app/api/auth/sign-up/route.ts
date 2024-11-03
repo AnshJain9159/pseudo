@@ -44,7 +44,7 @@ export async function POST(request: Request) {
 
         const emailHashBytes32 = convertToBytes32(emailHashBuffer.toString('hex'));
         const passwordHashBytes32 = convertToBytes32(passwordHashBuffer.toString('hex'));
-
+        // console.log(emailHashBytes32, passwordHashBytes32);
         // Generate a new Ethereum account for this user
         const newAccount = web3.eth.accounts.create();
         
