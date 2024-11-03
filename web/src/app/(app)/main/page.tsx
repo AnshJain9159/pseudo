@@ -1,19 +1,19 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // File: app/page.tsx
 'use client';
 import React, { useState, useEffect } from 'react';
-import dynamic from "next/dynamic";
-import { Code2, PenTool, Bot, ArrowLeft } from "lucide-react";
+import dynamic from 'next/dynamic';
+import { Code2, PenTool, Bot, ArrowLeft } from 'lucide-react';
 import type { ResizeCallback } from 're-resizable';
 import { Resizable } from 're-resizable';
 import Link from 'next/link';
-
-const ExcalidrawWrapper = dynamic(
-  async () => (await import("@/components/Canvas")).default,
-  { ssr: false }
-);
-
 import NotebookPage from '@/components/Codepad';
 import ChatPage from '@/components/ChatBotAlt';
+
+const ExcalidrawWrapper = dynamic(
+  async () => (await import('@/components/Canvas')).default,
+  { ssr: false }
+);
 
 interface ResizeData {
   width: number;
@@ -44,7 +44,7 @@ const Page: React.FC = () => {
   };
 
   return (
-    <div className='h-screen w-screen bg-black flex flex-col overflow-hidden'>
+    <div className="h-screen w-screen bg-black flex flex-col overflow-hidden">
       {/* Navigation Bar */}
       <div className="h-12 border-b border-zinc-800 flex items-center px-4">
         <Link href="/" className="text-zinc-400 hover:text-white">
@@ -53,7 +53,7 @@ const Page: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <div className='flex-1 flex min-h-0'>
+      <div className="flex-1 flex min-h-0">
         {/* Left Column - Code Cells */}
         <Resizable
           size={{ width: leftWidth, height: '100%' }}
@@ -67,11 +67,11 @@ const Page: React.FC = () => {
               right: '-2px',
               cursor: 'col-resize',
               background: '#27272a',
-              zIndex: 10
-            }
+              zIndex: 10,
+            },
           }}
           handleClasses={{
-            right: 'hover:bg-blue-500 transition-colors'
+            right: 'hover:bg-blue-500 transition-colors',
           }}
           className="border-r border-zinc-800"
         >
@@ -87,43 +87,36 @@ const Page: React.FC = () => {
         {/* Right Column - Split View */}
         <div className="flex-1 bg-black flex flex-col min-h-0">
           {/* Top Half - Canvas with Resizable */}
-          <div style={{ height: topHeight }} className="relative border-b border-zinc-800">
-            <div className="h-full">
+          <Resizable
+            size={{ width: '100%', height: topHeight }}
+            onResizeStop={handleTopResize}
+            minHeight="20%"
+            maxHeight="80%"
+            enable={{ bottom: true }}
+            handleStyles={{
+              bottom: {
+                height: '4px',
+                bottom: '-2px',
+                cursor: 'row-resize',
+                background: '#27272a',
+                zIndex: 10,
+              },
+            }}
+            handleClasses={{
+              bottom: 'hover:bg-blue-500 transition-colors',
+            }}
+            className="border-b border-zinc-800"
+          >
+            <div className="h-full flex flex-col">
               <div className="flex items-center space-x-2 px-4 py-3 border-b border-zinc-800">
                 <PenTool className="w-4 h-4 text-blue-400" />
                 <span className="text-sm font-medium text-white">Visual Canvas</span>
               </div>
-              <div className="h-[calc(100%-41px)]">
+              <div className="flex-1 min-h-0">
                 <ExcalidrawWrapper />
               </div>
             </div>
-            {/* Custom resize handle */}
-            <div
-              className="absolute bottom-0 left-0 right-0 h-1 cursor-row-resize bg-zinc-800 hover:bg-blue-500 transition-colors"
-              onMouseDown={(e) => {
-                const startY = e.clientY;
-                const startHeight = parseFloat(topHeight);
-                const parentHeight = e.currentTarget.parentElement!.parentElement!.offsetHeight;
-
-                const handleMouseMove = (moveEvent: MouseEvent) => {
-                  const deltaY = moveEvent.clientY - startY;
-                  const newHeight = Math.min(Math.max(
-                    (startHeight * parentHeight + deltaY) / parentHeight * 100,
-                    20
-                  ), 80);
-                  setTopHeight(`${newHeight}%`);
-                };
-
-                const handleMouseUp = () => {
-                  document.removeEventListener('mousemove', handleMouseMove);
-                  document.removeEventListener('mouseup', handleMouseUp);
-                };
-
-                document.addEventListener('mousemove', handleMouseMove);
-                document.addEventListener('mouseup', handleMouseUp);
-              }}
-            />
-          </div>
+          </Resizable>
 
           {/* Bottom Half - Chat */}
           <div className="flex-1 min-h-0 flex flex-col">
