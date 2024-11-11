@@ -1,0 +1,59 @@
+import { Algorithm } from './types';
+import { generateBubbleSortSteps } from './bubbleSort';
+import { generateQuickSortSteps } from './sorting/quickSort';
+import { generateMergeSortSteps } from './sorting/mergeSort';
+import { generateBinarySearchSteps } from './searching/binarySearch';
+import { generateDijkstraSteps } from './graph/dijkstra';
+import { generateTreeTraversalSteps } from './tree/binaryTreeTraversal';
+
+export const algorithms: Record<string, Algorithm> = {
+  'Bubble Sort': {
+    description: 'A simple sorting algorithm that repeatedly steps through the list, compares adjacent elements and swaps them if they are in the wrong order.',
+    timeComplexity: 'O(n²)',
+    spaceComplexity: 'O(1)',
+    type: 'sorting',
+    generator: (config) => generateBubbleSortSteps(config.array || []),
+  },
+  'Quick Sort': {
+    description: 'An efficient, in-place sorting algorithm that uses a divide-and-conquer strategy to sort elements. It picks an element as a pivot and partitions the array around it.',
+    timeComplexity: 'O(n log n)',
+    spaceComplexity: 'O(log n)',
+    type: 'sorting',
+    generator: (config) => generateQuickSortSteps(config.array || []),
+  },
+  'Merge Sort': {
+    description: 'A divide-and-conquer sorting algorithm that divides the array into smaller subarrays, sorts them, and then merges them back together.',
+    timeComplexity: 'O(n log n)',
+    spaceComplexity: 'O(n)',
+    type: 'sorting',
+    generator: (config) => generateMergeSortSteps(config.array || []),
+  },
+  'Binary Search': {
+    description: 'An efficient search algorithm that finds the position of a target value within a sorted array by repeatedly dividing the search space in half.',
+    timeComplexity: 'O(log n)',
+    spaceComplexity: 'O(1)',
+    type: 'searching',
+    generator: (config) => generateBinarySearchSteps(config.array || [], config.target || 0),
+  },
+  'Dijkstra\'s Algorithm': {
+    description: 'A graph search algorithm that finds the shortest path between nodes in a graph, which may represent, for example, road networks.',
+    timeComplexity: 'O((V + E) log V)',
+    spaceComplexity: 'O(V)',
+    type: 'graph',
+    generator: (config) => generateDijkstraSteps({
+      nodes: config.graphNodes || 6,
+      weighted: config.weighted || false,
+      source: 'A'
+    }),
+  },
+  'Binary Tree Traversal': {
+    description: 'Different ways to visit all nodes in a binary tree: inorder (left-root-right), preorder (root-left-right), postorder (left-right-root), and level-order.',
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(h)',
+    type: 'tree',
+    generator: (config) => generateTreeTraversalSteps({
+      nodes: config.treeNodes || 7,
+      traversalType: (config.traversalType as 'inorder' | 'preorder' | 'postorder' | 'levelorder') || 'inorder',
+    }),
+  }
+};

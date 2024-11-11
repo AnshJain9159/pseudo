@@ -27,6 +27,7 @@ const navItems = [
     category: 'Features',
     items: [
       { name: "DSA's Roadmap", href: '/roadmap' },
+      { name: "Algorithms Visualization", href: '/algovisualise' },
       { name: "LLM's Visualization", href: '/visualizer' },
 
     ],
