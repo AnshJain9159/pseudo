@@ -3,6 +3,7 @@ import { generateBubbleSortSteps } from './bubbleSort';
 import { generateQuickSortSteps } from './sorting/quickSort';
 import { generateMergeSortSteps } from './sorting/mergeSort';
 import { generateBinarySearchSteps } from './searching/binarySearch';
+import { generateInsertionSortSteps } from './sorting/insertionSort';
 import { generateDijkstraSteps } from './graph/dijkstra';
 import { generateTreeTraversalSteps } from './tree/binaryTreeTraversal';
 
@@ -14,6 +15,14 @@ export const algorithms: Record<string, Algorithm> = {
     type: 'sorting',
     generator: (config) => generateBubbleSortSteps(config.array || []),
   },
+  'Insertion Sort': {
+  description: 'A simple sorting algorithm that builds the sorted array one item at a time by repeatedly inserting the current element into its correct position.',
+  timeComplexity: 'O(n²)',
+  spaceComplexity: 'O(1)',
+  type: 'sorting',
+  generator: (config) => generateInsertionSortSteps(config.array || []),
+},
+
   'Quick Sort': {
     description: 'An efficient, in-place sorting algorithm that uses a divide-and-conquer strategy to sort elements. It picks an element as a pivot and partitions the array around it.',
     timeComplexity: 'O(n log n)',
