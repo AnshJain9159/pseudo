@@ -4,6 +4,18 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Brain, Zap, Code } from 'lucide-react';
 import { Code2, PenTool, Bot, Terminal, Play } from "lucide-react";
+import { Permanent_Marker, Shadows_Into_Light } from 'next/font/google';
+
+// Initialize the fonts
+const permanentMarker = Permanent_Marker({
+  weight: '400',
+  subsets: ['latin'],
+});
+
+const shadowsIntoLight = Shadows_Into_Light({
+  weight: '400',
+  subsets: ['latin'],
+});
 
 interface Feature {
   icon: React.FC<React.SVGProps<SVGSVGElement>>;
@@ -13,11 +25,11 @@ interface Feature {
 
 function FeatureCard({ icon, title, description }: Feature) {
   return (
-    <Card className="bg-gradient-to-br from-gray-800 via-gray-900 to-black border border-gray-700 hover:border-purple-500 transition-all duration-300 transform hover:-translate-y-2 shadow-lg hover:shadow-purple-500/50">
+    <Card className="bg-black border border-zinc-800 hover:border-zinc-700 transition-all duration-300">
       <CardContent className="flex flex-col items-center p-6">
-        {icon && React.createElement(icon, { className: "w-10 h-10 text-purple-400" })}
-        <h3 className="text-xl font-semibold mt-4 mb-2 text-white">{title}</h3>
-        <p className="text-gray-400 text-center text-sm">{description}</p>
+        {icon && React.createElement(icon, { className: "w-4 h-4 text-zinc-400" })}
+        <h3 className="text-sm font-medium mt-4 mb-2 text-zinc-200">{title}</h3>
+        <p className="text-zinc-400 text-center text-xs">{description}</p>
       </CardContent>
     </Card>
   );
@@ -25,26 +37,24 @@ function FeatureCard({ icon, title, description }: Feature) {
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 text-gray-300 flex flex-col justify-center items-center p-8 font-sans">
+    <div className="min-h-screen bg-black text-zinc-400 flex flex-col items-center px-8 pt-24 pb-16 font-sans"> {/* Adjusted padding */}
       {/* Logo Section */}
       <div className="max-w-4xl mx-auto text-center">
-        <div className="flex justify-center py-6">
-          <img
-            src="/SOCRATES.svg"
-            alt="Socrates Logo"
-            className="h-full"
-          />
+        <div className="flex justify-center mb-8">
+          <h1 className={`${shadowsIntoLight.className} text-6xl text-zinc-200 tracking-wider`}>
+            SOCRATES
+          </h1>
         </div>
         
         {/* Title and Description */}
-        <p className="text-lg text-gray-400 mb-10">
+        <p className="text-lg text-gray-400 mb-8"> {/* Changed mb-12 to mb-8 */}
           Master Computer Science through AI-powered Socratic questioning.
         </p>
         
         {/* Start Learning Button */}
-        <div className="flex justify-center"> 
+        <div className="flex justify-center mb-16"> {/* Added mb-16 */}
           <a href="/main">
-            <Button className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-8 rounded-lg transition duration-300 ease-in-out shadow-lg hover:shadow-purple-500/50 flex items-center">
+            <Button className="bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-sm px-8 rounded border border-zinc-800 transition duration-300 ease-in-out flex items-center">
               Start Learning
               <ArrowRight className="w-5 h-5 ml-3 text-white" />
             </Button>
@@ -52,8 +62,8 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Features Section */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mt-16">
+      {/* Features Section - removed mt-16 since we added mb-16 to button container */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <FeatureCard
           icon={Brain}
           title="Socratic Method"
@@ -72,7 +82,7 @@ export default function Home() {
       </div>
       {/* <h1 className='text-3xl font-semibold text-white px-4 py-4'>All at one place...</h1> */}
       <div className="flex-1 max-w-6xl mx-auto px-4 pb-4 mt-8">
-        <div className="h-full rounded-xl overflow-hidden border border-zinc-800/50">
+        <div className="h-full rounded border border-zinc-800 overflow-hidden">
           <div className="flex items-center space-x-2 px-3 py-2 bg-zinc-900/80 border-b border-zinc-800/50">
             <div className="w-2.5 h-2.5 rounded-full bg-zinc-700"></div>
             <div className="w-2.5 h-2.5 rounded-full bg-zinc-700"></div>
