@@ -1,102 +1,177 @@
+'use client';
+
 /* eslint-disable @next/next/no-img-element */
-import React from 'react';
-import { Card, CardContent } from "@/components/ui/card";
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Brain, Zap, Code } from 'lucide-react';
+
 import { Code2, PenTool, Bot, Terminal, Play } from "lucide-react";
+import dynamic from 'next/dynamic';
+
+// Dynamically import Excalidraw to avoid SSR issues
+const ExcalidrawWrapper = dynamic(
+  async () => (await import('@/components/Canvas')).default,
+  { ssr: false }
+);
 
 interface Feature {
   icon: React.FC<React.SVGProps<SVGSVGElement>>;
   title: string;
   description: string;
+  image: string;
 }
 
-function FeatureCard({ icon, title, description }: Feature) {
+const FEATURE_CARDS: Feature[] = [
+  {
+    icon: Brain,
+    title: "Socratic Method",
+    description: "Guided learning through intelligent questioning and systematic discovery",
+    image: "vector-art-of-agora-of-socratic-method-minimal-sty.jpg"
+  },
+  {
+    icon: Zap,
+    title: "Personalized Learning",
+    description: "Adaptive feedback and learning paths tailored to your unique progress",
+    image: "vector-art-of-personalized-learning-minimal-style-.jpg"
+  },
+  {
+    icon: Code,
+    title: "Interactive Coding",
+    description: "Real-time code execution and testing in an immersive environment",
+    image: "vector-art-of-interactive-coding-environment-style.jpg"
+  }
+];
+
+function InteractiveFeatureCard({ icon, title, description, image }: Feature) {
   return (
-    <Card className="bg-gradient-to-br from-gray-800 via-gray-900 to-black border border-gray-700 hover:border-purple-500 transition-all duration-300 transform hover:-translate-y-2 shadow-lg hover:shadow-purple-500/50">
-      <CardContent className="flex flex-col items-center p-6">
-        {icon && React.createElement(icon, { className: "w-10 h-10 text-purple-400" })}
-        <h3 className="text-xl font-semibold mt-4 mb-2 text-white">{title}</h3>
-        <p className="text-gray-400 text-center text-sm">{description}</p>
-      </CardContent>
-    </Card>
+    <div className="group relative h-[400px] rounded-3xl bg-black border border-zinc-800 overflow-hidden transition-all duration-500 hover:border-zinc-700 hover:scale-[1.02] hover:z-10">
+      {/* Feature Image */}
+      <div className="absolute inset-0">
+        <img
+          src={image}
+          alt={title}
+          className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+        />
+        {/* Gradient Overlay - Made stronger for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent opacity-80" />
+      </div>
+      
+      {/* Content - Positioned at bottom */}
+      <div className="absolute bottom-0 left-0 right-0 p-8">
+        <div className="flex items-center space-x-3 mb-3">
+          {icon && React.createElement(icon, { className: "w-5 h-5 text-white" })}
+          <h3 className="text-2xl font-medium text-white">{title}</h3>
+        </div>
+        <p className="text-sm text-zinc-300">{description}</p>
+      </div>
+    </div>
+  );
+}
+
+function GravityField({ mousePosition }: { mousePosition: { x: number, y: number } }) {
+  return (
+    <div className="absolute inset-0">
+      {/* Base Grid */}
+      <div 
+        className="absolute inset-0 opacity-20"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, rgb(64, 64, 64) 1px, transparent 1px),
+            linear-gradient(to bottom, rgb(64, 64, 64) 1px, transparent 1px)
+          `,
+          backgroundSize: '40px 40px',
+        }}
+      />
+      
+      {/* Mouse Follow Effect */}
+      <div 
+        className="absolute inset-0"
+        style={{
+          background: `radial-gradient(circle 250px at ${mousePosition.x}px ${mousePosition.y}px, rgba(255,255,255,0.03), transparent)`,
+          transition: 'all 0.15s ease-out',
+        }}
+      />
+    </div>
   );
 }
 
 export default function Home() {
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 text-gray-300 flex flex-col justify-center items-center p-8 font-sans">
-      {/* Logo Section */}
-      <div className="max-w-4xl mx-auto text-center">
-        <div className="flex justify-center py-6">
-          <img
-            src="/SOCRATES.svg"
-            alt="Socrates Logo"
-            className="h-full"
-          />
-        </div>
-        
-        {/* Title and Description */}
-        <p className="text-lg text-gray-400 mb-10">
-          Master Computer Science through AI-powered Socratic questioning.
-        </p>
-        
-        {/* Start Learning Button */}
-        <div className="flex justify-center"> 
-          <a href="/main">
-            <Button className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-8 rounded-lg transition duration-300 ease-in-out shadow-lg hover:shadow-purple-500/50 flex items-center">
-              Start Learning
-              <ArrowRight className="w-5 h-5 ml-3 text-white" />
-            </Button>
-          </a>
-        </div>
-      </div>
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isAtTop, setIsAtTop] = useState(true);
 
-      {/* Features Section */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mt-16">
-        <FeatureCard
-          icon={Brain}
-          title="Socratic Method"
-          description="Guided learning through intelligent questioning"
-        />
-        <FeatureCard
-          icon={Zap}
-          title="Personalized"
-          description="Adaptive feedback tailored to your progress"
-        />
-        <FeatureCard
-          icon={Code}
-          title="Interactive Coding"
-          description="Practice and test your code in real-time"
-        />
-      </div>
-      {/* <h1 className='text-3xl font-semibold text-white px-4 py-4'>All at one place...</h1> */}
-      <div className="flex-1 max-w-6xl mx-auto px-4 pb-4 mt-8">
-        <div className="h-full rounded-xl overflow-hidden border border-zinc-800/50">
-          <div className="flex items-center space-x-2 px-3 py-2 bg-zinc-900/80 border-b border-zinc-800/50">
-            <div className="w-2.5 h-2.5 rounded-full bg-zinc-700"></div>
-            <div className="w-2.5 h-2.5 rounded-full bg-zinc-700"></div>
-            <div className="w-2.5 h-2.5 rounded-full bg-zinc-700"></div>
-          </div>
-          <div className="grid grid-cols-2 gap-px bg-zinc-800/50 h-[calc(100%-2.5rem)]">
-            {/* Code Cells */}
-            <div className="bg-zinc-900/50 p-4 flex flex-col">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center space-x-2">
-                  <Code2 className="w-4 h-4 text-blue-400" />
-                  <span className="text-sm font-medium">Code Cell</span>
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsAtTop(window.scrollY < 100);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    setMousePosition({
+      x: e.clientX,
+      y: e.clientY
+    });
+  };
+
+  return (
+    <main className="min-h-screen bg-black text-white" onMouseMove={handleMouseMove}>
+      <div className="relative min-h-screen flex flex-col items-center">
+        {/* Single Background Grid */}
+        <GravityField mousePosition={mousePosition} />
+
+        {/* Content */}
+        <div className="relative w-full max-w-6xl mx-auto px-8 py-16">
+          {/* Hero Section */}
+          <div className="min-h-screen flex flex-col justify-center items-center">
+            <div className="relative max-w-6xl mx-auto w-full">
+              {/* Top Content */}
+              <div className="text-center mb-16">
+                <div className="flex justify-center py-12">
+                  <img
+                    src="/SOCRATES.svg"
+                    alt="Socrates Logo"
+                    className="h-16"
+                  />
                 </div>
-                <div className="flex space-x-2 text-xs">
-                  <span className="px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                    In [1]:
-                  </span>
-                  <span className="p-0.5 rounded hover:bg-blue-500/10 text-blue-400">
-                    <Play className="w-4 h-4" />
-                  </span>
+                
+                <p className="text-xl text-zinc-400 font-light tracking-wide max-w-2xl mx-auto mb-8">
+                  Master Computer Science through AI-powered Socratic questioning.
+                </p>
+                
+                <div className="flex justify-center"> 
+                  <a href="/main">
+                    <Button className="bg-white text-black hover:bg-zinc-200 font-medium px-8 py-6 rounded-lg transition duration-300 flex items-center text-sm">
+                      Start Learning
+                      <ArrowRight className="w-4 h-4 ml-3 group-hover:translate-x-1 transition-transform duration-300" />
+                    </Button>
+                  </a>
                 </div>
               </div>
-              <pre className="font-mono text-sm text-zinc-300 bg-zinc-950 p-3 rounded-lg flex-1">
-                <code>{`def binary_search(arr, target):
+
+              {/* Preview Component */}
+              <div className="relative w-full transform hover:scale-[1.02] transition-transform duration-500">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-zinc-700 to-zinc-700 rounded-xl blur opacity-20"></div>
+                <div className="relative rounded-xl overflow-hidden border border-zinc-800 bg-black">
+                  {/* Window Controls */}
+                  <div className="flex items-center space-x-2 px-4 py-3 border-b border-zinc-800">
+                    <div className="w-3 h-3 rounded-full bg-zinc-800"></div>
+                    <div className="w-3 h-3 rounded-full bg-zinc-800"></div>
+                    <div className="w-3 h-3 rounded-full bg-zinc-800"></div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-px bg-zinc-800">
+                    {/* Code Editor Side */}
+                    <div className="bg-black p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center space-x-3">
+                          <Code className="w-4 h-4 text-zinc-400" />
+                          <span className="text-sm font-medium text-zinc-300">Code Editor</span>
+                        </div>
+                      </div>
+                      <pre className="font-mono text-sm text-zinc-300 bg-zinc-900/50 p-4 rounded-lg">
+                        <code>{`def binary_search(arr, target):
     left, right = 0, len(arr) - 1
     
     while left <= right:
@@ -106,52 +181,94 @@ export default function Home() {
         elif arr[mid] < target:
             left = mid + 1
         else:
-            right = mid - 1
-            
-    return -1`}</code>
-              </pre>
-            </div>
+            right = mid - 1`}</code>
+                      </pre>
+                    </div>
 
-            {/* Canvas & Chat */}
-            <div className="bg-zinc-900/50 flex flex-col">
-              {/* Canvas */}
-              <div className="border-b border-zinc-800/50 p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center space-x-2">
-                    <PenTool className="w-4 h-4 text-blue-400" />
-                    <span className="text-sm font-medium">Visual Canvas</span>
-                  </div>
-                  <button className="p-0.5 rounded hover:bg-blue-500/10 text-blue-400">
-                    <PenTool className="w-4 h-4" />
-                  </button>
-                </div>
-                <div className="h-24 bg-zinc-950 rounded-lg flex items-center justify-center border border-zinc-800/50">
-                  <span className="text-sm text-zinc-500">
-                    Interactive visualization area
-                  </span>
-                </div>
-              </div>
+                    {/* Right Side Split View */}
+                    <div className="bg-black flex flex-col">
+                      {/* Canvas Section */}
+                      <div className="border-b border-zinc-800">
+                        <div className="flex items-center space-x-3 px-6 py-3 border-b border-zinc-800">
+                          <PenTool className="w-4 h-4 text-zinc-400" />
+                          <span className="text-sm font-medium text-zinc-300">Visual Canvas</span>
+                        </div>
+                        <div className="h-[200px] w-full bg-zinc-900/50 p-4">
+                          {/* Visual representation of a binary search tree */}
+                          <div className="h-full w-full flex items-center justify-center">
+                            <div className="relative">
+                              {/* Simple visual representation */}
+                              <svg width="200" height="120" viewBox="0 0 200 120" className="text-zinc-600">
+                                <line x1="100" y1="20" x2="50" y2="60" stroke="currentColor" />
+                                <line x1="100" y1="20" x2="150" y2="60" stroke="currentColor" />
+                                <circle cx="100" cy="20" r="15" fill="currentColor" opacity="0.2" />
+                                <circle cx="50" cy="60" r="15" fill="currentColor" opacity="0.2" />
+                                <circle cx="150" cy="60" r="15" fill="currentColor" opacity="0.2" />
+                                <text x="95" y="25" fill="white" fontSize="12">8</text>
+                                <text x="45" y="65" fill="white" fontSize="12">4</text>
+                                <text x="145" y="65" fill="white" fontSize="12">12</text>
+                              </svg>
+                              {/* Animated cursor dot */}
+                              <div className="absolute top-0 right-0 w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
-              {/* Chat */}
-              <div className="flex-1 p-4">
-                <div className="flex items-center space-x-2 mb-3">
-                  <Bot className="w-4 h-4 text-blue-400" />
-                  <span className="text-sm font-medium">AI Assistant</span>
-                </div>
-                <div className="space-y-3 text-sm">
-                  <p className="text-zinc-400">
-                    I see you&apos;re implementing binary search. Now imagine what if...
-                  </p>
-                  <div className="flex items-center space-x-2 text-blue-400">
-                    <Terminal className="w-4 h-4" />
-                    <span>_</span>
+                      {/* Chat Section */}
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-3 px-6 py-3 border-b border-zinc-800">
+                          <Bot className="w-4 h-4 text-zinc-400" />
+                          <span className="text-sm font-medium text-zinc-300">AI Assistant</span>
+                        </div>
+                        <div className="p-6">
+                          <p className="text-sm text-zinc-400">
+                            Let's explore how binary search works. What happens if we search for a number that's not in the array?
+                          </p>
+                          <div className="flex items-center space-x-2 mt-4 text-zinc-500">
+                            <Terminal className="w-4 h-4" />
+                            <span className="animate-pulse">_</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Scroll Indicator */}
+        <div 
+          className={`
+            fixed bottom-8 left-1/2 -translate-x-1/2 
+            flex flex-col items-center text-zinc-500 
+            transition-all duration-500 ease-in-out
+            ${isAtTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}
+          `}
+        >
+          <span className="text-xs mb-2">Scroll to explore features</span>
+          <ArrowRight className="w-4 h-4 rotate-90" />
+        </div>
       </div>
-    </div>
+
+      {/* Features Section - Updated padding and max-width */}
+      <div className="py-24 px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 [&:has(>*:hover)>*:not(:hover)]:opacity-50 [&:has(>*:hover)>*:not(:hover)]:blur-sm [&:has(>*:hover)>*:not(:hover)]:scale-95">
+            {FEATURE_CARDS.map((card, index) => (
+              <InteractiveFeatureCard
+                key={index}
+                icon={card.icon}
+                title={card.title}
+                description={card.description}
+                image={card.image}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </main>
   );
 }
