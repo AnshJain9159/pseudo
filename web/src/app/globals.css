@@ -8,6 +8,28 @@
 body {
   font-family: 'Inter', sans-serif;
 }
+@layer utilities {
+  .blur-sm {
+    filter: blur(4px);
+  }
+}
+
+/* Optional: Add smooth transitions */
+.grid > * {
+  transition: all 0.5s ease-in-out;
+}
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
 
 /* Custom styles for the Ace Editor */
 .ace_editor_custom .ace_content {
