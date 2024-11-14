@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
 /* eslint-disable @next/next/no-img-element */
@@ -8,12 +9,12 @@ import { ArrowRight, Brain, Zap, Code } from 'lucide-react';
 import { Code2, PenTool, Bot, Terminal, Play } from "lucide-react";
 import dynamic from 'next/dynamic';
 
-// Dynamically import Excalidraw to avoid SSR issues
 const ExcalidrawWrapper = dynamic(
   async () => (await import('@/components/Canvas')).default,
   { ssr: false }
-);
 
+);
+// Dynamically import Excalidraw to avoid SSR issues
 interface Feature {
   icon: React.FC<React.SVGProps<SVGSVGElement>>;
   title: string;
@@ -142,7 +143,7 @@ export default function Home() {
                 
                 <div className="flex justify-center"> 
                   <a href="/main">
-                    <Button className="bg-white text-black hover:bg-zinc-200 font-medium px-8 py-6 rounded-lg transition duration-300 flex items-center text-sm">
+                    <Button className="bg-white  text-black hover:bg-zinc-200 font-medium px-8 py-6 rounded-xl transition duration-300 flex items-center text-sm">
                       Start Learning
                       <ArrowRight className="w-4 h-4 ml-3 group-hover:translate-x-1 transition-transform duration-300" />
                     </Button>
@@ -223,7 +224,7 @@ export default function Home() {
                         </div>
                         <div className="p-6">
                           <p className="text-sm text-zinc-400">
-                            Let's explore how binary search works. What happens if we search for a number that's not in the array?
+                            Let&apos;s explore how binary search works. What happens if we search for a number that&apos;s not in the array?
                           </p>
                           <div className="flex items-center space-x-2 mt-4 text-zinc-500">
                             <Terminal className="w-4 h-4" />
@@ -254,7 +255,7 @@ export default function Home() {
       </div>
 
       {/* Features Section - Updated padding and max-width */}
-      <div className="py-24 px-8">
+      <div className="py-10 px-8">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 [&:has(>*:hover)>*:not(:hover)]:opacity-50 [&:has(>*:hover)>*:not(:hover)]:blur-sm [&:has(>*:hover)>*:not(:hover)]:scale-95">
             {FEATURE_CARDS.map((card, index) => (

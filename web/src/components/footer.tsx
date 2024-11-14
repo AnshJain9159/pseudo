@@ -8,7 +8,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           {/* Left section - Company name and copyright */}
           <div className="text-center md:text-left">
-            <h4 className="text-lg font-semibold text-white">Socrates</h4>
+            <a href="/"><h4 className="text-lg font-semibold text-white">Socrates</h4></a>
             <p className="text-xs text-gray-600 mt-1">&copy; {new Date().getFullYear()} All rights reserved.</p>
           </div>
           
@@ -22,13 +22,13 @@ export default function Footer() {
           
           {/* Right section - Social media */}
           <div className="flex space-x-6">
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-white">
+            <a href="https://linkedin.com/" target="_blank" rel="noopener noreferrer" className="hover:text-white">
               <Linkedin className="h-5 w-5" />
             </a>
             <a href="https://github.com/AnshJain9159/pseudo.git" target="_blank" rel="noopener noreferrer" className="hover:text-white">
               <Github className="h-5 w-5" />
             </a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-white">
+            <a href="https://twitter.com/whoanshjain" target="_blank" rel="noopener noreferrer" className="hover:text-white">
               <Twitter className="h-5 w-5" />
             </a>
           </div>

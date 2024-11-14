@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "BroCode",
+  "name": "SocrateBot",
   "version": "1.0",
-  "description": "A Socratic teaching assistant for LeetCode / GFG/ Code Forces problems",
+  "description": "A Socratic teaching assistant for LeetCode / GFG/ CodeForces problems",
   "permissions": [
     "activeTab",
     "scripting",
@@ -33,10 +33,10 @@
     "service_worker": "background.js"
   },
   "web_accessible_resources": [{
-    "resources": ["icons/*"],
+    "resources": ["icons/*","popup.html","styles.css"],
     "matches": ["https://leetcode.com/*"]
   }],
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'"
+    "extension_pages": "script-src 'self' ; object-src 'self'"
   }
 }

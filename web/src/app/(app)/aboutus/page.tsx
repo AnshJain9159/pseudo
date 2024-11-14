@@ -129,7 +129,7 @@ const AboutUs = () => {
         <div className="text-center mt-12">
           <Tooltip delayDuration={200}>
             <TooltipTrigger>
-              <a href="/socratesbot">
+              <a href="/">
                 <Button
                   variant={"default"}
                   className="bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-xl transition-all"

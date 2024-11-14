@@ -22,14 +22,13 @@ import '@fontsource/jetbrains-mono'; // Or any other font suitable to your theme
 // Define navigation items with categories
 const navItems = [
   { name: 'Socrator', href: '/main' },
-  { name: 'Code Analyzer', href: '/analyzer' },
   {
     category: 'Features',
     items: [
-      { name: "DSA's Roadmap", href: '/roadmap' },
+      { name: 'Code Analyzer', href: '/analyzer' },
       { name: "Algorithms Visualization", href: '/algovisualise' },
       { name: "LLM's Visualization", href: '/visualizer' },
-
+      { name: "DSA's Roadmap", href: '/roadmap' },
     ],
   },
   {
@@ -91,13 +90,13 @@ const Navbar: React.FC = () => {
   const NavDropdown: React.FC<{ category: string; items: any[] }> = ({ category, items }) => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="px-4 py-2 text-sm font-medium text-white hover:text-cyan-300">
+        <Button variant="ghost" className="px-4 py-2 text-sm font-medium rounded-xl text-white hover:text-cyan-300">
           {category} <ChevronDown className="ml-1 h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="bg-gray-800 border-gray-700">
+      <DropdownMenuContent className="bg-gray-800 border-gray-700 rounded-xl">
         {items.map((item) => (
-          <DropdownMenuItem key={item.name} className="hover:bg-gray-700">
+          <DropdownMenuItem key={item.name} className="hover:bg-gray-700 rounded-xl">
             <NavLink item={item} />
           </DropdownMenuItem>
         ))}
