@@ -5,6 +5,8 @@ import { useChat } from 'ai/react';
 import { Send, FileText, Download, X } from 'lucide-react'; // Import close icon (X)
 import { useRef, useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { Mic, MicOff, Volume2, VolumeX } from 'lucide-react'
+
 import { jsPDF } from 'jspdf';
 import { ActionButtons } from '@/components/ActionButtons';
 import { SummaryOutput } from '@/components/SummaryOutput';
@@ -20,6 +22,12 @@ export default function ChatPage() {
   const [summary, setSummary] = useState(''); // State to store the summary text
   const [isSummaryVisible, setIsSummaryVisible] = useState(false); // State to toggle summary visibility
   const [disableSummary, setDisableSummary] = useState(false); // State to disable summary and enable further chat
+  const [isRecording, setIsRecording] = useState(false);
+  const [recognition, setRecognition] = useState<SpeechRecognition | null>(null);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const speechTimeout = useRef<NodeJS.Timeout>();
+  const lastSpeechTime = useRef<number>(0);
+
 
   const {
     messages,
@@ -62,15 +70,129 @@ export default function ChatPage() {
     },
   });
 
+  // Initialize speech recognition
+    useEffect(() => {
+      if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
+          const SpeechRecognition = window.webkitSpeechRecognition;
+          const recognition = new SpeechRecognition();
+          
+          recognition.continuous = true;
+          recognition.interimResults = true;
+          recognition.lang = 'en-UK';
+
+          recognition.onresult = (event) => {
+              const transcript = Array.from(event.results)
+                  .map(result => result[0])
+                  .map(result => result.transcript)
+                  .join('');
+              
+              handleInputChange({ target: { value: transcript } } as any);
+              lastSpeechTime.current = Date.now();
+          };
+
+          recognition.onerror = (event) => {
+              console.error('Speech recognition error:', event.error);
+              setIsRecording(false);
+          };
+
+          recognition.onend = () => {
+              if (isRecording) {
+                  recognition.start(); // Restart if still recording
+              }
+          };
+
+          recognition.onspeechend = () => {
+              // Set a timeout to stop recording if no speech is detected
+              speechTimeout.current = setTimeout(() => {
+                  if (Date.now() - lastSpeechTime.current > 2000) {
+                      recognition.stop();
+                      setIsRecording(false);
+                  }
+              }, 2000); // Wait 2 seconds after speech ends
+          };
+
+          setRecognition(recognition);
+      }
+  }, [handleInputChange, isRecording]);
+
+  const toggleRecording = () => {
+      if (!recognition) {
+          console.error('Speech recognition not supported');
+          return;
+      }
+
+      if (isRecording) {
+          recognition.stop();
+          setIsRecording(false);
+      } else {
+          recognition.start();
+          setIsRecording(true);
+          lastSpeechTime.current = Date.now();
+      }
+  };
+
+  // Text-to-speech function
+  const speakMessage = (text: string) => {
+      if ('speechSynthesis' in window) {
+          // Cancel any ongoing speech
+          window.speechSynthesis.cancel();
+
+          // Remove any markdown or code blocks for cleaner speech
+          const cleanText = text.replace(/```[\s\S]*?```/g, 'Code block omitted')
+                              .replace(/[*_#`]/g, '')
+                              .replace(/\n/g, ' ');
+
+          const utterance = new SpeechSynthesisUtterance(cleanText);
+          utterance.rate = 1;
+          utterance.pitch = 7;
+          utterance.volume = 1;
+
+          utterance.onstart = () => setIsSpeaking(true);
+          utterance.onend = () => setIsSpeaking(false);
+          utterance.onerror = () => setIsSpeaking(false);
+
+          window.speechSynthesis.speak(utterance);
+      } else {
+          console.error('Text-to-speech not supported');
+      }
+  };
+
+  // Stop speaking
+  const stopSpeaking = () => {
+      if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+          setIsSpeaking(false);
+      }
+  };
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chat, currentMessage]);
 
+  // Cleanup speech synthesis on unmount
+  useEffect(() => {
+    return () => {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+        }
+        if (speechTimeout.current) {
+            clearTimeout(speechTimeout.current);
+        }
+    };
+}, []);
+
   const customSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!input.trim()) return;
+    if (isRecording) {
+        recognition?.stop();
+        setIsRecording(false);
+    }
+    if (isSpeaking) {
+        stopSpeaking();
+    }
     handleSubmit(e);
     setChat((prev) => [...prev, { role: 'user', content: input }]);
   };
@@ -173,9 +295,15 @@ export default function ChatPage() {
       <div className="flex-1 overflow-y-auto max-h-96 p-4 space-y-4"> {/* Scrollable chat section */}
         {chat.map((message, index) => (
           <div key={index} className="text-sm text-white">
-            <div className="flex items-start space-x-2">
-              <span className="font-medium min-w-[32px] text-white">
-                {message.role === 'assistant' ? 'AI:' : 'You:'}
+            <div className="flex items-start space-x-4">
+              <span className="font-medium flex  min-w-[32px] text-white">
+                {message.role === 'assistant' ? 'AI:'  : 'You:'  }
+                <button
+                    onClick={() => isSpeaking ? stopSpeaking() : speakMessage(message.content)}
+                    className={`ml-2 p-1 rounded-full ${isSpeaking ? 'text-red-500 hover:text-red-600' : 'text-blue-500 hover:text-blue-600'}`}
+                >
+                  {isSpeaking ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                </button>
               </span>
               <div className="prose prose-invert prose-sm max-w-none text-white">
                 <ReactMarkdown>{message.content}</ReactMarkdown>
@@ -236,6 +364,19 @@ export default function ChatPage() {
             className="flex-1 bg-zinc-900 text-white text-sm rounded px-3 py-1.5 focus:outline-none border border-zinc-800"
             disabled={disableSummary} // Disable input if summary is visible
           />
+          <button
+              type="button"
+              onClick={toggleRecording}
+              className={`px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                            isRecording ? 'bg-red-500 hover:bg-red-600' : 'bg-gray-500 hover:bg-gray-600'
+              } text-white`}
+          >
+            {isRecording ? (
+                <MicOff className="w-4 h-4" />
+                  ) : (
+                  <Mic className="w-4 h-4" />
+                     )}
+          </button>
           <button
             type="submit"
             disabled={isLoading || !input.trim() || disableSummary} // Disable button if summary is visible

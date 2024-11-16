@@ -38,6 +38,8 @@ export const config = {
         '/u/profile',
         '/aboutus',
         '/analyzer',
+        '/algovisualise',
+        '/comptest',
         '/main',
         '/u/dashboard',
         '/roadmap',
