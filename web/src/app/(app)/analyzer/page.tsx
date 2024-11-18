@@ -21,7 +21,7 @@ const ComplexityAnalyzer: React.FC = () => {
   //api call hai code ko bhejne ki
   const analyzeCode = async () => {
     try {
-      const response = await fetch('/api/analyze', {
+      const response = await fetch('/api/analyse-code', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code, language: 'javascript' }),

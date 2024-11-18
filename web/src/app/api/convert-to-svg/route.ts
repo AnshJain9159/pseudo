@@ -1,4 +1,4 @@
-// app/api/convert/route.ts
+// app/api/convert-to-svg/route.ts
 import sharp from 'sharp';
 import { NextRequest, NextResponse } from 'next/server';
 

@@ -21,7 +21,7 @@ export default function ChatPage() {
     const lastSpeechTime = useRef<number>(0);
 
     const { messages, input, handleInputChange, handleSubmit, isLoading, error } = useChat({
-        api: '/api/chat1',
+        api: '/api/ai-chat',
         onResponse: async (response) => {
             console.log('Response status:', response.status);
             console.log('Response headers:', Object.fromEntries(response.headers.entries()));

@@ -41,7 +41,7 @@ const ExcalidrawWrapper: React.FC = () => {
         });
         const svgString = new XMLSerializer().serializeToString(svg);
 
-        const response = await fetch('/api/convert', {
+        const response = await fetch('/api/convert-to-svg', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

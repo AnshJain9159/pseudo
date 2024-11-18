@@ -37,7 +37,7 @@ export default function ChatPage() {
     isLoading,
     error,
   } = useChat({
-    api: '/api/chat1',
+    api: '/api/ai-chat',
     onResponse: async (response) => {
       const clonedResponse = response.clone();
       const reader = clonedResponse.body?.getReader();

@@ -25,9 +25,9 @@ const navItems = [
   {
     category: 'Features',
     items: [
-      { name: 'Code Analyzer', href: '/analyzer' },
-      { name: "Algorithms Visualization", href: '/algovisualise' },
-      { name: "LLM's Visualization", href: '/visualizer' },
+      { name: 'Code Analyser', href: '/analyzer' },
+      { name: "Algorithm's Visualisation", href: '/algovisualise' },
+      { name: "LLM's Visualisation", href: '/visualizer' },
       { name: "DSA's Roadmap", href: '/roadmap' },
     ],
   },

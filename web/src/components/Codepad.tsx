@@ -24,7 +24,7 @@ const CustomCodeEditor: React.FC = () => {
     if (cellToRun) {
       if (cellToRun.type === "code") {
         try {
-          const response = await axios.post("/api/executeCode", {
+          const response = await axios.post("/api/execute-code", {
             code: cellToRun.content,
             language,
           });

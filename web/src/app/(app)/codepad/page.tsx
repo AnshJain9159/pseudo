@@ -44,7 +44,7 @@ const NotebookPage = () => {
   const [selectedCellIndex, setSelectedCellIndex] = useState<number | null>(null);
 
   const runCode = async (index: number, code: string) => {
-    const response = await axios.post("/api/executeCode", { code, language: selectedLanguage });
+    const response = await axios.post("/api/execute-code", { code, language: selectedLanguage });
     const newCells = [...cells];
     if (newCells[index].type === "code") {
       newCells[index].output = response.data.output;
@@ -70,7 +70,7 @@ const NotebookPage = () => {
     const newCells = await Promise.all(
       cells.map(async (cell, index) => {
         if (cell.type === "code") {
-          const response = await axios.post("/api/executeCode", {
+          const response = await axios.post("/api/execute-code", {
             code: cell.code,
             language: selectedLanguage,
           });
