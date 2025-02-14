@@ -10,7 +10,7 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   experimental: {
-    typedRoutes: true,
+    appDir: true,
   },
   // Tell Next.js to use `web/src/` as the base directory
   dir: "web/src",
