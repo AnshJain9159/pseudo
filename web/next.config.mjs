@@ -3,12 +3,17 @@ const nextConfig = {
   images: {
     domains: ['assets.aceternity.com'],
   },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
   eslint: {
     ignoreDuringBuilds: true,
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  experimental: {
+    typedRoutes: true,
+  },
+  // Tell Next.js to use `web/src/` as the base directory
+  dir: "web/src",
 };
 
 export default nextConfig;
