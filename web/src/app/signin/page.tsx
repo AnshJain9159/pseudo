@@ -3,9 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import GoogleSignInButton from '@/components/GoogleSignInButton';
-// import { signInWithEmailAndPassword } from 'firebase/auth';
-// import { auth } from '@/lib/firebase';
+import GoogleSignInButton from '../../components/GoogleSignInButton';
 
 export default function SignInPage() {
     const [email, setEmail] = useState('');
@@ -17,7 +15,7 @@ export default function SignInPage() {
     const handleEmailSignIn = async (e: React.FormEvent) => {
         e.preventDefault();
         // Temporary direct navigation without auth
-        router.push('/dashboard');
+        router.push('/main');
         
         /* Authentication temporarily disabled
         setError('');
@@ -44,7 +42,7 @@ export default function SignInPage() {
     };
 
     const handleGoogleSuccess = () => {
-        router.push('/dashboard');
+        router.push('/main');
     };
 
     const handleGoogleError = (error: string) => {
@@ -143,7 +141,7 @@ export default function SignInPage() {
                 <div className="mt-4 text-center">
                     <p className="text-sm text-gray-400">
                         Don't have an account?{' '}
-                        <Link href="/signup" className="font-medium text-purple-500 hover:text-purple-400">
+                        <Link href="/sign-up" className="font-medium text-purple-500 hover:text-purple-400">
                             Sign up for Socrates
                         </Link>
                     </p>

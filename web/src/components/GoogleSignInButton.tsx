@@ -1,6 +1,4 @@
 import { useState } from 'react';
-// import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-// import { auth } from '@/lib/firebase';
 
 interface GoogleSignInButtonProps {
     className?: string;
