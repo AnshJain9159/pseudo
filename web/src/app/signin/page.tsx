@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import GoogleSignInButton from 'components/GoogleSignInButton';
+
 import router from 'next/router';
 
 const handleEmailSignIn = async (e: React.FormEvent) => {
