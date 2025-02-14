@@ -1,3 +1,5 @@
+// Firebase configuration temporarily disabled
+/*
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import type { FirebaseOptions } from 'firebase/app';
@@ -41,4 +43,9 @@ try {
 const auth = getAuth(app);
 
 export { auth };
-export default app; 
+export default app;
+*/
+
+// Temporary placeholder exports
+export const auth = null;
+export default null; 

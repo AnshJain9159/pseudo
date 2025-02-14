@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import GoogleSignInButton from '@/components/GoogleSignInButton';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+// import { signInWithEmailAndPassword } from 'firebase/auth';
+// import { auth } from '@/lib/firebase';
 
 export default function SignInPage() {
     const [email, setEmail] = useState('');
@@ -16,6 +16,10 @@ export default function SignInPage() {
 
     const handleEmailSignIn = async (e: React.FormEvent) => {
         e.preventDefault();
+        // Temporary direct navigation without auth
+        router.push('/dashboard');
+        
+        /* Authentication temporarily disabled
         setError('');
         setLoading(true);
 
@@ -36,6 +40,7 @@ export default function SignInPage() {
         } finally {
             setLoading(false);
         }
+        */
     };
 
     const handleGoogleSuccess = () => {
@@ -43,11 +48,7 @@ export default function SignInPage() {
     };
 
     const handleGoogleError = (error: string) => {
-        if (error.includes('network')) {
-            setError('Network error. Please check your internet connection and try again.');
-        } else {
-            setError(error);
-        }
+        setError('Temporarily disabled');
     };
 
     return (
