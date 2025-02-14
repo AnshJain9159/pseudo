@@ -7,11 +7,11 @@ import { Code2, PenTool, Bot, ArrowLeft } from 'lucide-react';
 import type { ResizeCallback } from 're-resizable';
 import { Resizable } from 're-resizable';
 import Link from 'next/link';
-import NotebookPage from '@/components/Codepad';
-import ChatPage from '@/components/ChatBotAlt';
+import NotebookPage from 'components/Codepad';
+import ChatPage from 'components/ChatBotAlt';
 
 const ExcalidrawWrapper = dynamic(
-  async () => (await import('@/components/Canvas')).default,
+  async () => (await import('components/Canvas')).default,
   { ssr: false }
 );
 

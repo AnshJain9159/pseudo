@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardHeader, CardTitle, CardContent } from 'components/ui/card';
+import { Button } from 'components/ui/button';
+import { Input } from 'components/ui/input';
+import { Badge } from 'components/ui/badge';
 import { Users, MessageSquare, Brain, Trash2 } from 'lucide-react';
 
 interface Discussion {
@@ -89,9 +89,12 @@ const PeerLearningNetwork = () => {
       const newResponse = await response.json();
       setDiscussions(
         discussions.map((d) =>
-          d._id === discussionId ? { ...d, responses: [...d.responses, newResponse] } : d
+          d._id === discussionId
+            ? { ...d, responses: (d.responses || []).concat(newResponse) }
+            : d
         )
       );
+
     } catch (error) {
       console.error('Failed to add response', error);
     }

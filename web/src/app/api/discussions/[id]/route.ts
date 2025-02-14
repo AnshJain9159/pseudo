@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import dbConnect from '@/lib/dbConnect';
-import Discussion from '@/models/Discussions';
+import dbConnect from 'lib/dbConnect';
+import Discussion from 'models/Discussions';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/app/api/auth/[...nextauth]/options';
+import { authOptions } from 'app/api/auth/[...nextauth]/options';
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   await dbConnect(); 
   const { id } = params;

@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { parseCode, analyzeComplexity } from '@/utils/codeAnalysis';
-import { generateFeedback } from '@/utils/feedBackGenerator';
+import { parseCode, analyzeComplexity } from 'utils/codeAnalysis';
+import { generateFeedback } from 'utils/feedBackGenerator';
 import { exec } from 'child_process';
 import path from 'path';
 import { promisify } from 'util';
-import type { AnalyzeRequest } from '@/types/api';
+import type { AnalyzeRequest } from 'types/api';
 
 // Get Python path from environment variable or use system default
 const PYTHON_PATH = process.env.PYTHON_PATH || 'python';

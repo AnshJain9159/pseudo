@@ -6,7 +6,7 @@ import '@xyflow/react/dist/style.css';
 import { Info } from 'lucide-react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from 'components/ui/button';
 
 interface CustomNodeData {
   label: string;

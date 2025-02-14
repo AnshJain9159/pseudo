@@ -1,5 +1,5 @@
 // utils/initializeTopics.ts
-import { Topic } from '@/models/User';
+import { Topic } from 'models/User';
 
 export const getInitialTopics = (): Topic[] => {
   return [

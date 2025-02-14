@@ -1,8 +1,8 @@
 "use client"
 import { useChat } from 'ai/react'
 import { Bot, User, Send } from 'lucide-react'
-import  CodeBlock  from '@/components/CodeBlock'
-import { MessageSkeleton } from '@/components/MessageSkeleton'
+import  CodeBlock  from 'components/CodeBlock'
+import { MessageSkeleton } from 'components/MessageSkeleton'
 import { useRef, useEffect, useState } from 'react';
 
 export default function ChatPage() {

@@ -1,23 +1,23 @@
 "use client";
 import React from 'react';
 import { Brain, Lock, ArrowLeft } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button } from 'components/ui/button';
+import { Input } from 'components/ui/input';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { signIn } from 'next-auth/react';
-import { signInSchema } from '@/schemas/signInSchema';
-import { useToast } from '@/hooks/use-toast';
+import { signInSchema } from 'schemas/signInSchema';
+import { useToast } from 'hooks/use-toast';
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-} from '@/components/ui/form';
+} from 'components/ui/form';
 
 const LoginPage = () => {
   const router = useRouter();

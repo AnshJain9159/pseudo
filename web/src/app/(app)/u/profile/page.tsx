@@ -2,10 +2,10 @@
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "components/ui/button";
+import { Card, CardHeader, CardContent, CardFooter } from "components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "components/ui/avatar";
+import { Skeleton } from "components/ui/skeleton";
 import { CheckCircle2, BookOpen } from "lucide-react";
 
 interface Topic {
