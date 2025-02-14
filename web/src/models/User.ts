@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { getInitialTopics } from '@/utils/initializeTopics';
+import { getInitialTopics } from 'utils/initializeTopics';
 
 export interface Topic {
   name: string;

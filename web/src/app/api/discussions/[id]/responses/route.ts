@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/app/api/auth/[...nextauth]/options';
-import dbConnect from '@/lib/dbConnect';
-import Discussion from '@/models/Discussions';
+import { authOptions } from 'app/api/auth/[...nextauth]/options';
+import dbConnect from 'lib/dbConnect';
+import Discussion from 'models/Discussions';
 import { z } from 'zod';
 
 const createResponseSchema = z.object({

@@ -2,18 +2,18 @@
 import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
+import { Button } from 'components/ui/button';
 import {
   Card,
   CardHeader,
   CardContent,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Skeleton } from '@/components/ui/skeleton';
-import { getInitialTopics } from '@/utils/initializeTopics';
+} from 'components/ui/card';
+import { Input } from 'components/ui/input';
+import { Label } from 'components/ui/label';
+import { Avatar, AvatarFallback, AvatarImage } from 'components/ui/avatar';
+import { Checkbox } from 'components/ui/checkbox';
+import { Skeleton } from 'components/ui/skeleton';
+import { getInitialTopics } from 'utils/initializeTopics';
 import { CheckCircle2 } from 'lucide-react';
 
 interface Topic {

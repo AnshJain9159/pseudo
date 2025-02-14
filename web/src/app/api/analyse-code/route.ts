@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from 'next/server';
-import { parseCode, analyzeComplexity } from '@/utils/codeAnalysis';
-import { generateFeedback } from '@/utils/feedBackGenerator';
+import { parseCode, analyzeComplexity } from 'utils/codeAnalysis';
+import { generateFeedback } from 'utils/feedBackGenerator';
 
 interface AnalyzeRequest {
   code: string;

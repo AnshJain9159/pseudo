@@ -1,11 +1,11 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardTitle, CardContent } from 'components/ui/card';
+import { Progress } from 'components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from 'components/ui/tabs';
+import { Alert, AlertDescription, AlertTitle } from 'components/ui/alert';
+import { Button } from 'components/ui/button';
 import { 
   Brain, TrendingUp, MessageSquare, Network, AlertCircle, 
   Check, X 
@@ -41,7 +41,7 @@ const ProgressDashboard = () => {
     { date: '2024-04', problemsSolved: 35, questionsAsked: 89, conceptsMastered: 9 }
   ];
 
-  const renderSocraticProgress = (topic) => (
+  const renderSocraticProgress = (topic: { topic: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; questioningSkill: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; strengths: any[]; weaknesses: any[]; progress: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | Promise<React.AwaitedReactNode> | null | undefined; completedProblems: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }) => (
     <Card className="bg-[#222] shadow-lg border border-gray-700 rounded-lg mb-4">
       <CardContent className="pt-6 text-[#fff]">
         <div className="flex justify-between items-center mb-4">

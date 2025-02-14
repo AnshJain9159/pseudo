@@ -66,6 +66,7 @@ const NotebookPage = () => {
     }
   };
 
+
   const runAllCells = async () => {
     const newCells = await Promise.all(
       cells.map(async (cell, index) => {
@@ -91,7 +92,7 @@ const NotebookPage = () => {
     const newCells = [...cells];
     const insertionIndex = selectedCellIndex !== null ? selectedCellIndex + 1 : cells.length;
 
-    newCells.splice(insertionIndex, 0, newCell); // Insert the new cell just after the selected one
+    newCells.splice(insertionIndex, 0, newCell as Cell); // Insert the new cell just after the selected one
     setCells(newCells);
     setSelectedCellIndex(insertionIndex); // Automatically select the newly added cell
   };

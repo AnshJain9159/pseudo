@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "components/ui/card";
 import { BadgeCheck, ChevronRight, Code, Search, Brain, Users, Zap } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Button } from "components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "components/ui/tooltip";
 
 const features = [
   {

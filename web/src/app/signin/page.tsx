@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import GoogleSignInButton from '@/components/GoogleSignInButton';
+import GoogleSignInButton from 'components/GoogleSignInButton';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { auth } from 'lib/firebase';
 
 export default function SignInPage() {
     const [email, setEmail] = useState('');

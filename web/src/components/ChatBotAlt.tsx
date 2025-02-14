@@ -8,8 +8,8 @@ import ReactMarkdown from 'react-markdown';
 import { Mic, MicOff, Volume2, VolumeX } from 'lucide-react'
 
 import { jsPDF } from 'jspdf';
-import { ActionButtons } from '@/components/ActionButtons';
-import { SummaryOutput } from '@/components/SummaryOutput';
+import { ActionButtons } from 'components/ActionButtons';
+import { SummaryOutput } from 'components/SummaryOutput';
 
 export default function ChatPage() {
   interface ChatMessage {
@@ -80,7 +80,7 @@ export default function ChatPage() {
           recognition.interimResults = true;
           recognition.lang = 'en-UK';
 
-          recognition.onresult = (event) => {
+          recognition.onresult = (event: { results: Iterable<unknown> | ArrayLike<unknown>; }) => {
               const transcript = Array.from(event.results)
                   .map(result => result[0])
                   .map(result => result.transcript)
@@ -90,7 +90,7 @@ export default function ChatPage() {
               lastSpeechTime.current = Date.now();
           };
 
-          recognition.onerror = (event) => {
+          recognition.onerror = (event: { error: any; }) => {
               console.error('Speech recognition error:', event.error);
               setIsRecording(false);
           };

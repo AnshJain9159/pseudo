@@ -3,22 +3,22 @@ import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { ShieldCheck, Lock, ArrowLeft } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button } from 'components/ui/button';
+import { Input } from 'components/ui/input';
 import Link from 'next/link';
-import { signUpSchema } from '@/schemas/signUpSchema';
+import { signUpSchema } from 'schemas/signUpSchema';
 import { useRouter } from 'next/navigation';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from 'hooks/use-toast';
 import axios, { AxiosError } from "axios";
 import * as z from 'zod';
-import { ApiResponse } from '@/types/ApiResponse';
+import { ApiResponse } from 'types/ApiResponse';
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-} from '@/components/ui/form';
+} from 'components/ui/form';
 
 
 const RegisterPage = () => {
