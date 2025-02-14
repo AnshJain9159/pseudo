@@ -38,14 +38,14 @@ function App() {
   }, [selectedAlgo, config]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-gray-300">
-      <div className="pt-16"> {/* Added padding to the top */}
+    <div className="min-h-screen bg-black text-zinc-100">
+      <div className="pt-16">
         <main className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-12 py-8">
           <div className="grid grid-cols-12 gap-8">
             <div className="col-span-3">
-              <div className="bg-zinc-900 rounded-xl shadow-lg p-6 border border-gray-700">
-                <h2 className="text-lg font-semibold text-white mb-4 flex items-center">
-                  <BookOpen className="h-5 w-5 mr-2 text-purple-500" />
+              <div className="bg-black border border-zinc-800 rounded-xl shadow-lg p-6">
+                <h2 className="text-lg font-medium text-zinc-100 mb-6 flex items-center">
+                  <BookOpen className="h-5 w-5 mr-2 text-zinc-400" />
                   Algorithms
                 </h2>
                 <div className="space-y-2">
@@ -55,8 +55,8 @@ function App() {
                       onClick={() => setSelectedAlgo(name)}
                       className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
                         selectedAlgo === name
-                          ? 'bg-purple-600 text-white'
-                          : 'hover:bg-zinc-800 text-gray-300'
+                          ? 'bg-zinc-800 text-zinc-100'
+                          : 'hover:bg-zinc-900 text-zinc-400'
                       }`}
                     >
                       {name}
@@ -69,17 +69,17 @@ function App() {
             <div className="col-span-9">
               {selectedAlgo ? (
                 <div className="space-y-6">
-                  <div className="bg-zinc-900 rounded-xl shadow-lg p-6 border border-gray-700">
-                    <h2 className="text-2xl font-bold text-white mb-2">{selectedAlgo}</h2>
-                    <p className="text-gray-400 mb-4">{algorithms[selectedAlgo].description}</p>
-                    <div className="flex space-x-6">
+                  <div className="bg-black border border-zinc-800 rounded-xl shadow-lg p-6">
+                    <h2 className="text-2xl font-medium text-zinc-100 mb-4">{selectedAlgo}</h2>
+                    <p className="text-zinc-400 mb-6">{algorithms[selectedAlgo].description}</p>
+                    <div className="flex space-x-8">
                       <div>
-                        <span className="text-sm font-medium text-gray-500">Time Complexity</span>
-                        <p className="text-purple-500 font-mono">{algorithms[selectedAlgo].timeComplexity}</p>
+                        <span className="text-sm font-medium text-zinc-500">Time Complexity</span>
+                        <p className="text-zinc-100 font-mono">{algorithms[selectedAlgo].timeComplexity}</p>
                       </div>
                       <div>
-                        <span className="text-sm font-medium text-gray-500">Space Complexity</span>
-                        <p className="text-purple-500 font-mono">{algorithms[selectedAlgo].spaceComplexity}</p>
+                        <span className="text-sm font-medium text-zinc-500">Space Complexity</span>
+                        <p className="text-zinc-100 font-mono">{algorithms[selectedAlgo].spaceComplexity}</p>
                       </div>
                     </div>
                   </div>
@@ -96,10 +96,10 @@ function App() {
                   />
                 </div>
               ) : (
-                <div className="bg-zinc-900 rounded-xl shadow-lg p-12 text-center border border-gray-700">
-                  <Code2 className="h-16 w-16 text-purple-500 mx-auto mb-4" />
-                  <h2 className="text-2xl font-bold text-white mb-2">Select an Algorithm</h2>
-                  <p className="text-gray-400">
+                <div className="bg-black border border-zinc-800 rounded-xl shadow-lg p-12 text-center">
+                  <Code2 className="h-16 w-16 text-zinc-400 mx-auto mb-4" />
+                  <h2 className="text-2xl font-medium text-zinc-100 mb-2">Select an Algorithm</h2>
+                  <p className="text-zinc-400">
                     Choose an algorithm from the sidebar to start visualizing!
                   </p>
                 </div>

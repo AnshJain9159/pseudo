@@ -138,12 +138,12 @@ const Navbar: React.FC = () => {
             ) : session ? (
               <>
                 <AuthButton href="/u/profile">User Profile</AuthButton>
-                <AuthButton href="#" onClick={handleLogout}>Logout</AuthButton>
+                {/* <AuthButton href="#" onClick={handleLogout}>Logout</AuthButton> */}
               </>
             ) : (
               <>
-                <AuthButton href="/sign-in">Login</AuthButton>
-                <AuthButton href="/sign-up">Register</AuthButton>
+                {/* <AuthButton href="/sign-in">Login</AuthButton> */}
+                {/* <AuthButton href="/sign-up">Register</AuthButton> */}
               </>
             )}
           </div>
@@ -188,12 +188,12 @@ const Navbar: React.FC = () => {
               ) : session ? (
                 <>
                   <AuthButton href="/profile">User Profile</AuthButton>
-                  <AuthButton href="#" onClick={handleLogout}>Logout</AuthButton>
+                  {/* <AuthButton href="#" onClick={handleLogout}>Logout</AuthButton> */}
                 </>
               ) : (
                 <>
-                  <AuthButton href="/sign-in">Login</AuthButton>
-                  <AuthButton href="/sign-up">Register</AuthButton>
+                  {/* <AuthButton href="/sign-in">Login</AuthButton> */}
+                  {/* <AuthButton href="/sign-up">Register</AuthButton> */}
                 </>
               )}
             </nav>

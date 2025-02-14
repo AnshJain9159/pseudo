@@ -123,6 +123,7 @@ const Page: React.FC = () => {
             <div className="flex items-center space-x-2 px-4 py-3 border-b border-zinc-800">
               <Bot className="w-4 h-4 text-blue-400" />
               <span className="text-sm font-medium text-white">AI Assistant</span>
+              <span className="text-xs text-red-400 ml-2">(LLM not hosted yet)</span>
             </div>
             <div className="flex-1 min-h-0">
               <ChatPage />

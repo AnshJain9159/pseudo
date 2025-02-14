@@ -18,7 +18,7 @@ const ComplexityAnalyzer: React.FC = () => {
   const [code, setCode] = useState<string>('');
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [feedback, setFeedback] = useState<string[]>([]);
-  //api call hai code ko bhejne ki
+
   const analyzeCode = async () => {
     try {
       const response = await fetch('/api/analyse-code', {
@@ -60,78 +60,96 @@ const ComplexityAnalyzer: React.FC = () => {
       'O(n^2)': 'On2',
       'O(2^n)': 'O2n'
     };
-    return map[complexity] || 'On';  // default to 'On' if not found
+    return map[complexity] || 'On';
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-black to-gray-900 px-6 py-12 font-sans">
-      <Card className="w-full max-w-3xl bg-gray-800 border border-gray-700 shadow-lg text-gray-300">
-        <CardHeader className="text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">
-          Algorithmic Complexity Analyzer
+    <div className="min-h-screen flex flex-col items-center justify-center bg-black px-6 py-12 font-sans">
+      <Card className="w-full max-w-4xl border border-zinc-800 bg-black shadow-lg text-zinc-100">
+        <CardHeader className="text-center">
+          <h1 className="text-4xl font-bold tracking-tight mb-2">Code Analyzer</h1>
+          <p className="text-zinc-400 text-lg">Analyze your code's algorithmic complexity</p>
         </CardHeader>
-        <CardContent className="p-6">
-          <Textarea
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-            placeholder="Paste your JavaScript code here..."
-            className="h-48 mb-4 bg-gray-900 text-gray-300 border border-gray-700 focus:ring-2 focus:ring-purple-500 transition duration-300"
-          />
-          <div className="flex justify-center">
-            <Button
-              onClick={analyzeCode}
-              className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-300 ease-in-out shadow-lg hover:shadow-purple-500/50"
-            >
-              Analyze Complexity
-            </Button>
+        <CardContent className="p-8 space-y-8">
+          <div className="space-y-4">
+            <Textarea
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              placeholder="Paste your JavaScript code here..."
+              className="h-64 bg-zinc-900 text-zinc-100 border border-zinc-800 focus:ring-2 focus:ring-zinc-700 transition duration-200 resize-none font-mono"
+            />
+            <div className="flex justify-center">
+              <Button
+                onClick={analyzeCode}
+                className="bg-zinc-800 hover:bg-zinc-700 text-zinc-100 font-medium px-8 py-2 rounded-lg transition-all duration-200"
+              >
+                Analyze Complexity
+              </Button>
+            </div>
           </div>
-          {/* analysis ka result jo ayega yaha  render hoga */}
-          {analysis && (
-            <div className="mt-6">
-              <h3 className="text-lg font-semibold text-purple-400">Analysis Results:</h3>
-              <p className="mt-2">Time Complexity: {analysis.timeComplexity}</p>
-              <p>Space Complexity: {analysis.spaceComplexity}</p>
-              <p>Maximum Loop Nesting Depth: {analysis.loopNestDepth}</p>
-              <p>Recursion Detected: {analysis.recursion ? 'Yes' : 'No'}</p>
-              <p>Data Structures Used: {Array.from(analysis.dataStructures).join(', ')}</p>
-            </div>
-          )}
-          {/* agar koi feedback hoga ya honge to yaha render hoge */}
-          {feedback.length > 0 && (
-            <div className="mt-6">
-              <h3 className="text-lg font-semibold text-purple-400">Feedback:</h3>
-              <ul className="list-disc pl-5 space-y-2">
-                {feedback.map((item, index) => (
-                  <li key={index}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          )}
 
-        {/* yeh sirf acting hai ki graph banega complexity ka dhyan mat do */}
           {analysis && (
-            <div className="mt-8">
-              <h3 className="text-lg font-semibold text-purple-400">Complexity Visualization:</h3>
-              <div className="flex justify-center mt-4 bg-gray-900 p-4 rounded-lg shadow-md border border-gray-700">
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={complexityData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                    <XAxis dataKey="n" stroke="#9CA3AF" />
-                    <YAxis stroke="#9CA3AF" />
-                    <Tooltip contentStyle={{ backgroundColor: '#1F2937', border: 'none' }} />
-                    <Legend />
-                    {Object.entries(complexityColors).map(([complexity, color]) => (
-                      <Line 
-                        key={complexity}
-                        type="monotone" 
-                        dataKey={getComplexityKey(complexity)} 
-                        stroke={color}
-                        strokeWidth={complexity === analysis.timeComplexity ? 3 : 1}
-                        dot={complexity === analysis.timeComplexity}
-                        name={complexity}
-                      />
+            <div className="space-y-6 border-t border-zinc-800 pt-6">
+              <div>
+                <h3 className="text-xl font-medium text-zinc-100 mb-4">Analysis Results</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <p className="text-zinc-400">Time Complexity: <span className="text-zinc-100">{analysis.timeComplexity}</span></p>
+                    <p className="text-zinc-400">Space Complexity: <span className="text-zinc-100">{analysis.spaceComplexity}</span></p>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-zinc-400">Loop Nesting Depth: <span className="text-zinc-100">{analysis.loopNestDepth}</span></p>
+                    <p className="text-zinc-400">Recursion: <span className="text-zinc-100">{analysis.recursion ? 'Yes' : 'No'}</span></p>
+                  </div>
+                </div>
+                <p className="text-zinc-400 mt-4">Data Structures: <span className="text-zinc-100">{Array.from(analysis.dataStructures).join(', ') || 'None'}</span></p>
+              </div>
+
+              {feedback.length > 0 && (
+                <div>
+                  <h3 className="text-xl font-medium text-zinc-100 mb-4">Feedback</h3>
+                  <ul className="space-y-2 text-zinc-400">
+                    {feedback.map((item, index) => (
+                      <li key={index} className="flex items-start">
+                        <span className="mr-2">•</span>
+                        {item}
+                      </li>
                     ))}
-                  </LineChart>
-                </ResponsiveContainer>
+                  </ul>
+                </div>
+              )}
+
+              <div>
+                <h3 className="text-xl font-medium text-zinc-100 mb-4">Complexity Visualization</h3>
+                <div className="bg-zinc-900 p-6 rounded-lg border border-zinc-800">
+                  <ResponsiveContainer width="100%" height={300}>
+                    <LineChart data={complexityData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
+                      <XAxis dataKey="n" stroke="#71717a" />
+                      <YAxis stroke="#71717a" />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: '#18181b',
+                          border: '1px solid #27272a',
+                          borderRadius: '0.5rem'
+                        }} 
+                        labelStyle={{ color: '#71717a' }}
+                      />
+                      <Legend />
+                      {Object.entries(complexityColors).map(([complexity, color]) => (
+                        <Line 
+                          key={complexity}
+                          type="monotone" 
+                          dataKey={getComplexityKey(complexity)} 
+                          stroke={color}
+                          strokeWidth={complexity === analysis.timeComplexity ? 3 : 1}
+                          dot={complexity === analysis.timeComplexity}
+                          name={complexity}
+                        />
+                      ))}
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
             </div>
           )}

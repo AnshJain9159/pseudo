@@ -1,18 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from 'next/server';
-import { parseCode, analyzeComplexity } from '../utils/codeAnalysis';
-import { generateFeedback } from '../utils/feedbackGenerator';
+import { parseCode, analyzeComplexity } from '@/utils/codeAnalysis';
+import { generateFeedback } from '@/utils/feedBackGenerator';
 import { exec } from 'child_process';
 import path from 'path';
 import { promisify } from 'util';
+import type { AnalyzeRequest } from '@/types/api';
 
+// Get Python path from environment variable or use system default
+const PYTHON_PATH = process.env.PYTHON_PATH || 'python';
 const execAsync = promisify(exec);
-
-interface AnalyzeRequest {
-  code: string;
-  language: 'javascript' | 'python' | 'cpp'; // Specify supported languages
-}
 
 export async function POST(req: NextRequest) {
   try {
@@ -54,41 +50,47 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: parseError.message }, { status: 500 });
     }
   } catch (error: any) {
-    console.error('Error during code analysis:', error); // Log the error
+    console.error('Error during code analysis:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
 // Helper function to run the Python parser script
 async function runPythonParser(code: string): Promise<any> {
-  const scriptPath = path.resolve('./src/scripts/parse_python.py');
-  const pythonPath = `"C:\\Users\\anshj\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"`;
-  const command = `${pythonPath} ${scriptPath} "${code.replace(/"/g, '\\"')}"`; // Pass code as a command-line argument
-  const { stdout, stderr } = await execAsync(command);
+  const scriptPath = path.resolve(process.cwd(), 'src/scripts/parse_python.py');
+  const escapedCode = code.replace(/"/g, '\\"');
+  const command = `${PYTHON_PATH} "${scriptPath}" "${escapedCode}"`;
 
-  if (stderr) {
-    throw new Error(`Python parser error: ${stderr}`);
-  }
   try {
+    const { stdout, stderr } = await execAsync(command);
+    if (stderr) {
+      throw new Error(`Python parser error: ${stderr}`);
+    }
     return JSON.parse(stdout);
-  } catch (error) {
-    throw new Error('Failed to parse Python output');
+  } catch (error: any) {
+    if (error.code === 'ENOENT') {
+      throw new Error('Python interpreter not found. Please check your Python installation.');
+    }
+    throw error;
   }
 }
 
 // Helper function to run the C++ parser script
 async function runCppParser(code: string): Promise<any> {
-  const scriptPath = path.resolve('./src/scripts/parse_c.py');
-  const pythonPath = `"C:\\Users\\anshj\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"`;
-  const command = `${pythonPath} ${scriptPath} "${code.replace(/"/g, '\\"')}"`; // Pass code as a command-line argument
-  const { stdout, stderr } = await execAsync(command);
+  const scriptPath = path.resolve(process.cwd(), 'src/scripts/parse_c.py');
+  const escapedCode = code.replace(/"/g, '\\"');
+  const command = `${PYTHON_PATH} "${scriptPath}" "${escapedCode}"`;
 
-  if (stderr) {
-    throw new Error(`C++ parser error: ${stderr}`);
-  }
   try {
+    const { stdout, stderr } = await execAsync(command);
+    if (stderr) {
+      throw new Error(`C++ parser error: ${stderr}`);
+    }
     return JSON.parse(stdout);
-  } catch (error) {
-    throw new Error('Failed to parse C++ output');
+  } catch (error: any) {
+    if (error.code === 'ENOENT') {
+      throw new Error('Python interpreter not found. Please check your Python installation.');
+    }
+    throw error;
   }
-}
+} 

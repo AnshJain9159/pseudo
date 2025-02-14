@@ -5,8 +5,9 @@ import ReactFlow, { Node, Edge, Controls, Background } from 'reactflow';
 import '@xyflow/react/dist/style.css';
 import { Info } from 'lucide-react';
 import Link from 'next/link';
-import {  ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+
 interface CustomNodeData {
   label: string;
   description: string;
@@ -18,13 +19,13 @@ interface CustomNodeData {
 const getDifficultyColor = (difficulty: string) => {
   switch (difficulty) {
     case 'Beginner':
-      return 'bg-green-600';
+      return 'border-zinc-700 bg-black';
     case 'Intermediate':
-      return 'bg-yellow-600';
+      return 'border-zinc-600 bg-black';
     case 'Advanced':
-      return 'bg-red-600';
+      return 'border-zinc-500 bg-black';
     default:
-      return 'bg-blue-600';
+      return 'border-zinc-800 bg-black';
   }
 };
 
@@ -32,23 +33,27 @@ const CustomNode = ({ data }: { data: CustomNodeData }) => {
   const [showInfo, setShowInfo] = useState(false);
   
   return (
-    <div className={`rounded-lg p-4 ${getDifficultyColor(data.difficulty)} text-white min-w-[200px]`}>
+    <div 
+      className={`
+        rounded-lg p-4 border transition-all duration-200
+        ${getDifficultyColor(data.difficulty)}
+      `}
+    >
       <div className="flex justify-between items-start">
-        <h3 className="font-bold text-lg">{data.label}</h3>
+        <h3 className="font-medium text-lg text-zinc-100">{data.label}</h3>
         <button 
-          className="p-1 hover:bg-white/20 rounded-full transition-colors"
+          className="p-1 hover:bg-zinc-800 rounded-lg transition-colors"
           onClick={() => setShowInfo(!showInfo)}
         >
-          <Info size={16} />
+          <Info size={16} className="text-zinc-400" />
         </button>
       </div>
       {showInfo && (
-        <div className="mt-2 text-sm bg-black/20 p-2 rounded">
-          <p className="mb-1">{data.description}</p>
-          <p className="mb-1">Difficulty: {data.difficulty}</p>
-          <p className="mb-1">Est. Time: {data.estimatedHours}h</p>
+        <div className="mt-2 text-sm bg-zinc-900/50 p-2 rounded-lg border border-zinc-800">
+          <p className="mb-1 text-zinc-300">{data.description}</p>
+          <p className="mb-1 text-zinc-400">Difficulty: {data.difficulty}</p>
           {data.prerequisites.length > 0 && (
-            <p>Prerequisites: {data.prerequisites.join(', ')}</p>
+            <p className="text-zinc-400">Prerequisites: {data.prerequisites.join(', ')}</p>
           )}
         </div>
       )}
@@ -306,25 +311,21 @@ const DSARoadmap = () => {
   const [selectedNode, setSelectedNode] = useState<Node<CustomNodeData> | null>(null);
 
   return (
-    <div className="h-screen w-full bg-gray-900 ">
-      
-      
-      
+    <div className="h-screen w-full bg-black">
       {selectedNode && (
-        <div className="absolute top-4 right-4 z-10 bg-gray-800 p-4 rounded-lg text-white max-w-md">
-          <h2 className="text-xl font-bold mb-2">{selectedNode.data.label}</h2>
-          <p className="mb-2">{selectedNode.data.description}</p>
-          <p className="mb-1">Difficulty: {selectedNode.data.difficulty}</p>
-          <p className="mb-1">Estimated Time: {selectedNode.data.estimatedHours} hours</p>
-            <div className="flex justify-between items-center">
-            <p>Prerequisites: {selectedNode.data.prerequisites.join(', ') || 'None'}</p>
+        <div className="absolute top-4 right-4 z-10 bg-black p-6 rounded-lg text-zinc-100 max-w-md border border-zinc-800">
+          <h2 className="text-xl font-medium mb-4">{selectedNode.data.label}</h2>
+          <p className="mb-4 text-zinc-400">{selectedNode.data.description}</p>
+          <p className="mb-2 text-zinc-400">Difficulty: {selectedNode.data.difficulty}</p>
+          <div className="flex justify-between items-center">
+            <p className="text-zinc-400">Prerequisites: {selectedNode.data.prerequisites.join(', ') || 'None'}</p>
             <button 
-              className="p-1 hover:bg-white/20 rounded-full transition-colors"
+              className="p-2 hover:bg-zinc-900 rounded-lg transition-colors"
               onClick={() => setSelectedNode(null)}
             >
-              <ArrowLeft size={16} />
+              <ArrowLeft size={16} className="text-zinc-400" />
             </button>
-            </div>
+          </div>
         </div>
       )}
 
@@ -334,23 +335,23 @@ const DSARoadmap = () => {
         nodeTypes={nodeTypes}
         fitView
         onNodeClick={(_, node) => setSelectedNode(node)}
-        className="bg-gray-900"
+        className="bg-black"
       >
-        <Background color="#fff" variant="dots" />
-        <div className="absolute top-4 left-4 z-10 flex gap-4">
-        <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded-full bg-green-600" />
-          <span className="text-white">Beginner</span>
+        <Background gap={12} color="#27272a" />
+        <div className="absolute top-4 left-20 z-10 flex gap-4">
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 rounded-lg border border-zinc-700" />
+            <span className="text-zinc-400">Beginner</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 rounded-lg border border-zinc-600" />
+            <span className="text-zinc-400">Intermediate</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 rounded-lg border border-zinc-500" />
+            <span className="text-zinc-400">Advanced</span>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded-full bg-yellow-600" />
-          <span className="text-white">Intermediate</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded-full bg-red-600" />
-          <span className="text-white">Advanced</span>
-        </div>
-      </div>
       </ReactFlow>
     </div>
   );

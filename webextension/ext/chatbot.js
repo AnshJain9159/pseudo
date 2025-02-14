@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "hwm:latest", // Changed from hwm:latest
+          model: "deepscaler:latest", // Changed from hwm:latest
           prompt: userMessage, // Using prompt instead of messages
           stream: true,
         }),

@@ -1,0 +1,28 @@
+{
+  "name": "code-analyzer",
+  "version": "1.0.0",
+  "description": "Code analysis and feedback system",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "^14.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "acorn": "^8.11.3",
+    "acorn-walk": "^8.3.2",
+    "firebase": "^10.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.19",
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.19",
+    "typescript": "^5.3.3",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "^14.1.0"
+  }
+} 

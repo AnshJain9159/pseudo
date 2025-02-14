@@ -40,7 +40,7 @@
     "acorn": "^8.13.0",
     "acorn-walk": "^8.3.4",
     "ai": "^3.4.9",
-    "axios": "^1.7.7",
+    "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
     "bn.js": "^5.2.1",
     "class-variance-authority": "^0.7.0",

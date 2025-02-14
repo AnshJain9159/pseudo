@@ -31,13 +31,13 @@ function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-800 via-gray-900 to-black text-gray-300">
+    <div className="min-h-screen bg-black text-zinc-100">
       <div className="container mx-auto px-4 py-12">
         <header className="text-center mb-16">
-          <h1 className="text-4xl font-bold text-white mb-4">
+          <h1 className="text-4xl font-medium text-zinc-100 mb-4">
             LoRA & QLoRA Visualization
           </h1>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+          <p className="text-lg text-zinc-400 max-w-2xl mx-auto">
             Understanding Low-Rank Adaptation and Quantized Fine-tuning for Large Language Models
           </p>
         </header>
@@ -50,7 +50,7 @@ function App() {
               {...step}
               isActive={activeStep === index}
               onClick={() => setActiveStep(index)}
-              className="bg-gradient-to-br from-gray-800 via-gray-900 to-black border border-gray-700 hover:border-purple-500 transition-all duration-300 transform hover:-translate-y-2 shadow-lg hover:shadow-purple-500/50"
+              className="bg-black border border-zinc-800 hover:border-zinc-700 transition-all duration-200 transform hover:-translate-y-1"
             />
           ))}
         </div>
@@ -62,43 +62,43 @@ function App() {
 
         {/* Technical Details */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="bg-gray-900 rounded-xl shadow-lg p-6 border border-gray-700">
+          <div className="bg-black rounded-xl shadow-lg p-6 border border-zinc-800">
             <div className="flex items-center gap-3 mb-4">
-              <Cpu className="w-6 h-6 text-purple-400" />
-              <h3 className="text-xl font-semibold text-white">QLoRA Benefits</h3>
+              <Cpu className="w-6 h-6 text-zinc-400" />
+              <h3 className="text-xl font-medium text-zinc-100">QLoRA Benefits</h3>
             </div>
-            <ul className="space-y-3 text-gray-400">
+            <ul className="space-y-3 text-zinc-400">
               <li className="flex items-start gap-2">
-                <Zap className="w-5 h-5 text-yellow-500 mt-1 flex-shrink-0" />
+                <Zap className="w-5 h-5 text-zinc-300 mt-1 flex-shrink-0" />
                 <span>4-bit quantization reduces memory usage by up to 75%</span>
               </li>
               <li className="flex items-start gap-2">
-                <Database className="w-5 h-5 text-green-500 mt-1 flex-shrink-0" />
+                <Database className="w-5 h-5 text-zinc-300 mt-1 flex-shrink-0" />
                 <span>Enables fine-tuning on consumer GPUs</span>
               </li>
               <li className="flex items-start gap-2">
-                <Layers className="w-5 h-5 text-purple-500 mt-1 flex-shrink-0" />
+                <Layers className="w-5 h-5 text-zinc-300 mt-1 flex-shrink-0" />
                 <span>Maintains model quality through double quantization</span>
               </li>
             </ul>
           </div>
 
-          <div className="bg-gray-900 rounded-xl shadow-lg p-6 border border-gray-700">
+          <div className="bg-black rounded-xl shadow-lg p-6 border border-zinc-800">
             <div className="flex items-center gap-3 mb-4">
-              <Grid className="w-6 h-6 text-purple-400" />
-              <h3 className="text-xl font-semibold text-white">LoRA Architecture</h3>
+              <Grid className="w-6 h-6 text-zinc-400" />
+              <h3 className="text-xl font-medium text-zinc-100">LoRA Architecture</h3>
             </div>
-            <ul className="space-y-3 text-gray-400">
+            <ul className="space-y-3 text-zinc-400">
               <li className="flex items-start gap-2">
-                <Layers className="w-5 h-5 text-blue-500 mt-1 flex-shrink-0" />
+                <Layers className="w-5 h-5 text-zinc-300 mt-1 flex-shrink-0" />
                 <span>Trains rank decomposition matrices instead of full weights</span>
               </li>
               <li className="flex items-start gap-2">
-                <Scale className="w-5 h-5 text-red-500 mt-1 flex-shrink-0" />
+                <Scale className="w-5 h-5 text-zinc-300 mt-1 flex-shrink-0" />
                 <span>Typically uses rank 8-32 for optimal balance</span>
               </li>
               <li className="flex items-start gap-2">
-                <LightbulbIcon className="w-5 h-5 text-amber-500 mt-1 flex-shrink-0" />
+                <LightbulbIcon className="w-5 h-5 text-zinc-300 mt-1 flex-shrink-0" />
                 <span>Enables efficient task-specific adaptations</span>
               </li>
             </ul>
