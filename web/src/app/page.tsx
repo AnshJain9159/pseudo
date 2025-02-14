@@ -3,14 +3,14 @@
 
 /* eslint-disable @next/next/no-img-element */
 import React, { useState, useEffect } from 'react';
-import { Button } from "@/components/ui/button";
+import { Button } from "components/ui/button";
 import { ArrowRight, Brain, Zap, Code } from 'lucide-react';
 
 import { Code2, PenTool, Bot, Terminal, Play } from "lucide-react";
 import dynamic from 'next/dynamic';
 
 const ExcalidrawWrapper = dynamic(
-  async () => (await import('@/components/Canvas')).default,
+  async () => (await import('components/Canvas')).default,
   { ssr: false }
 
 );

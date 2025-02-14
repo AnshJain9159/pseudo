@@ -3,16 +3,16 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from 'components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from 'components/ui/dropdown-menu';
 import Link from 'next/link';
 import { Menu, X, ChevronDown } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from 'context/AuthContext';
 import { useSession, signOut } from 'next-auth/react'; 
 import { useRouter } from 'next/navigation';
 
@@ -106,7 +106,7 @@ const Navbar: React.FC = () => {
 
   const AuthButton: React.FC<{ href: string; onClick?: () => void; children: React.ReactNode }> = ({ href, onClick, children }) => (
     <Link
-      href={href}
+      ref={href}
       onClick={onClick}
       className="px-4 py-2 text-sm font-medium text-white bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-300 rounded"
     >

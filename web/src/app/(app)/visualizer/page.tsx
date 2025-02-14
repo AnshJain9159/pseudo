@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from 'react';
 import { Brain, Cpu, Database, Layers, LightbulbIcon, Grid, Scale, Zap } from 'lucide-react';
-import ProcessStep from '@/components/ProcessStep';
-import StepVisualizer from '@/components/StepVisualizer';
+import ProcessStep from 'components/ProcessStep';
+import StepVisualizer from 'components/StepVisualizer';
 
 function App() {
   const [activeStep, setActiveStep] = useState(0);

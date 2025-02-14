@@ -2,10 +2,10 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import { Search, BookOpen, Code2 } from 'lucide-react';
-import { AlgorithmVisualizer } from '@/components/AlgorithmVisualizer';
-import { AlgorithmControls } from '@/components/AlgorithmControls';
-import { algorithms } from '@/algorithms/algorithms';
-import { generateRandomArray } from '@/algorithms/types';
+import { AlgorithmVisualizer } from 'components/AlgorithmVisualizer';
+import { AlgorithmControls } from 'components/AlgorithmControls';
+import { algorithms } from 'algorithms/algorithms';
+import { generateRandomArray } from 'algorithms/types';
 
 function App() {
   const [searchTerm, setSearchTerm] = useState('');

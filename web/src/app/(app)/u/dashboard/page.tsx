@@ -1,6 +1,6 @@
 "use client"
-import ProgressDashboard from '@/components/ProgressDashboard';
-import PeerLearningNetwork from '@/components/PeerLearningNetwork';
+import ProgressDashboard from 'components/ProgressDashboard';
+import PeerLearningNetwork from 'components/PeerLearningNetwork';
 
 export default function DashboardPage() {
   return (

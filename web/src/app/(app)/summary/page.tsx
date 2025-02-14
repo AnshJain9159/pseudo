@@ -1,12 +1,12 @@
 "use client"
 import React, { useState } from 'react';
-import { Header } from '@/components/Header';
+import { Header } from 'components/Header';
 
-import { TextInput } from '@/components/TextInput';
-import { ActionButtons } from '@/components/ActionButtons';
-import { SummaryOutput } from '@/components/SummaryOutput';
-import { summarizeText } from '@/utils/nlp';
-import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { TextInput } from 'components/TextInput';
+import { ActionButtons } from 'components/ActionButtons';
+import { SummaryOutput } from 'components/SummaryOutput';
+import { summarizeText } from 'utils/nlp';
+import { LoadingSpinner } from 'components/LoadingSpinner';
 
 export default function App() {
   const [text, setText] = useState('');
