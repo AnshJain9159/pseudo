@@ -3,42 +3,28 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 
-import router from 'next/router';
+// Dynamically import GoogleSignInButton to prevent server-side rendering issues
+//nst GoogleSignInButton = dynamic(() => import('components/GoogleSignInButton'), { ssr: false });
 
-const handleEmailSignIn = async (e: React.FormEvent) => {
+export default function SignInPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Temporary direct navigation without auth
-    router.push('/dashboard');
+    router.push('/dashboard'); // Temporary navigation without auth
+  };
 
-    /* Authentication temporarily disabled
-    setError('');
-    setLoading(true);
-
-    try {
-        await signInWithEmailAndPassword(auth, email, password);
-        router.push('/dashboard');
-    } catch (error: any) {
-        console.error('Sign in error:', error);
-        if (error.code === 'auth/network-request-failed') {
-            setError('Network error. Please check your internet connection and try again.');
-        } else if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
-            setError('Invalid email or password.');
-        } else if (error.code === 'auth/too-many-requests') {
-            setError('Too many failed attempts. Please try again later.');
-        } else {
-            setError('Failed to sign in. Please try again.');
-        }
-    } finally {
-        setLoading(false);
-    }
-    */
-};
-
-const handleGoogleError = (error: string) => {
-    setError('Temporarily disabled');
-};
-function setError(arg0: string) {
-    throw new Error('Function not implemented.');
+  return (
+    <div>
+      <h1>Sign In</h1>
+      <button onClick={() => router.push('/dashboard')}>Sign In</button>
+      
+    </div>
+  );
 }
-
