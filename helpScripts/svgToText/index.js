@@ -12,7 +12,7 @@ fs.readFile(svgFilePath, 'utf8', async (err, svgData) => {
 
   // Prepare the request payload
   const payload = {
-    model: 'deepscaler:latest', 
+    model: 'hwm:latest', 
     prompt: svgData,
   };
 

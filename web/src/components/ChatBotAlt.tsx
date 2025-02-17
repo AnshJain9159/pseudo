@@ -11,6 +11,41 @@ import { jsPDF } from 'jspdf';
 import { ActionButtons } from 'components/ActionButtons';
 import { SummaryOutput } from 'components/SummaryOutput';
 
+// WebSpeech API type declarations
+interface SpeechRecognitionEvent {
+  results: SpeechRecognitionResultList[];
+  resultIndex: number;
+}
+
+interface SpeechRecognitionResult {
+  transcript: string;
+  confidence: number;
+}
+
+interface SpeechRecognitionResultList {
+  [index: number]: SpeechRecognitionResult;
+  length: number;
+}
+
+interface SpeechRecognition extends EventTarget {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  maxAlternatives: number;
+  onresult: (event: SpeechRecognitionEvent) => void;
+  onerror: (event: { error: string }) => void;
+  onend: () => void;
+  onspeechend: () => void;
+  start: () => void;
+  stop: () => void;
+  abort: () => void;
+}
+
+// Declare the global WebkitSpeechRecognition constructor
+declare const webkitSpeechRecognition: {
+  new (): SpeechRecognition;
+};
+
 export default function ChatPage() {
   interface ChatMessage {
     role: 'user' | 'assistant';
@@ -25,9 +60,12 @@ export default function ChatPage() {
   const [isRecording, setIsRecording] = useState(false);
   const [recognition, setRecognition] = useState<SpeechRecognition | null>(null);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [recognitionError, setRecognitionError] = useState<string>('');
   const speechTimeout = useRef<NodeJS.Timeout>();
   const lastSpeechTime = useRef<number>(0);
-
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const retryAttempts = useRef<number>(0);
+  const MAX_RETRY_ATTEMPTS = 3;
 
   const {
     messages,
@@ -70,65 +108,197 @@ export default function ChatPage() {
     },
   });
 
-  // Initialize speech recognition
-    useEffect(() => {
-      if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
-          const SpeechRecognition = window.webkitSpeechRecognition;
-          const recognition = new SpeechRecognition();
+  const initializeSpeechRecognition = () => {
+    if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
+      const newRecognition = new webkitSpeechRecognition();
+      
+      // Configure for more stable network performance
+      newRecognition.continuous = false;
+      newRecognition.interimResults = false;
+      newRecognition.maxAlternatives = 1;
+      newRecognition.lang = 'en-UK';
+
+      // Check network status before starting
+      const checkNetworkAndStart = () => {
+        if (!navigator.onLine) {
+          setRecognitionError('No internet connection. Please check your network.');
+          setIsRecording(false);
+          return false;
+        }
+        return true;
+      };
+
+      newRecognition.onresult = (event: SpeechRecognitionEvent) => {
+        const transcript = Array.from(event.results)
+            .map(result => result[0] as SpeechRecognitionResult)
+            .map(result => result.transcript)
+            .join('');
+        
+        handleInputChange({ target: { value: transcript } } as any);
+        lastSpeechTime.current = Date.now();
+        setRecognitionError('');
+        retryAttempts.current = 0;
+      };
+
+      newRecognition.onerror = (event: { error: any; }) => {
+        console.error('Speech recognition error:', event.error);
+        
+        if (event.error === 'network') {
+          setRecognitionError('Network error occurred. Please check your connection.');
           
-          recognition.continuous = true;
-          recognition.interimResults = true;
-          recognition.lang = 'en-UK';
-
-          recognition.onresult = (event: { results: Iterable<unknown> | ArrayLike<unknown>; }) => {
-              const transcript = Array.from(event.results)
-                  .map(result => result[0])
-                  .map(result => result.transcript)
-                  .join('');
-              
-              handleInputChange({ target: { value: transcript } } as any);
-              lastSpeechTime.current = Date.now();
-          };
-
-          recognition.onerror = (event: { error: any; }) => {
-              console.error('Speech recognition error:', event.error);
-              setIsRecording(false);
-          };
-
-          recognition.onend = () => {
-              if (isRecording) {
-                  recognition.start(); // Restart if still recording
+          // Stop current recognition instance
+          try {
+            newRecognition.stop();
+          } catch (e) {
+            console.error('Error stopping recognition:', e);
+          }
+          
+          // Implement retry logic with exponential backoff
+          if (retryAttempts.current < MAX_RETRY_ATTEMPTS && isRecording) {
+            retryAttempts.current += 1;
+            const backoffTime = Math.min(1000 * Math.pow(2, retryAttempts.current), 8000);
+            
+            setTimeout(() => {
+              if (recognitionRef.current && isRecording && checkNetworkAndStart()) {
+                try {
+                  recognitionRef.current.start();
+                  setRecognitionError(`Retrying... Attempt ${retryAttempts.current}/${MAX_RETRY_ATTEMPTS}`);
+                } catch (error) {
+                  console.error('Failed to restart recognition:', error);
+                  setRecognitionError('Failed to restart speech recognition. Please try again.');
+                  setIsRecording(false);
+                }
               }
-          };
+            }, backoffTime);
+          } else if (retryAttempts.current >= MAX_RETRY_ATTEMPTS) {
+            setRecognitionError('Maximum retry attempts reached. Please try again later.');
+            setIsRecording(false);
+          }
+        } else if (event.error === 'no-speech') {
+          setRecognitionError('No speech detected. Please try speaking again.');
+          // Don't stop recording for no-speech error, just notify
+        } else if (event.error === 'audio-capture') {
+          setRecognitionError('No microphone detected. Please check your microphone settings.');
+          setIsRecording(false);
+        } else if (event.error === 'not-allowed') {
+          setRecognitionError('Microphone access denied. Please allow microphone access and try again.');
+          setIsRecording(false);
+        } else if (event.error === 'aborted') {
+          // Ignore aborted errors during normal operation
+          if (isRecording) {
+            setRecognitionError('Speech recognition was interrupted. Restarting...');
+          }
+        } else {
+          setRecognitionError(`Speech recognition error: ${event.error}`);
+          setIsRecording(false);
+        }
+      };
 
-          recognition.onspeechend = () => {
-              // Set a timeout to stop recording if no speech is detected
-              speechTimeout.current = setTimeout(() => {
-                  if (Date.now() - lastSpeechTime.current > 2000) {
-                      recognition.stop();
-                      setIsRecording(false);
-                  }
-              }, 2000); // Wait 2 seconds after speech ends
-          };
+      newRecognition.onend = () => {
+        // Only restart if we're still supposed to be recording and haven't hit retry limits
+        if (isRecording && retryAttempts.current < MAX_RETRY_ATTEMPTS) {
+          try {
+            newRecognition.start();
+          } catch (error) {
+            console.error('Failed to restart recognition:', error);
+            setRecognitionError('Failed to restart speech recognition. Please try again.');
+            setIsRecording(false);
+          }
+        }
+      };
 
-          setRecognition(recognition);
+      newRecognition.onspeechend = () => {
+        // Clear any existing timeout
+        if (speechTimeout.current) {
+          clearTimeout(speechTimeout.current);
+        }
+        
+        speechTimeout.current = setTimeout(() => {
+          if (Date.now() - lastSpeechTime.current > 2000) {
+            try {
+              newRecognition.stop();
+            } catch (error) {
+              console.error('Error stopping recognition:', error);
+            }
+            setIsRecording(false);
+            setRecognitionError('');
+            retryAttempts.current = 0;
+          }
+        }, 2000);
+      };
+
+      // Add network status change handlers
+      window.addEventListener('online', () => {
+        const recognition = recognitionRef.current;
+        if (isRecording && recognition) {
+          setRecognitionError('Network connection restored. Restarting...');
+          retryAttempts.current = 0;
+          setTimeout(() => {
+            try {
+              recognition.start();
+            } catch (error) {
+              console.error('Failed to restart recognition:', error);
+            }
+          }, 1000); // Short delay to ensure connection is stable
+        }
+      });
+
+      window.addEventListener('offline', () => {
+        setRecognitionError('Network connection lost. Please check your internet connection.');
+        if (recognitionRef.current) {
+          try {
+            recognitionRef.current.stop();
+          } catch (error) {
+            console.error('Error stopping recognition:', error);
+          }
+        }
+        setIsRecording(false);
+      });
+
+      recognitionRef.current = newRecognition;
+      setRecognition(newRecognition);
+      return newRecognition;
+    }
+    return null;
+  };
+
+  // Initialize speech recognition
+  useEffect(() => {
+    if (!recognitionRef.current) {
+      initializeSpeechRecognition();
+    }
+
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
       }
-  }, [handleInputChange, isRecording]);
+      if (speechTimeout.current) {
+        clearTimeout(speechTimeout.current);
+      }
+    };
+  }, []);
 
   const toggleRecording = () => {
-      if (!recognition) {
-          console.error('Speech recognition not supported');
-          return;
+    if (!recognitionRef.current) {
+      const newRecognition = initializeSpeechRecognition();
+      if (!newRecognition) {
+        console.error('Speech recognition not supported');
+        setRecognitionError('Speech recognition is not supported in your browser.');
+        return;
       }
+    }
 
-      if (isRecording) {
-          recognition.stop();
-          setIsRecording(false);
-      } else {
-          recognition.start();
-          setIsRecording(true);
-          lastSpeechTime.current = Date.now();
-      }
+    setRecognitionError(''); // Clear any previous errors
+    retryAttempts.current = 0; // Reset retry attempts
+
+    if (isRecording) {
+      recognitionRef.current?.stop();
+      setIsRecording(false);
+    } else {
+      recognitionRef.current?.start();
+      setIsRecording(true);
+      lastSpeechTime.current = Date.now();
+    }
   };
 
   // Text-to-speech function
@@ -170,18 +340,6 @@ export default function ChatPage() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chat, currentMessage]);
-
-  // Cleanup speech synthesis on unmount
-  useEffect(() => {
-    return () => {
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel();
-        }
-        if (speechTimeout.current) {
-            clearTimeout(speechTimeout.current);
-        }
-    };
-}, []);
 
   const customSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -296,16 +454,20 @@ export default function ChatPage() {
         {chat.map((message, index) => (
           <div key={index} className="text-sm text-white">
             <div className="flex items-start space-x-4">
-              <span className="font-medium flex  min-w-[32px] text-white">
-                {message.role === 'assistant' ? 'AI:'  : 'You:'  }
-                <button
+              <div className="flex items-center space-x-2 min-w-[80px]">
+                <span className="font-medium text-white">
+                  {message.role === 'assistant' ? 'AI:' : 'You:'}
+                </span>
+                {message.role === 'assistant' && (
+                  <button
                     onClick={() => isSpeaking ? stopSpeaking() : speakMessage(message.content)}
-                    className={`ml-2 p-1 rounded-full ${isSpeaking ? 'text-red-500 hover:text-red-600' : 'text-blue-500 hover:text-blue-600'}`}
-                >
-                  {isSpeaking ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-                </button>
-              </span>
-              <div className="prose prose-invert prose-sm max-w-none text-white">
+                    className={`p-1 rounded-full ${isSpeaking ? 'text-red-500 hover:text-red-600' : 'text-blue-500 hover:text-blue-600'}`}
+                  >
+                    {isSpeaking ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                  </button>
+                )}
+              </div>
+              <div className="flex-1 prose prose-invert prose-sm max-w-none text-white">
                 <ReactMarkdown>{message.content}</ReactMarkdown>
               </div>
             </div>
@@ -315,9 +477,17 @@ export default function ChatPage() {
         {/* Display current message */}
         {currentMessage && (
           <div className="text-sm text-white">
-            <div className="flex items-start space-x-2">
-              <span className="font-medium min-w-[32px] text-white">AI:</span>
-              <div className="prose prose-invert prose-sm max-w-none text-white">
+            <div className="flex items-start space-x-4">
+              <div className="flex items-center space-x-2 min-w-[80px]">
+                <span className="font-medium text-white">AI:</span>
+                <button
+                  onClick={() => isSpeaking ? stopSpeaking() : speakMessage(currentMessage)}
+                  className={`p-1 rounded-full ${isSpeaking ? 'text-red-500 hover:text-red-600' : 'text-blue-500 hover:text-blue-600'}`}
+                >
+                  {isSpeaking ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                </button>
+              </div>
+              <div className="flex-1 prose prose-invert prose-sm max-w-none text-white">
                 <ReactMarkdown>{currentMessage}</ReactMarkdown>
               </div>
             </div>
@@ -351,6 +521,13 @@ export default function ChatPage() {
           </div>
           <SummaryOutput summary={summary} onCopy={handleCopySummary} />
 
+        </div>
+      )}
+
+      {/* Add error message display */}
+      {recognitionError && (
+        <div className="text-red-500 text-sm px-4 py-2 bg-red-500/10 rounded-md mb-2">
+          {recognitionError}
         </div>
       )}
 
@@ -404,5 +581,3 @@ export default function ChatPage() {
     </div>
   );
 }
-
-

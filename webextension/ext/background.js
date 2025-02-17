@@ -80,7 +80,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         'Access-Control-Allow-Origin': '*',  // Add this line
       },
       body: JSON.stringify({
-        model: 'deepscaler:latest',
+        model: 'hwm:latest',
         messages: [{ role: 'user', content: message.userMessage }],
         stream: true,
       }),

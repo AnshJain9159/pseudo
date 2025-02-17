@@ -58,14 +58,12 @@ const NotebookPage = () => {
       runCode(index, cell.code);
     } else if (cell.type === "markdown") {
       const newCells = [...cells];
-      newCells[index] = {
-        ...newCells[index],
-        markdownRendered: true,
-      };
+      const updatedCell = { ...newCells[index] } as MarkdownCell;
+      updatedCell.markdownRendered = true;
+      newCells[index] = updatedCell;
       setCells(newCells);
     }
   };
-
 
   const runAllCells = async () => {
     const newCells = await Promise.all(

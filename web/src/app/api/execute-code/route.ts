@@ -82,7 +82,7 @@ function executeCode(filePath: string, outputPath: string, language: string): Pr
 
     switch (language) {
       case 'python':
-        command = `python "${filePath}"`;
+        command = `python3 "${filePath}"`;
         break;
       case 'cpp':
         // Compile and execute C++ code

@@ -31,7 +31,7 @@ const features = [
 
 const AboutUs = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black to-gray-800 text-gray-300 font-mono">
+    <div className="min-h-screen bg-black text-gray-300 font-mono">
       <div className="container mx-auto px-6 py-20">
         {/* Main Title Section */}
         <div className="text-center mb-12">

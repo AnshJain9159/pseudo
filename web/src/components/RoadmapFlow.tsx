@@ -66,10 +66,10 @@ const nodes: Node<CustomNodeData>[] = [
     id: '1',
     position: { x: 250, y: 0 },
     data: {
-      label: 'Arrays & Hashing',
-      description: 'Learn about arrays and hashing data structures and their applications.',
+      label: 'Programming Fundamentals',
+      description: 'Learn basic programming concepts, variables, control structures, and functions.',
       difficulty: 'Beginner',
-      estimatedHours: 0,
+      estimatedHours: 40,
       prerequisites: []
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
@@ -78,11 +78,11 @@ const nodes: Node<CustomNodeData>[] = [
     id: '2',
     position: { x: 100, y: 100 },
     data: {
-      label: 'Two Pointers',
-      description: 'Understand the two pointers technique and its use cases.',
+      label: 'Data Structures',
+      description: 'Study fundamental data structures like arrays, linked lists, trees, and graphs.',
       difficulty: 'Beginner',
-      estimatedHours: 0,
-      prerequisites: []
+      estimatedHours: 60,
+      prerequisites: ['Programming Fundamentals']
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
@@ -90,11 +90,11 @@ const nodes: Node<CustomNodeData>[] = [
     id: '3',
     position: { x: 400, y: 100 },
     data: {
-      label: 'Stack',
-      description: 'Learn about the stack data structure and its applications.',
-      difficulty: 'Beginner',
-      estimatedHours: 0,
-      prerequisites: []
+      label: 'Algorithms',
+      description: 'Learn algorithm design, analysis, and common algorithmic patterns.',
+      difficulty: 'Intermediate',
+      estimatedHours: 60,
+      prerequisites: ['Data Structures']
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
@@ -102,11 +102,11 @@ const nodes: Node<CustomNodeData>[] = [
     id: '4',
     position: { x: 50, y: 200 },
     data: {
-      label: 'Binary Search',
-      description: 'Master the binary search algorithm and its variations.',
-      difficulty: 'Beginner',
-      estimatedHours: 0,
-      prerequisites: []
+      label: 'Computer Architecture',
+      description: 'Understand computer organization, assembly, and hardware concepts.',
+      difficulty: 'Intermediate',
+      estimatedHours: 50,
+      prerequisites: ['Programming Fundamentals']
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
@@ -114,11 +114,11 @@ const nodes: Node<CustomNodeData>[] = [
     id: '5',
     position: { x: 250, y: 200 },
     data: {
-      label: 'Sliding Window',
-      description: 'Learn about the sliding window technique and its applications.',
-      difficulty: 'Beginner',
-      estimatedHours: 0,
-      prerequisites: []
+      label: 'Operating Systems',
+      description: 'Learn about OS concepts, processes, threading, and memory management.',
+      difficulty: 'Advanced',
+      estimatedHours: 60,
+      prerequisites: ['Computer Architecture']
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
@@ -126,11 +126,11 @@ const nodes: Node<CustomNodeData>[] = [
     id: '6',
     position: { x: 400, y: 200 },
     data: {
-      label: 'Linked List',
-      description: 'Understand linked list data structures and their applications.',
-      difficulty: 'Beginner',
-      estimatedHours: 0,
-      prerequisites: []
+      label: 'Database Systems',
+      description: 'Study database design, SQL, and database management systems.',
+      difficulty: 'Intermediate',
+      estimatedHours: 40,
+      prerequisites: ['Data Structures']
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
@@ -138,11 +138,11 @@ const nodes: Node<CustomNodeData>[] = [
     id: '7',
     position: { x: 250, y: 300 },
     data: {
-      label: 'Trees',
-      description: 'Learn about tree data structures and their traversal algorithms.',
-      difficulty: 'Beginner',
-      estimatedHours: 0,
-      prerequisites: []
+      label: 'Computer Networks',
+      description: 'Learn networking protocols, architecture, and web technologies.',
+      difficulty: 'Intermediate',
+      estimatedHours: 50,
+      prerequisites: ['Operating Systems']
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
@@ -150,11 +150,11 @@ const nodes: Node<CustomNodeData>[] = [
     id: '8',
     position: { x: 50, y: 400 },
     data: {
-      label: 'Tries',
-      description: 'Understand trie data structures and their applications.',
-      difficulty: 'Beginner',
-      estimatedHours: 0,
-      prerequisites: []
+      label: 'Software Engineering',
+      description: 'Study software development methodologies, testing, and project management.',
+      difficulty: 'Intermediate',
+      estimatedHours: 45,
+      prerequisites: ['Programming Fundamentals']
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
@@ -162,11 +162,11 @@ const nodes: Node<CustomNodeData>[] = [
     id: '9',
     position: { x: 400, y: 400 },
     data: {
-      label: 'Backtracking',
-      description: 'Learn about the backtracking algorithm and its applications.',
-      difficulty: 'Advanced',
-      estimatedHours: 0,
-      prerequisites: []
+      label: 'Web Development',
+      description: 'Learn frontend and backend development, frameworks, and APIs.',
+      difficulty: 'Intermediate',
+      estimatedHours: 70,
+      prerequisites: ['Programming Fundamentals']
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
@@ -174,140 +174,123 @@ const nodes: Node<CustomNodeData>[] = [
     id: '10',
     position: { x: 50, y: 500 },
     data: {
-      label: 'Heap / Priority Queue',
-      description: 'Understand heap and priority queue data structures and their applications.',
-      difficulty: 'Beginner',
-      estimatedHours: 0,
-      prerequisites: []
+      label: 'Artificial Intelligence',
+      description: 'Study AI concepts, machine learning, and neural networks.',
+      difficulty: 'Advanced',
+      estimatedHours: 80,
+      prerequisites: ['Algorithms', 'Mathematics']
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
   {
     id: '11',
-    position: { x: 250, y: 600 },
+    position: { x: 250, y: 500 },
     data: {
-      label: 'Intervals',
-      description: 'Learn about interval data structures and their applications.',
-      difficulty: 'Beginner',
-      estimatedHours: 0,
+      label: 'Mathematics',
+      description: 'Learn discrete math, linear algebra, and probability theory.',
+      difficulty: 'Intermediate',
+      estimatedHours: 60,
       prerequisites: []
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
   {
     id: '12',
-    position: { x: 400, y: 600 },
+    position: { x: 400, y: 500 },
     data: {
-      label: 'Greedy',
-      description: 'Understand the greedy algorithm and its applications.',
-      difficulty: 'Beginner',
-      estimatedHours: 0,
-      prerequisites: []
+      label: 'Cybersecurity',
+      description: 'Study security principles, cryptography, and network security.',
+      difficulty: 'Advanced',
+      estimatedHours: 60,
+      prerequisites: ['Computer Networks']
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
   {
     id: '13',
-    position: { x: 100, y: 700 },
+    position: { x: 100, y: 600 },
     data: {
-      label: 'Graphs',
-      description: 'Learn about graph data structures and their traversal algorithms.',
+      label: 'Cloud Computing',
+      description: 'Learn cloud services, deployment, and distributed systems.',
       difficulty: 'Advanced',
-      estimatedHours: 0,
-      prerequisites: []
+      estimatedHours: 50,
+      prerequisites: ['Computer Networks', 'Database Systems']
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
   {
     id: '14',
-    position: { x: 250, y: 700 },
+    position: { x: 250, y: 600 },
     data: {
-      label: 'Advanced Graphs',
-      description: 'Explore advanced graph algorithms and data structures.',
-      difficulty: 'Advanced',
-      estimatedHours: 0,
-      prerequisites: []
+      label: 'Mobile Development',
+      description: 'Study mobile app development for iOS and Android.',
+      difficulty: 'Intermediate',
+      estimatedHours: 60,
+      prerequisites: ['Programming Fundamentals']
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
   },
   {
     id: '15',
-    position: { x: 400, y: 700 },
+    position: { x: 400, y: 600 },
     data: {
-      label: 'DP (1D)',
-      description: 'Learn about dynamic programming with 1D arrays.',
-      difficulty: 'Beginner',
-      estimatedHours: 0,
-      prerequisites: []
-    },
-    style: { background: '#2446bf', color: '#fff', padding: 10 },
-  },
-  {
-    id: '16',
-    position: { x: 250, y: 800 },
-    data: {
-      label: 'DP (2D)',
-      description: 'Learn about dynamic programming with 2D arrays.',
+      label: 'DevOps',
+      description: 'Learn continuous integration, deployment, and infrastructure automation.',
       difficulty: 'Advanced',
-      estimatedHours: 0,
-      prerequisites: []
+      estimatedHours: 55,
+      prerequisites: ['Software Engineering', 'Cloud Computing']
     },
     style: { background: '#2446bf', color: '#fff', padding: 10 },
-  },
-  {
-    id: '17',
-    position: { x: 100, y: 900 },
-    data: {
-      label: 'Bit Manipulation',
-      description: 'Understand bitwise operations and their applications.',
-      difficulty: 'Advanced',
-      estimatedHours: 0,
-      prerequisites: []
-    },
-    style: { background: '#2446bf', color: '#fff', padding: 10 },
-  },
-  {
-    id: '18',
-    position: { x: 400, y: 900 },
-    data: {
-      label: 'Math & Geometry',
-      description: 'Learn about mathematical concepts and geometric algorithms.',
-      difficulty: 'Beginner',
-      estimatedHours: 0,
-      prerequisites: []
-    },
-    style: { background: '#2446bf', color: '#fff', padding: 10 },
-  },
+  }
 ];
 
-
-// Define the edges connecting the nodes
+// Update edges to match the exact flow in the image
 const edges = [
-  { id: 'e1-2', source: '1', target: '2', animated: true , style: { stroke: '#fff' }},
-  { id: 'e1-3', source: '1', target: '3', animated: true , style: { stroke: '#fff' }},
-  { id: 'e2-4', source: '2', target: '4', animated: true , style: { stroke: '#fff' }},
-  { id: 'e2-5', source: '2', target: '5', animated: true , style: { stroke: '#fff' }},
-  { id: 'e3-6', source: '3', target: '6', animated: true , style: { stroke: '#fff' }},
-  { id: 'e5-7', source: '5', target: '7', animated: true , style: { stroke: '#fff' }},
-  { id: 'e6-7', source: '6', target: '7', animated: true , style: { stroke: '#fff' }},
-  { id: 'e7-8', source: '7', target: '8', animated: true , style: { stroke: '#fff' }},
-  { id: 'e7-9', source: '7', target: '9', animated: true , style: { stroke: '#fff' }},
-  { id: 'e8-10', source: '8', target: '10', animated: true , style: { stroke: '#fff' }},
-  { id: 'e9-13', source: '9', target: '13', animated: true , style: { stroke: '#fff' }},
-  { id: 'e10-11', source: '10', target: '11', animated: true , style: { stroke: '#fff' }},
-  { id: 'e10-12', source: '10', target: '12', animated: true , style: { stroke: '#fff' }},
-  { id: 'e13-14', source: '13', target: '14', animated: true , style: { stroke: '#fff' }},
-  { id: 'e14-15', source: '14', target: '15', animated: true , style: { stroke: '#fff' }},
-  { id: 'e15-16', source: '15', target: '16', animated: true , style: { stroke: '#fff' }},
-  { id: 'e16-17', source: '16', target: '17', animated: true , style: { stroke: '#fff' }},
-  { id: 'e17-18', source: '17', target: '18', animated: true, style: { stroke: '#fff' } },
+  // Programming Fundamentals connections
+  { id: 'e1-2', source: '1', target: '2', animated: true, style: { stroke: '#fff' }}, // to Data Structures
+  { id: 'e1-3', source: '1', target: '3', animated: true, style: { stroke: '#fff' }}, // to Algorithms
+  { id: 'e1-4', source: '1', target: '4', animated: true, style: { stroke: '#fff' }}, // to Computer Architecture
+  { id: 'e1-5', source: '1', target: '5', animated: true, style: { stroke: '#fff' }}, // to Operating Systems
+
+  // Data Structures connections
+  { id: 'e2-4', source: '2', target: '4', animated: true, style: { stroke: '#fff' }}, // to Computer Architecture
+  { id: 'e2-5', source: '2', target: '5', animated: true, style: { stroke: '#fff' }}, // to Operating Systems
+  { id: 'e2-6', source: '2', target: '6', animated: true, style: { stroke: '#fff' }}, // to Database Systems
+
+  // Algorithms connections
+  { id: 'e3-6', source: '3', target: '6', animated: true, style: { stroke: '#fff' }}, // to Database Systems
+
+  // Operating Systems to Networks
+  { id: 'e5-7', source: '5', target: '7', animated: true, style: { stroke: '#fff' }},
+
+  // Computer Networks connections
+  { id: 'e7-8', source: '7', target: '8', animated: true, style: { stroke: '#fff' }}, // to Software Engineering
+  { id: 'e7-9', source: '7', target: '9', animated: true, style: { stroke: '#fff' }}, // to Web Development
+
+  // Database Systems connections
+  { id: 'e6-7', source: '6', target: '7', animated: true, style: { stroke: '#fff' }}, // to Computer Networks
+  { id: 'e6-9', source: '6', target: '9', animated: true, style: { stroke: '#fff' }}, // to Web Development
+
+  // Software Engineering connections
+  { id: 'e8-10', source: '8', target: '10', animated: true, style: { stroke: '#fff' }}, // to AI
+
+  // Mathematics connections
+  { id: 'e11-10', source: '11', target: '10', animated: true, style: { stroke: '#fff' }}, // to AI
+  { id: 'e11-13', source: '11', target: '13', animated: true, style: { stroke: '#fff' }}, // to Cloud Computing
+  { id: 'e11-15', source: '11', target: '15', animated: true, style: { stroke: '#fff' }}, // to DevOps
+
+  // Cybersecurity connections
+  { id: 'e12-15', source: '12', target: '15', animated: true, style: { stroke: '#fff' }}, // to DevOps
+
+  // Cloud Computing to Mobile Development
+  { id: 'e13-14', source: '13', target: '14', animated: true, style: { stroke: '#fff' }}
 ];
 
 const nodeTypes = {
   custom: CustomNode,
 };
 
-const DSARoadmap = () => {
+const CSRoadmap = () => {
   const [selectedNode, setSelectedNode] = useState<Node<CustomNodeData> | null>(null);
 
   return (
@@ -357,4 +340,4 @@ const DSARoadmap = () => {
   );
 };
 
-export default DSARoadmap;
+export default CSRoadmap;

@@ -6,12 +6,13 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap">
   <title>Socrate - AI Companion</title>
 </head>
 <body>
   <div class="container">
     <div class="popup-header">
-      <img title="logo" class= "popup-title" src ="./icons/SOCRATES.svg"/>
+      <img title="logo" class="popup-title" src="./icons/SOCRATES.svg"/>
       <p class="popup-subtitle">AI-powered DSA learning companion</p>
     </div>
     
@@ -23,30 +24,37 @@
     </div>
     
     <div class="action-buttons">
-      <button id="copyButton" class="primary-button">
-        <span class="icon">📋</span>
-        Copy Question
-      </button>
-      <button id="helpButton" class="secondary-button">
+      <button id="helpButton" class="primary-button">
         <span class="icon">🎯</span>
         Help
       </button>
     </div>
+
+    <!-- <div class="help-text hidden" id="helpText">
+      <h3>How to Use Socrate</h3>
+      <p>Socrate helps you learn Data Structures & Algorithms through Socratic questioning.</p>
+      <ul>
+        <li>Click <strong>Help</strong> to analyze the current problem</li>
+        <li>Ask questions about concepts you don't understand</li>
+        <li>Get guided hints instead of direct solutions</li>
+        <li>Learn through interactive problem-solving</li>
+      </ul>
+    </div> -->
     
     <div class="chat-window hidden" id="chatWindow">
       <div id="chatMessages" class="messages"></div>
       <form id="chatForm" class="chat-form">
-        <input type="text" id="chatInput" placeholder="Ask about sorting algorithms..." class="chat-input">
+        <input type="text" id="chatInput" placeholder="Ask about the problem..." class="chat-input">
         <button type="submit" class="chat-submit-button">📤</button>
       </form>
     </div>
-    <div class="footer">
+    <!-- <div class="footer">
       <a href="https://github.com/AnshJain9159/pseudo.git" target="_blank" rel="noopener" class="icon-button github-link" title="Visit our GitHub">
         <svg height="24" width="24" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true" class="github-icon">
           <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.22 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.19 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/>
         </svg>
       </a>
-    </div>
+    </div> -->
   </div>
   <script src="popup.js"></script>
   <script src="chatbot.js"></script>

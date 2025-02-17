@@ -70,7 +70,7 @@ export async function POST(req: Request) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'deepscaler:latest',
+        model: 'hwm:latest',
         prompt: body.messages[body.messages.length - 1].content,
         stream: true,
       }),

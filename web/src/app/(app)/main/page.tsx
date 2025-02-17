@@ -9,6 +9,7 @@ import { Resizable } from 're-resizable';
 import Link from 'next/link';
 import NotebookPage from 'components/Codepad';
 import ChatPage from 'components/ChatBotAlt';
+import { useRouter } from 'next/navigation';
 
 const ExcalidrawWrapper = dynamic(
   async () => (await import('components/Canvas')).default,
@@ -24,6 +25,7 @@ const Page: React.FC = () => {
   const [mounted, setMounted] = useState(false);
   const [leftWidth, setLeftWidth] = useState('45%');
   const [topHeight, setTopHeight] = useState('50%');
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
@@ -43,13 +45,17 @@ const Page: React.FC = () => {
     setTopHeight(`${(newHeight / parentHeight) * 100}%`);
   };
 
+  const handleBack = () => {
+    router.push('/');
+  };
+
   return (
     <div className="h-screen w-screen bg-black flex flex-col overflow-hidden">
       {/* Navigation Bar */}
       <div className="h-12 border-b border-zinc-800 flex items-center px-4">
-        <Link href="/" className="text-zinc-400 hover:text-white">
+        <button onClick={handleBack} className="text-zinc-400 hover:text-white">
           <ArrowLeft className="w-5 h-5" />
-        </Link>
+        </button>
       </div>
 
       {/* Main Content */}
@@ -123,7 +129,7 @@ const Page: React.FC = () => {
             <div className="flex items-center space-x-2 px-4 py-3 border-b border-zinc-800">
               <Bot className="w-4 h-4 text-blue-400" />
               <span className="text-sm font-medium text-white">AI Assistant</span>
-              <span className="text-xs text-red-400 ml-2">(LLM not hosted yet)</span>
+              {/*<span className="text-xs text-red-400 ml-2">(LLM not hosted yet)</span>*/}
             </div>
             <div className="flex-1 min-h-0">
               <ChatPage />

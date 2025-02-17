@@ -28,7 +28,7 @@ const navItems = [
       { name: 'Code Analyser', href: '/analyzer' },
       { name: "Algorithm's Visualisation", href: '/algovisualise' },
       { name: "LLM's Visualisation", href: '/visualizer' },
-      { name: "DSA's Roadmap", href: '/roadmap' },
+      { name: "Computer Science Roadmap", href: '/roadmap' },
     ],
   },
   {
@@ -43,23 +43,33 @@ const navItems = [
 
 const Navbar: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
-  const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const { loading } = useAuth(); 
   const { data: session, status } = useSession();
   const router = useRouter();
 
+  // Close sidebar when screen size changes to desktop
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 0) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
+    const handleResize = () => {
+      if (window.innerWidth >= 768) { // md breakpoint
+        setIsSidebarOpen(false);
       }
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
-  
+
+  // Prevent body scroll when sidebar is open
+  useEffect(() => {
+    if (isSidebarOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isSidebarOpen]);
 
   const toggleSidebar = (): void => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -90,14 +100,16 @@ const Navbar: React.FC = () => {
   const NavDropdown: React.FC<{ category: string; items: any[] }> = ({ category, items }) => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="px-4 py-2 text-sm font-medium rounded-xl text-white hover:text-cyan-300">
+        <Button variant="ghost" className="px-4 py-2 text-sm font-medium text-zinc-300 hover:text-white transition-colors">
           {category} <ChevronDown className="ml-1 h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="bg-gray-800 border-gray-700 rounded-xl">
+      <DropdownMenuContent className="bg-black border border-zinc-800 rounded-lg shadow-lg">
         {items.map((item) => (
-          <DropdownMenuItem key={item.name} className="hover:bg-gray-700 rounded-xl">
-            <NavLink item={item} />
+          <DropdownMenuItem key={item.name} className="focus:bg-zinc-900 focus:text-white">
+            <Link href={item.href} className="w-full px-4 py-2 text-sm text-zinc-300 hover:text-white">
+              {item.name}
+            </Link>
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
@@ -106,9 +118,9 @@ const Navbar: React.FC = () => {
 
   const AuthButton: React.FC<{ href: string; onClick?: () => void; children: React.ReactNode }> = ({ href, onClick, children }) => (
     <Link
-      ref={href}
+      href={href}
       onClick={onClick}
-      className="px-4 py-2 text-sm font-medium text-white bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-300 rounded"
+      className="px-4 py-2 text-sm font-medium text-zinc-300 hover:text-white bg-zinc-900 hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-500 transition-colors duration-300 rounded-lg"
     >
       {children}
     </Link>
@@ -119,7 +131,7 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-black shadow-md' : 'bg-transparent'}`}>
+    <nav className="sticky top-0 left-0 right-0 z-50 bg-black border-b border-zinc-800">
       <div className="container mx-auto px-6 py-4">
         <div className="flex justify-between items-center">
           <Link href="/" className="font-bold text-xl text-white">
@@ -134,25 +146,19 @@ const Navbar: React.FC = () => {
               )
             ))}
             {loading ? (
-              <span>Loading...</span>
+              <span className="text-zinc-500">Loading...</span>
             ) : session ? (
               <>
-                <AuthButton href="/u/profile">User Profile</AuthButton>
-                {/* <AuthButton href="#" onClick={handleLogout}>Logout</AuthButton> */}
+                <AuthButton href="/u/profile">Profile</AuthButton>
               </>
-            ) : (
-              <>
-                {/* <AuthButton href="/sign-in">Login</AuthButton> */}
-                {/* <AuthButton href="/sign-up">Register</AuthButton> */}
-              </>
-            )}
+            ) : null}
           </div>
           
           <Button
             onClick={toggleSidebar}
             variant="ghost"
             size="icon"
-            className="md:hidden text-cyan-200 hover:text-cyan-300"
+            className="md:hidden text-zinc-300 hover:text-white"
             aria-label="Toggle menu"
           >
             {isSidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -160,45 +166,46 @@ const Navbar: React.FC = () => {
         </div>
       </div>
       {isSidebarOpen && (
-        <div className="fixed inset-0 bg-black/50 z-40" onClick={closeSidebar}>
+        <>
+          <div 
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 transition-opacity duration-300 ease-in-out" 
+            onClick={closeSidebar}
+            aria-hidden="true"
+          />
           <div
-            className="fixed right-0 top-0 h-full w-64 bg-gray-800 shadow-lg z-50 overflow-y-auto"
+            className="fixed right-0 top-0 h-full w-[280px] bg-black border-l border-zinc-800 shadow-lg z-50 overflow-y-auto transform transition-transform duration-300 ease-in-out"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-end p-4">
-              <Button onClick={closeSidebar} variant="ghost" size="icon">
-                <X className="h-6 w-6 text-cyan-200" />
+              <Button onClick={closeSidebar} variant="ghost" size="icon" className="text-zinc-300 hover:text-white">
+                <X className="h-6 w-6" />
               </Button>
             </div>
-            <nav className="flex flex-col space-y-4 p-4">
+            <nav className="flex flex-col space-y-6 p-4">
               {navItems.map((item, index) => (
                 isNavCategory(item) ? (
-                  <div key={index}>
-                    <h3 className="font-semibold text-sm text-gray-500 uppercase tracking-wider mb-2">{item.category}</h3>
-                    {item.items.map((subItem) => (
-                      <NavLink key={subItem.name} item={subItem} onClick={closeSidebar} />
-                    ))}
+                  <div key={index} className="space-y-3">
+                    <h3 className="font-semibold text-sm text-zinc-500 uppercase tracking-wider">{item.category}</h3>
+                    <div className="flex flex-col space-y-2 pl-2">
+                      {item.items.map((subItem) => (
+                        <NavLink key={subItem.name} item={subItem} onClick={closeSidebar} />
+                      ))}
+                    </div>
                   </div>
                 ) : (
                   <NavLink key={index} item={item} onClick={closeSidebar} />
                 )
               ))}
               {loading ? (
-                <span>Loading...</span>
+                <span className="text-zinc-500">Loading...</span>
               ) : session ? (
-                <>
-                  <AuthButton href="/profile">User Profile</AuthButton>
-                  {/* <AuthButton href="#" onClick={handleLogout}>Logout</AuthButton> */}
-                </>
-              ) : (
-                <>
-                  {/* <AuthButton href="/sign-in">Login</AuthButton> */}
-                  {/* <AuthButton href="/sign-up">Register</AuthButton> */}
-                </>
-              )}
+                <div className="pt-4 border-t border-zinc-800">
+                  <AuthButton href="/u/profile" onClick={closeSidebar}>Profile</AuthButton>
+                </div>
+              ) : null}
             </nav>
           </div>
-        </div>
+        </>
       )}
     </nav>
   );

@@ -5,7 +5,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "components/ui/button";
 import { ArrowRight, Brain, Zap, Code } from 'lucide-react';
-
 import { Code2, PenTool, Bot, Terminal, Play } from "lucide-react";
 import dynamic from 'next/dynamic';
 
@@ -123,13 +122,13 @@ export default function Home() {
         <GravityField mousePosition={mousePosition} />
 
         {/* Content */}
-        <div className="relative w-full max-w-6xl mx-auto px-8 py-16">
+        <div className="relative w-full max-w-6xl mx-auto px-8 pt-0">
           {/* Hero Section */}
           <div className="min-h-screen flex flex-col justify-center items-center">
             <div className="relative max-w-6xl mx-auto w-full">
               {/* Top Content */}
               <div className="text-center mb-16">
-                <div className="flex justify-center py-12">
+                <div className="flex justify-center py-8">
                   <img
                     src="/SOCRATES.svg"
                     alt="Socrates Logo"
@@ -195,22 +194,56 @@ export default function Home() {
                           <span className="text-sm font-medium text-zinc-300">Visual Canvas</span>
                         </div>
                         <div className="h-[200px] w-full bg-zinc-900/50 p-4">
-                          {/* Visual representation of a binary search tree */}
+                          {/* Complex visualization of a binary search tree with array mapping */}
                           <div className="h-full w-full flex items-center justify-center">
                             <div className="relative">
-                              {/* Simple visual representation */}
-                              <svg width="200" height="120" viewBox="0 0 200 120" className="text-zinc-600">
-                                <line x1="100" y1="20" x2="50" y2="60" stroke="currentColor" />
-                                <line x1="100" y1="20" x2="150" y2="60" stroke="currentColor" />
-                                <circle cx="100" cy="20" r="15" fill="currentColor" opacity="0.2" />
-                                <circle cx="50" cy="60" r="15" fill="currentColor" opacity="0.2" />
-                                <circle cx="150" cy="60" r="15" fill="currentColor" opacity="0.2" />
-                                <text x="95" y="25" fill="white" fontSize="12">8</text>
-                                <text x="45" y="65" fill="white" fontSize="12">4</text>
-                                <text x="145" y="65" fill="white" fontSize="12">12</text>
+                              <svg width="300" height="120" viewBox="0 0 300 120" className="text-zinc-600">
+                                {/* Array representation */}
+                                <rect x="20" y="90" width="260" height="25" fill="none" stroke="currentColor" />
+                                <line x1="60" y1="90" x2="60" y2="115" stroke="currentColor" />
+                                <line x1="100" y1="90" x2="100" y2="115" stroke="currentColor" />
+                                <line x1="140" y1="90" x2="140" y2="115" stroke="currentColor" />
+                                <line x1="180" y1="90" x2="180" y2="115" stroke="currentColor" />
+                                <line x1="220" y1="90" x2="220" y2="115" stroke="currentColor" />
+                                <line x1="260" y1="90" x2="260" y2="115" stroke="currentColor" />
+                                
+                                {/* Array indices */}
+                                <text x="40" y="107" fill="white" fontSize="10">2</text>
+                                <text x="80" y="107" fill="white" fontSize="10">4</text>
+                                <text x="120" y="107" fill="white" fontSize="10">6</text>
+                                <text x="160" y="107" fill="white" fontSize="10">8</text>
+                                <text x="200" y="107" fill="white" fontSize="10">10</text>
+                                <text x="240" y="107" fill="white" fontSize="10">12</text>
+                                
+                                {/* Binary Search Tree */}
+                                <line x1="150" y1="20" x2="80" y2="45" stroke="currentColor" />
+                                <line x1="150" y1="20" x2="220" y2="45" stroke="currentColor" />
+                                <line x1="80" y1="45" x2="40" y2="70" stroke="currentColor" />
+                                <line x1="80" y1="45" x2="120" y2="70" stroke="currentColor" />
+                                <line x1="220" y1="45" x2="180" y2="70" stroke="currentColor" />
+                                <line x1="220" y1="45" x2="260" y2="70" stroke="currentColor" />
+                                
+                                {/* Tree Nodes */}
+                                <circle cx="150" cy="20" r="15" fill="currentColor" opacity="0.3" />
+                                <circle cx="80" cy="45" r="15" fill="currentColor" opacity="0.3" />
+                                <circle cx="220" cy="45" r="15" fill="currentColor" opacity="0.3" />
+                                <circle cx="40" cy="70" r="15" fill="currentColor" opacity="0.3" />
+                                <circle cx="120" cy="70" r="15" fill="currentColor" opacity="0.3" />
+                                <circle cx="180" cy="70" r="15" fill="currentColor" opacity="0.3" />
+                                <circle cx="260" cy="70" r="15" fill="currentColor" opacity="0.3" />
+                                
+                                {/* Node Values */}
+                                <text x="145" y="25" fill="white" fontSize="12">8</text>
+                                <text x="75" y="50" fill="white" fontSize="12">4</text>
+                                <text x="215" y="50" fill="white" fontSize="12">10</text>
+                                <text x="35" y="75" fill="white" fontSize="12">2</text>
+                                <text x="115" y="75" fill="white" fontSize="12">6</text>
+                                <text x="175" y="75" fill="white" fontSize="12">9</text>
+                                <text x="255" y="75" fill="white" fontSize="12">12</text>
+                                
+                                {/* Current Search Position Indicator */}
+                                <circle cx="150" cy="20" r="18" stroke="#3b82f6" strokeWidth="2" fill="none" className="animate-pulse" />
                               </svg>
-                              {/* Animated cursor dot */}
-                              <div className="absolute top-0 right-0 w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
                             </div>
                           </div>
                         </div>
@@ -238,19 +271,6 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Scroll Indicator */}
-        <div 
-          className={`
-            fixed bottom-8 left-1/2 -translate-x-1/2 
-            flex flex-col items-center text-zinc-500 
-            transition-all duration-500 ease-in-out
-            ${isAtTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}
-          `}
-        >
-          <span className="text-xs mb-2">Scroll to explore features</span>
-          <ArrowRight className="w-4 h-4 rotate-90" />
         </div>
       </div>
 
