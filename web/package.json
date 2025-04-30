@@ -49,6 +49,7 @@
     "crypto": "^1.0.1",
     "framer-motion": "^11.11.10",
     "fs": "^0.0.1-security",
+    "groq-sdk": "^0.20.1",
     "jspdf": "^2.5.2",
     "lucide-react": "^0.451.0",
     "mongodb": "^6.9.0",

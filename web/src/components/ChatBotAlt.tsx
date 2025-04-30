@@ -244,12 +244,28 @@ export default function ChatPage() {
     return `The conversation focused on the following main points: ${topThemes.join('; ')}.`;
   };
 
-  // Function to generate and display the summary
-  const generateSummary = () => {
-    const generatedSummary = generateTfidfSummary(chat);
-    setSummary(generatedSummary); // Update summary state with generated summary
-    setIsSummaryVisible(true); // Show summary section
-    setDisableSummary(true); // Disable chat input when summary is visible
+  const generateSummary = async () => {
+    try {
+      const response = await fetch("/api/ai-summary", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat }),
+      });
+      const data = await response.json();
+      if (data.summary) {
+        setSummary(data.summary);
+        setIsSummaryVisible(true);
+        setDisableSummary(true);
+      } else {
+        setSummary("Could not generate summary.");
+        setIsSummaryVisible(true);
+        setDisableSummary(true);
+      }
+    } catch (error) {
+      setSummary("Error generating summary.");
+      setIsSummaryVisible(true);
+      setDisableSummary(true);
+    }
   };
 
   // Reset function to clear chat and summary

@@ -12,7 +12,7 @@ export interface User extends Document {
   email: string;
   password: string;
   role: 'teacher' | 'student';
-  ethereumAddress?: string;
+  // ethereumAddress?: string;
   topics: Topic[];
 }
 
@@ -56,11 +56,11 @@ const UserSchema: Schema<User> = new mongoose.Schema({
     enum: ['teacher', 'student'],
     required: [true, 'Role is required'],
   },
-  ethereumAddress: {
-    type: String,
-    unique: true,
-    sparse: true,
-  },
+  // ethereumAddress: {
+  //   type: String,
+  //   unique: true,
+  //   sparse: true,
+  // },
   topics: {
     type: [TopicSchema],
     default: getInitialTopics, // Use the function to initialize topics

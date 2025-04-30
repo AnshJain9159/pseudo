@@ -3,89 +3,68 @@
 
 import { StreamingTextResponse } from 'ai';
 import { experimental_StreamData } from 'ai';
+import Groq from 'groq-sdk';
 
-const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://localhost:11434';
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-// Convert Ollama response to proper stream format
-function createStream(response: Response, data: experimental_StreamData): ReadableStream<Uint8Array> {
-  const reader = response.body?.getReader();
-  const encoder = new TextEncoder();
-  const decoder = new TextDecoder();
+function buildSocraticPrompt(userQuery: string) {
+  return `
+You are Socrates, an AI tutor specializing in Computer Science. 
+Your job is to guide students to deeper understanding using Socratic questioning, analogies, and encouragement. 
+The student asked: "${userQuery}"
 
-  return new ReadableStream({
-    async start(controller) {
-      if (!reader) {
-        controller.close();
-        data.close(); // Ensure to close the data stream
-        return;
-      }
-
-      try {
-        while (true) {
-          const { done, value } = await reader.read();
-          
-          if (done) {
-            controller.close();
-            data.close(); // Close the data stream when finished
-            break;
-          }
-
-          const text = decoder.decode(value);
-          const lines = text.split('\n');
-
-          for (const line of lines) {
-            if (line.trim() === '') continue;
-            
-            try {
-              const json = JSON.parse(line);
-              if (json.response) {
-                // Send the chunk in the format expected by useChat
-                const chunk = json.response;
-                controller.enqueue(encoder.encode(chunk));
-              }
-            } catch (e) {
-              console.warn('Failed to parse JSON:', e);
-            }
-          }
-        }
-      } catch (error) {
-        controller.error(error);
-        data.close(); // Ensure to close the data stream on error
-      }
-    },
-    async cancel() {
-      await reader?.cancel();
-      data.close(); // Ensure to close the data stream if cancelled
-    }
-  });
+Respond as a Socratic teacher:
+- Acknowledge the student's current understanding.
+- Ask guiding, open-ended questions.
+- Use relevant analogies from Computer Science.
+- Encourage critical thinking and curiosity.
+- Keep your tone friendly and supportive.
+`;
 }
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    
-    const response = await fetch(`${OLLAMA_HOST}/api/generate`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'hwm:latest',
-        prompt: body.messages[body.messages.length - 1].content,
-        stream: true,
-      }),
-    });
+    const userQuery = body.messages?.[body.messages.length - 1]?.content || '';
 
-    if (!response.ok) {
-      throw new Error(`Ollama API error: ${response.statusText}`);
+    if (!userQuery) {
+      return new Response(JSON.stringify({ error: 'No user query provided' }), { status: 400 });
     }
 
-    // Create stream data handler
+    const prompt = buildSocraticPrompt(userQuery);
+
+    // Call Groq API (using Llama-3-8b for example, adjust as needed)
+    const completion = await groq.chat.completions.create({
+      model: 'llama3-8b-8192',
+      messages: [
+        { role: 'system', content: 'You are a Socratic AI tutor for Computer Science.' },
+        { role: 'user', content: prompt }
+      ],
+      stream: true,
+      max_tokens: 512,
+      temperature: 0.8,
+    });
+
+    // Stream the response to the frontend
     const data = new experimental_StreamData();
-    
-    // Create streaming response with proper headers
-    const stream = createStream(response, data);
-    
+    const encoder = new TextEncoder();
+
+    const stream = new ReadableStream<Uint8Array>({
+      async start(controller) {
+        for await (const chunk of completion) {
+          const text = chunk.choices?.[0]?.delta?.content;
+          if (text) {
+            controller.enqueue(encoder.encode(text));
+          }
+        }
+        controller.close();
+        data.close();
+      },
+      async cancel() {
+        data.close();
+      }
+    });
+
     return new StreamingTextResponse(stream, {
       headers: {
         'Content-Type': 'text/plain; charset=utf-8',
@@ -96,13 +75,8 @@ export async function POST(req: Request) {
   } catch (error: any) {
     console.error('API Error:', error);
     return new Response(
-      JSON.stringify({
-        error: error.message,
-      }),
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      }
+      JSON.stringify({ error: error.message }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
   }
 }

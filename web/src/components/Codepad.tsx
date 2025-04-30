@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from "react";
 import { Play } from "lucide-react";
 import axios from "axios";
@@ -56,6 +57,7 @@ const CustomCodeEditor: React.FC = () => {
     <div className="w-full bg-black text-white">
       <div className="px-4 py-2 border-b border-zinc-800">
         <select
+          title="lang"
           value={language}
           onChange={(e) => setLanguage(e.target.value)}
           className="bg-zinc-900 text-white px-3 py-1 rounded text-sm border border-zinc-800"
