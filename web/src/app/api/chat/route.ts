@@ -29,7 +29,7 @@ export async function POST(req: Request) {
 
     // 2. Initialize Google AI
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
     // 3. Parse request body
     const body = await req.json();
