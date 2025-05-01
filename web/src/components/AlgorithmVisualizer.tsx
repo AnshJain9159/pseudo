@@ -51,6 +51,7 @@ export const AlgorithmVisualizer = ({ steps, delay = 1000 }: { steps: Step[]; de
   const step = steps[currentStep];
 
   return (
+    <div className="overflow-x-auto">
     <div className="w-full max-w-4xl bg-zinc-900 rounded-xl shadow-lg p-6 border border-gray-700">
       <div className="flex justify-between items-center mb-6">
         <div className="text-lg font-semibold text-white">
@@ -126,6 +127,7 @@ export const AlgorithmVisualizer = ({ steps, delay = 1000 }: { steps: Step[]; de
       <div className="bg-zinc-800 p-4 rounded-lg border border-zinc-700">
         <p className="text-gray-300">{step.description}</p>
       </div>
+    </div>
     </div>
   );
 };

@@ -160,44 +160,55 @@ const Navbar: React.FC = () => {
         </div>
       </div>
       {isSidebarOpen && (
-        <div className="fixed inset-0 bg-black/50 z-40" onClick={closeSidebar}>
+        <div
+          className="fixed inset-0 z-40 flex"
+          onClick={closeSidebar}
+          style={{ background: "rgba(0,0,0,0.7)" }}
+        >
           <div
-            className="fixed right-0 top-0 h-full w-64 bg-gray-800 shadow-lg z-50 overflow-y-auto"
+            className="relative w-4/5 max-w-xs h-full bg-gray-900 shadow-2xl flex flex-col p-6 animate-slide-in"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex justify-end p-4">
+            <div className="flex justify-between items-center mb-8">
+              <span className="font-bold text-lg text-white">Menu</span>
               <Button onClick={closeSidebar} variant="ghost" size="icon">
-                <X className="h-6 w-6 text-cyan-200" />
+                <X className="h-7 w-7 text-cyan-200" />
               </Button>
             </div>
-            <nav className="flex flex-col space-y-4 p-4">
-              {navItems.map((item, index) => (
+            <nav className="flex flex-col gap-6">
+              {navItems.map((item, index) =>
                 isNavCategory(item) ? (
-                  <div key={index}>
-                    <h3 className="font-semibold text-sm text-gray-500 uppercase tracking-wider mb-2">{item.category}</h3>
-                    {item.items.map((subItem) => (
-                      <NavLink key={subItem.name} item={subItem} onClick={closeSidebar} />
-                    ))}
+                  <div key={index} className="mb-4">
+                    <h3 className="font-semibold text-xs text-gray-400 uppercase tracking-wider mb-2">{item.category}</h3>
+                    <div className="flex flex-col gap-2">
+                      {item.items.map((subItem) => (
+                        <NavLink key={subItem.name} item={subItem} onClick={closeSidebar} />
+                      ))}
+                    </div>
                   </div>
                 ) : (
                   <NavLink key={index} item={item} onClick={closeSidebar} />
                 )
-              ))}
-              {loading ? (
-                <span>Loading...</span>
-              ) : session ? (
-                <>
-                  <AuthButton href="/profile">User Profile</AuthButton>
-                  <AuthButton href="#" onClick={handleLogout}>Logout</AuthButton>
-                </>
-              ) : (
-                <>
-                  <AuthButton href="/sign-in">Login</AuthButton>
-                  <AuthButton href="/sign-up">Register</AuthButton>
-                </>
               )}
+              <div className="mt-6 flex flex-col gap-3">
+                {loading ? (
+                  <span className="text-white">Loading...</span>
+                ) : session ? (
+                  <>
+                    <AuthButton href="/u/profile">User Profile</AuthButton>
+                    <AuthButton href="#" onClick={handleLogout}>Logout</AuthButton>
+                  </>
+                ) : (
+                  <>
+                    <AuthButton href="/sign-in">Login</AuthButton>
+                    <AuthButton href="/sign-up">Register</AuthButton>
+                  </>
+                )}
+              </div>
             </nav>
           </div>
+          {/* Click outside to close */}
+          <div className="flex-1" />
         </div>
       )}
     </nav>

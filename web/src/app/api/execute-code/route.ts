@@ -4,6 +4,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import crypto from 'crypto';
 import os from 'os';
+import fsSync from 'fs';
 
 const TIMEOUT = 5000; // 5 seconds timeout for the execution
 const MAX_BUFFER = 1024 * 1024; // 1 MB buffer size for stdout/stderr
@@ -45,14 +46,23 @@ export async function POST(request: NextRequest) {
   } finally {
     // Cleanup temporary files
     try {
-      await fs.unlink(filePath);
-      await fs.unlink(outputPath);
+      if (await fileExists(filePath)) await fs.unlink(filePath);
+      if (await fileExists(outputPath)) await fs.unlink(outputPath);
     } catch (cleanupError) {
       console.error('Error cleaning up files:', cleanupError);
     }
   }
 }
 
+// Add this helper function:
+async function fileExists(path: string) {
+  try {
+    await fs.access(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
 // Sanitize input code (optional)
 function sanitizeCode(code: string): string {
   const forbiddenPatterns = [

@@ -291,9 +291,13 @@ export default function ChatPage() {
     const doc = new jsPDF();
     doc.text("Conversation Summary", 10, 10);
 
+    const plainSummary = summary
+    .replace(/[*_#`>-]/g, '') // Remove *, _, #, `, >, -
+    .replace(/\n{2,}/g, '\n') // Collapse multiple newlines
+    .replace(/\n/g, ' ');     // Replace newlines with spaces
     // Wrap the text to fit within the page width
     const pageWidth = doc.internal.pageSize.getWidth() - 20; // 20 is for padding on both sides
-    const wrappedText = doc.splitTextToSize(summary, pageWidth);
+    const wrappedText = doc.splitTextToSize(plainSummary, pageWidth);
 
     // Add the wrapped text to the PDF starting at position (10, 20)
     doc.text(wrappedText, 10, 20);
